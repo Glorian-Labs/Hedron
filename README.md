@@ -512,6 +512,7 @@ PAYMENT_NETWORK=hedera-testnet npm run demo:hackathon 0.0.123456 50 hedera-testn
 **Impact**: Instant payments, $18K annual savings, zero manual work
 
 **How it works**:
+
 1. AnalyzerAgent detects NFT sale on Hedera
 2. VerifierAgent validates royalty calculation (10% of sale)
 3. SettlementAgent executes cross-chain payment (HBAR → USDC on Base/Ethereum)

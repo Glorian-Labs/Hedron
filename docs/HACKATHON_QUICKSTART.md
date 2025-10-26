@@ -19,11 +19,13 @@ npm run demo:hackathon
 ## 🎬 Demo Commands
 
 ### Base Sepolia (USDC) Payment
+
 ```bash
 PAYMENT_NETWORK=base-sepolia npm run demo:hackathon 0.0.123456 50 base-sepolia
 ```
 
 ### Hedera Native (HBAR) Payment
+
 ```bash
 PAYMENT_NETWORK=hedera-testnet npm run demo:hackathon 0.0.123456 50 hedera-testnet
 ```
@@ -157,4 +159,3 @@ PAYMENT_NETWORK=hedera-testnet npm run demo:hackathon 0.0.123456 50 hedera-testn
 ---
 
 **Good luck at the hackathon! 🚀**
-

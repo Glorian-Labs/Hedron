@@ -29,6 +29,9 @@ const DEMO_ACCOUNT = process.argv[2] || '0.0.123456'
 const THRESHOLD_HBAR = parseInt(process.argv[3] || '50') || 50
 const PAYMENT_NETWORK = process.argv[4] || process.env.PAYMENT_NETWORK || 'base-sepolia'
 
+// Set environment variable for agents to use
+process.env.PAYMENT_NETWORK = PAYMENT_NETWORK
+
 console.log(chalk.bold('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'))
 
 console.log(chalk.bold('📋 Demo Configuration:'))
@@ -191,7 +194,7 @@ async function hackathonDemo() {
     console.log(chalk.bold.green('🎉 DEMO COMPLETE!\n'))
 
     console.log(chalk.blue('📚 Resources:'))
-    console.log(chalk.gray('   GitHub: https://github.com/Hebx/hedera-a2a-agents'))
+    console.log(chalk.gray('   GitHub: https://github.com/Hebx/hedera-a2a-x402-agents'))
     console.log(chalk.gray('   Docs: See docs/ folder\n'))
 
     process.exit(0)
