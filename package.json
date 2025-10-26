@@ -44,7 +44,8 @@
     "test:x402-complete": "ts-node tests/integration/test-complete-x402-system.ts",
     "test:x402-server": "ts-node tests/integration/test-payment-server.ts",
     "test:e2e-payment": "ts-node tests/e2e/test-payment-flow.ts",
-    "deploy:supply-chain": "ts-node scripts/deploy-supply-chain.ts"
+    "deploy:supply-chain": "ts-node scripts/deploy-supply-chain.ts",
+    "deploy:real": "ts-node scripts/deploy-real.ts"
   },
   "repository": {
     "type": "git",
@@ -73,9 +74,12 @@
     "langchain": "^1.0.1"
   },
   "devDependencies": {
+    "@nomicfoundation/hardhat-verify": "^3.0.4",
+    "@openzeppelin/contracts": "^5.4.0",
     "@types/axios": "^0.9.36",
     "@types/node": "^24.9.1",
     "eslint": "^9.38.0",
+    "hardhat": "^3.0.9",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
     "typescript": "^5.9.3"
