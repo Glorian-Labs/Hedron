@@ -265,16 +265,25 @@ export class SupplyChainNegotiationDemo {
       return
     }
     
-    // Simulate smart contract creation
-    console.log(chalk.bold.yellow('\n━━━━━━━━━━ Blockchain Execution ━━━━━━━━━━'))
-    console.log(chalk.blue('\n📝 Deploying Smart Contract on Hedera...'))
+    // Simulate smart contract creation (in production, this would deploy a real smart contract)
+    console.log(chalk.bold.yellow('\n━━━━━━━━━━ Blockchain Execution (Simulated) ━━━━━━━━━━'))
+    console.log(chalk.blue('\n📝 Smart Contract Terms Would Be Deployed on Hedera...'))
+    console.log(chalk.yellow('⚠️  Note: This demo simulates contract deployment'))
+    console.log(chalk.yellow('    In production, this would use Hedera smart contracts'))
+    console.log(chalk.yellow('    to create escrow and enforce terms\n'))
     
-    const contractId = `0.0.${Math.floor(Math.random() * 1000000)}`
-    console.log(chalk.green(`✅ Smart Contract Deployed: ${contractId}`))
-    console.log(chalk.green(`✅ Terms recorded on Hedera blockchain`))
+    const simulatedContractId = `0.0.${Math.floor(Math.random() * 1000000)}`
+    console.log(chalk.green(`📋 Contract ID (simulated): ${simulatedContractId}`))
+    console.log(chalk.green(`✅ Negotiation terms recorded`))
     if (vendorTerms) {
       const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
-      console.log(chalk.green(`✅ Payment escrow created: $${totalValue.toLocaleString()}`))
+      console.log(chalk.green(`💰 Contract value: $${totalValue.toLocaleString()}`))
+      console.log(chalk.gray(`\n   Would create payment escrow on Hedera mainnet`))
+      console.log(chalk.gray(`   Would execute smart contract with terms:`))
+      console.log(chalk.gray(`   - Price: $${vendorTerms.terms.pricePerUnit}/unit`))
+      console.log(chalk.gray(`   - Delivery: ${vendorTerms.terms.deliveryDate}`))
+      console.log(chalk.gray(`   - Payment: ${vendorTerms.terms.paymentSchedule}`))
+      console.log(chalk.gray(`   - Warranty: ${vendorTerms.terms.warrantyMonths} months\n`))
     }
     
     console.log(chalk.bold.green(`\n🎉 Supply Chain Negotiation Complete!\n`))
@@ -283,14 +292,14 @@ export class SupplyChainNegotiationDemo {
     console.log(chalk.green('   ⚡ Time Saved: 3 weeks → 3 hours (80% faster)'))
     console.log(chalk.green('   💰 Cost Reduced: Automated procurement'))
     console.log(chalk.green('   🎯 Accuracy: No human negotiation errors'))
-    console.log(chalk.green('   🔒 Transparency: Blockchain-verified contract'))
-    console.log(chalk.green('   📊 Audit Trail: Every round recorded\n'))
+    console.log(chalk.green('   🔒 Transparency: All rounds logged'))
+    console.log(chalk.green('   📊 Audit Trail: Complete negotiation history\n'))
     
-    console.log(chalk.bold.yellow('💡 Try in Production:'))
-    console.log(chalk.gray('   1. Integrate with procurement systems'))
-    console.log(chalk.gray('   2. Connect vendor marketplaces'))
-    console.log(chalk.gray('   3. Deploy on Hedera mainnet'))
-    console.log(chalk.gray('   4. Handle $1M+ annual contracts\n'))
+    console.log(chalk.bold.yellow('💡 To Deploy Smart Contracts:'))
+    console.log(chalk.gray('   1. Write Solidity contract for terms'))
+    console.log(chalk.gray('   2. Deploy to Hedera EVM via Hedera SDK'))
+    console.log(chalk.gray('   3. Store contract ID in negotiation results'))
+    console.log(chalk.gray('   4. Create payment escrow with contract\n'))
   }
 }
 
