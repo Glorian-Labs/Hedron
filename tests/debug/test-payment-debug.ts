@@ -1,4 +1,4 @@
-import { SettlementAgent } from './src/agents/SettlementAgent'
+import { SettlementAgent } from '../../src/agents/SettlementAgent'
 import { processPayment } from 'a2a-x402'
 import { ethers } from 'ethers'
 import chalk from 'chalk'

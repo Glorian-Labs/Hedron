@@ -1,4 +1,5 @@
-import { processPayment, x402Utils, verifyPayment, settlePayment } from 'a2a-x402'
+import { processPayment, x402Utils, settlePayment } from 'a2a-x402'
+import { X402FacilitatorServer } from '../../src/facilitator/X402FacilitatorServer'
 import { ethers } from 'ethers'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
@@ -10,11 +11,13 @@ class ImprovedSettlementAgent {
   private provider: ethers.JsonRpcProvider
   private wallet: ethers.Wallet
   private utils: any
+  private facilitator: X402FacilitatorServer
 
   constructor() {
     this.provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL)
     this.wallet = new ethers.Wallet(process.env.SETTLEMENT_WALLET_PRIVATE_KEY!, this.provider)
     this.utils = new x402Utils()
+    this.facilitator = new X402FacilitatorServer()
   }
 
   async executePayment(verification: any): Promise<void> {
@@ -47,26 +50,32 @@ class ImprovedSettlementAgent {
       console.log(JSON.stringify(paymentPayload, null, 2))
       console.log('')
 
-      // Verify payment using standalone functions
-      console.log(chalk.yellow('🔍 Verifying payment...'))
-      const verificationResult = await verifyPayment(paymentPayload, requirements)
+      // Verify payment using local facilitator server
+      console.log(chalk.yellow('🔍 Verifying payment via local facilitator...'))
+      const paymentHeader = Buffer.from(JSON.stringify(paymentPayload)).toString('base64')
       
-      if (verificationResult.isValid) {
-        console.log(chalk.green('✅ Payment verification successful!'))
+      try {
+        const verificationResult = await this.facilitator.verify(paymentHeader, requirements)
         
-        // Settle payment
-        console.log(chalk.yellow('🏦 Settling payment...'))
-        const settlementResult = await settlePayment(paymentPayload, requirements)
-        
-        if (settlementResult.success) {
-          console.log(chalk.green('✅ Payment settled successfully!'))
-          console.log(chalk.blue('📋 Settlement Result:'))
-          console.log(JSON.stringify(settlementResult, null, 2))
+        if (verificationResult.isValid) {
+          console.log(chalk.green('✅ Payment verification successful!'))
+          
+          // Settle payment
+          console.log(chalk.yellow('🏦 Settling payment...'))
+          const settlementResult = await this.facilitator.settle(paymentHeader, requirements)
+          
+          if (settlementResult.success) {
+            console.log(chalk.green('✅ Payment settled successfully!'))
+            console.log(chalk.blue('📋 Settlement Result:'))
+            console.log(JSON.stringify(settlementResult, null, 2))
+          } else {
+            console.log(chalk.red('❌ Payment settlement failed:'), settlementResult.error)
+          }
         } else {
-          console.log(chalk.red('❌ Payment settlement failed:'), settlementResult.errorReason)
+          console.log(chalk.red('❌ Payment verification failed:'), verificationResult.invalidReason)
         }
-      } else {
-        console.log(chalk.red('❌ Payment verification failed:'), verificationResult.invalidReason)
+      } catch (error: any) {
+        console.log(chalk.red('❌ Payment verification failed:'), error.message)
       }
 
     } catch (error) {

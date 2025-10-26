@@ -1,4 +1,5 @@
-import { x402PaymentRequiredException, processPayment, verifyPayment, settlePayment, x402Utils } from 'a2a-x402'
+import { x402PaymentRequiredException, processPayment, x402Utils } from 'a2a-x402'
+import { X402FacilitatorServer } from '../../src/facilitator/X402FacilitatorServer'
 import { ethers } from 'ethers'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
@@ -22,11 +23,13 @@ class CompleteX402System {
   private wallet: ethers.Wallet
   private utils: any
   private paymentStates: Map<string, PaymentState> = new Map()
+  private facilitator: X402FacilitatorServer
 
   constructor() {
     this.provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL)
     this.wallet = new ethers.Wallet(process.env.SETTLEMENT_WALLET_PRIVATE_KEY!, this.provider)
     this.utils = new x402Utils()
+    this.facilitator = new X402FacilitatorServer()
   }
 
   // Merchant Agent: Request Payment
@@ -96,7 +99,8 @@ class CompleteX402System {
     console.log('')
 
     try {
-      const verificationResult = await verifyPayment(paymentPayload, requirements)
+      const paymentHeader = Buffer.from(JSON.stringify(paymentPayload)).toString('base64')
+      const verificationResult = await this.facilitator.verify(paymentHeader, requirements)
       
       if (verificationResult.isValid) {
         console.log(chalk.green('✅ Payment verification successful!'))
@@ -118,15 +122,16 @@ class CompleteX402System {
     console.log('')
 
     try {
-      const settlementResult = await settlePayment(paymentPayload, requirements)
+      const paymentHeader = Buffer.from(JSON.stringify(paymentPayload)).toString('base64')
+      const settlementResult = await this.facilitator.settle(paymentHeader, requirements)
       
       if (settlementResult.success) {
         console.log(chalk.green('✅ Payment settlement successful!'))
-        console.log(chalk.blue('📋 Transaction Hash:'), settlementResult.transaction)
-        return { success: true, txHash: settlementResult.transaction || 'unknown' }
+        console.log(chalk.blue('📋 Transaction Hash:'), settlementResult.txHash)
+        return { success: true, txHash: settlementResult.txHash || 'unknown' }
       } else {
-        console.log(chalk.red('❌ Payment settlement failed:'), settlementResult.errorReason)
-        return { success: false, error: settlementResult.errorReason || 'Settlement failed' }
+        console.log(chalk.red('❌ Payment settlement failed:'), settlementResult.error)
+        return { success: false, error: settlementResult.error || 'Settlement failed' }
       }
 
     } catch (error) {

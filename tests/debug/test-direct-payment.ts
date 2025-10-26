@@ -1,4 +1,4 @@
-import { SettlementAgent } from './src/agents/SettlementAgent'
+import { SettlementAgent } from '../../src/agents/SettlementAgent'
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
 import chalk from 'chalk'
 import dotenv from 'dotenv'

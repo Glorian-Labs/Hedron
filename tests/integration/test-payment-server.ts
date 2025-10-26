@@ -1,4 +1,5 @@
-import { verifyPayment, settlePayment, x402Utils } from 'a2a-x402'
+import { x402Utils } from 'a2a-x402'
+import { X402FacilitatorServer } from '../../src/facilitator/X402FacilitatorServer'
 import { ethers } from 'ethers'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
@@ -21,6 +22,7 @@ class X402PaymentServer {
   private usdcContract: ethers.Contract
   private utils: any
   private payments: Map<string, PaymentRecord> = new Map()
+  private facilitator: X402FacilitatorServer
 
   constructor() {
     this.provider = new ethers.JsonRpcProvider(process.env.BASE_RPC_URL)
@@ -41,6 +43,7 @@ class X402PaymentServer {
     )
     
     this.utils = new x402Utils()
+    this.facilitator = new X402FacilitatorServer()
   }
 
   async processPayment(paymentPayload: any, requirements: any): Promise<{ success: boolean; txHash?: string; error?: string }> {
@@ -70,7 +73,8 @@ class X402PaymentServer {
 
       // Step 1: Verify Payment
       console.log(chalk.bold('--- Step 1: Verify Payment ---'))
-      const verificationResult = await verifyPayment(paymentPayload, requirements)
+      const paymentHeader = Buffer.from(JSON.stringify(paymentPayload)).toString('base64')
+      const verificationResult = await this.facilitator.verify(paymentHeader, requirements)
       
       if (!verificationResult.isValid) {
         paymentRecord.status = 'failed'
@@ -84,18 +88,18 @@ class X402PaymentServer {
 
       // Step 2: Settle Payment
       console.log(chalk.bold('--- Step 2: Settle Payment ---'))
-      const settlementResult = await settlePayment(paymentPayload, requirements)
+      const settlementResult = await this.facilitator.settle(paymentHeader, requirements)
       
       if (!settlementResult.success) {
         paymentRecord.status = 'failed'
-        paymentRecord.error = settlementResult.errorReason || 'Settlement failed'
-        console.log(chalk.red('❌ Payment settlement failed:'), settlementResult.errorReason)
-        return { success: false, error: settlementResult.errorReason || 'Settlement failed' }
+        paymentRecord.error = settlementResult.error || 'Settlement failed'
+        console.log(chalk.red('❌ Payment settlement failed:'), settlementResult.error)
+        return { success: false, error: settlementResult.error || 'Settlement failed' }
       }
       
       console.log(chalk.green('✅ Payment settlement successful!'))
       paymentRecord.status = 'settled'
-      paymentRecord.txHash = settlementResult.transaction || 'unknown'
+      paymentRecord.txHash = settlementResult.txHash || 'unknown'
 
       // Step 3: Execute Actual Token Transfer
       console.log(chalk.bold('--- Step 3: Execute Token Transfer ---'))
