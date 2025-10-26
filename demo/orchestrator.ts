@@ -49,20 +49,62 @@ async function main(): Promise<void> {
     console.log(`Balance: ${accountData.balance}`)
     console.log(`Threshold: ${THRESHOLD_HBAR} HBAR`)
     
-    // Simulate proposing insight (since proposeInsight method doesn't exist yet)
-    // accountData.balance is already in HBAR format, so compare directly
+    // Analyze threshold and trigger payment if met
     const balanceInHBAR = parseFloat(accountData.balance.replace(' ℏ', ''))
     const meetsThreshold = balanceInHBAR >= THRESHOLD_HBAR
     console.log(chalk.blue(`✓ Proposal: ${meetsThreshold ? 'Meets' : 'Does not meet'} threshold`))
     
+    if (meetsThreshold) {
+      console.log(chalk.bold('--- Triggering Payment Flow ---'))
+      console.log(chalk.yellow('💰 Account meets threshold - executing USDC payment on Base Sepolia'))
+      
+      // Create verification result for SettlementAgent
+      const verificationResult = {
+        type: 'verification_result',
+        agentId: process.env.VERIFIER_AGENT_ID || 'verifier-agent',
+        proposalId: `proposal_${Date.now()}`,
+        approved: true,
+        reasoning: `Account ${accountData.accountId} meets threshold of ${THRESHOLD_HBAR} HBAR (balance: ${balanceInHBAR} HBAR)`,
+        paymentDetails: {
+          amount: '1000000', // 1 USDC in atomic units
+          asset: process.env.USDC_CONTRACT,
+          payTo: process.env.MERCHANT_WALLET_ADDRESS
+        }
+      }
+      
+      console.log(chalk.blue('📋 Payment Details:'))
+      console.log(`   Amount: 1 USDC`)
+      console.log(`   To: ${process.env.MERCHANT_WALLET_ADDRESS}`)
+      console.log(`   Asset: ${process.env.USDC_CONTRACT}`)
+      console.log('')
+      
+      // Execute settlement by calling the public triggerSettlement method
+      console.log(chalk.yellow('🔧 Executing x402 payment...'))
+      try {
+        // Use triggerSettlement to execute the payment
+        await settlement.triggerSettlement(verificationResult)
+        console.log(chalk.green('✅ Payment executed successfully!'))
+        console.log(chalk.blue('📋 Check BaseScan for the transaction'))
+      } catch (error) {
+        console.error(chalk.red('❌ Payment execution failed:'), error)
+        console.log(chalk.yellow('💡 This might be due to insufficient ETH for gas or USDC balance'))
+        console.log(chalk.yellow('💡 Run: npm run check:wallets to verify wallet status'))
+      }
+    } else {
+      console.log(chalk.gray('⏳ Account does not meet threshold - no payment triggered'))
+    }
+    
     console.log(chalk.gray('⏳ Waiting for agent coordination...'))
-    await sleep(8000) // 8 seconds for A2A messages
+    await sleep(5000) // 5 seconds for coordination
 
     // Print final summary
     console.log(chalk.bold('--- Workflow Complete ---'))
     console.log(chalk.gray('📡 Monitor agent communication:'))
     console.log(chalk.gray(`   HashScan Topic: https://hashscan.io/testnet/topic/${process.env.ANALYZER_TOPIC_ID || 'ANALYZER_TOPIC_ID'}`))
-    console.log(chalk.gray('   BaseScan: https://sepolia.basescan.org'))
+    console.log(chalk.gray(`   BaseScan: https://sepolia.basescan.org/address/${process.env.MERCHANT_WALLET_ADDRESS}`))
+    if (meetsThreshold) {
+      console.log(chalk.green('💰 Real USDC payment executed on Base Sepolia!'))
+    }
     console.log('')
 
     // Exit cleanly

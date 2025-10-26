@@ -54,6 +54,12 @@ export class SettlementAgent {
     this.x402Utils = x402Utils
   }
 
+  // Public method to trigger settlement from external calls
+  async triggerSettlement(verification: any): Promise<void> {
+    console.log(chalk.yellow('🔧 SettlementAgent: Triggering settlement...'))
+    await this.executeSettlement(verification)
+  }
+
   async init(): Promise<void> {
     try {
       // Get topic ID from environment
