@@ -302,15 +302,14 @@ export class SupplyChainNegotiationDemo {
       }
     }
     
-    // Record agreement as a smart contract on Hedera (real contract creation)
+    // Two-step process: 1) Record agreement, 2) Execute payment
     if (vendorTerms) {
-      console.log(chalk.blue('\n📝 Creating Agreement Contract on Hedera Blockchain...\n'))
+      console.log(chalk.blue('\n📝 Step 1: Recording Agreement on Blockchain...\n'))
       
       try {
         const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
+        const agreementDetails = `SC: $${vendorTerms.terms.pricePerUnit}x${vendorTerms.terms.quantity}=$${totalValue.toLocaleString()}`
         
-        // Record agreement terms directly in payment transaction
-        const agreementDetails = `SC Agreement: $${vendorTerms.terms.pricePerUnit}/unit x ${vendorTerms.terms.quantity}, Total: $${totalValue}, Delivery: ${vendorTerms.terms.deliveryDate}`
         console.log(chalk.green(`📋 Agreement Terms:`))
         console.log(chalk.gray(`   Price: $${vendorTerms.terms.pricePerUnit}/unit × ${vendorTerms.terms.quantity} units`))
         console.log(chalk.gray(`   Total Value: $${(vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity).toLocaleString()}`))
@@ -318,9 +317,31 @@ export class SupplyChainNegotiationDemo {
         console.log(chalk.gray(`   Payment: ${vendorTerms.terms.paymentSchedule}`))
         console.log(chalk.gray(`   Warranty: ${vendorTerms.terms.warrantyMonths} months\n`))
         
-        // Execute payment transfer with agreement terms in memo
-        console.log(chalk.blue('💸 Executing Payment Transfer...\n'))
-        const transfer = new TransferTransaction()
+        // Step 1: Record agreement with small transaction (0.01 HBAR)
+        const agreementTx = new TransferTransaction()
+          .addHbarTransfer(
+            AccountId.fromString(accountId),
+            new Hbar(-0.01)
+          )
+          .addHbarTransfer(
+            AccountId.fromString('0.0.7135719'),
+            new Hbar(0.01)
+          )
+          .setTransactionMemo(agreementDetails)
+          .setMaxTransactionFee(new Hbar(1))
+        
+        console.log(chalk.yellow('⏳ Executing agreement transaction...'))
+        const agreementResponse = await agreementTx.execute(this.hederaClient)
+        const agreementTxId = agreementResponse.transactionId.toString()
+        
+        console.log(chalk.bold.green('\n✅ Agreement Recorded on Blockchain!\n'))
+        console.log(chalk.green(`📋 Transaction ID: ${agreementTxId}`))
+        console.log(chalk.cyan(`🔗 View Agreement: https://hashscan.io/testnet/transaction/${agreementTxId}\n`))
+        
+        // Step 2: Execute full payment after agreement approval
+        console.log(chalk.blue('💸 Step 2: Executing Payment Transfer...\n'))
+        
+        const paymentTx = new TransferTransaction()
           .addHbarTransfer(
             AccountId.fromString(accountId),
             new Hbar(-1)
@@ -329,14 +350,17 @@ export class SupplyChainNegotiationDemo {
             AccountId.fromString('0.0.7135719'),
             new Hbar(1)
           )
-          .setTransactionMemo(agreementDetails)
+          .setTransactionMemo(`Payment for Agreement: ${agreementTxId}`)
           .setMaxTransactionFee(new Hbar(5))
         
-        const txResponse = await transfer.execute(this.hederaClient)
-        const txId = txResponse.transactionId.toString()
+        console.log(chalk.yellow('⏳ Executing payment transaction...'))
+        const paymentResponse = await paymentTx.execute(this.hederaClient)
+        const paymentTxId = paymentResponse.transactionId.toString()
         
-        console.log(chalk.green(`✅ Payment Executed: ${txId}`))
-        console.log(chalk.cyan(`🔗 View Payment on HashScan: https://hashscan.io/testnet/transaction/${txId}\n`))
+        console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
+        console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
+        console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
+        console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
         
       } catch (error) {
         console.log(chalk.red(`❌ Failed: ${(error as Error).message}\n`))
