@@ -59,7 +59,6 @@
   },
   "homepage": "https://github.com/Hebx/hedera-a2a-agents#readme",
   "description": "",
-  "type": "module",
   "dependencies": {
     "@hashgraph/sdk": "^2.75.0",
     "@hashgraphonline/standards-agent-kit": "^0.2.164",
@@ -70,17 +69,16 @@
     "axios": "^1.12.2",
     "chalk": "^5.6.2",
     "dotenv": "^16.6.1",
+    "ethers": "^6.15.0",
     "hedera-agent-kit": "^3.4.0",
     "langchain": "^1.0.1"
   },
   "devDependencies": {
-    "@nomicfoundation/hardhat-ethers": "^4.0.2",
     "@nomicfoundation/hardhat-verify": "^3.0.4",
     "@openzeppelin/contracts": "^5.4.0",
     "@types/axios": "^0.9.36",
     "@types/node": "^24.9.1",
     "eslint": "^9.38.0",
-    "ethers": "^5.8.0",
     "hardhat": "^3.0.9",
     "prettier": "^3.6.2",
     "ts-node": "^10.9.2",
