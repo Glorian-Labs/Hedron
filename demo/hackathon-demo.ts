@@ -137,6 +137,8 @@ async function hackathonDemo() {
 
     console.log(chalk.blue('   ⏳ Processing...\n'))
 
+    let transactionHash = null
+    
     try {
       await settlement.triggerSettlement(verificationResult)
       
@@ -150,44 +152,30 @@ async function hackathonDemo() {
       console.log(chalk.blue('   ✅ Status: COMPLETED'))
       console.log(chalk.blue(`   🌐 Network: ${networkName}`))
       console.log(chalk.blue(`   💰 Amount: ${amount} ${asset}`))
-      console.log(chalk.blue(`   ⏱️  Time: ~5 seconds`))
-      console.log(chalk.blue(`   💵 Fees: $${PAYMENT_NETWORK === 'hedera-testnet' ? '0.0001' : '0.05'}\n`))
+      console.log(chalk.blue(`   ⏱️  Settlement Time: ~5-10 seconds`))
+      console.log(chalk.blue(`   💵 Network Fees: $${PAYMENT_NETWORK === 'hedera-testnet' ? '0.0001' : '~0.02-0.05'}\n`))
 
-      console.log(chalk.blue('   🔗 Verify Transaction:'))
+      console.log(chalk.blue('   🔗 Transaction Verification:'))
+      
       if (PAYMENT_NETWORK === 'hedera-testnet') {
-        console.log(`      https://hashscan.io/testnet/transaction/0.0.7132337@1761472785.724691852`)
+        console.log(chalk.gray('      Note: Check terminal output above for Hedera Transaction ID'))
+        console.log(chalk.gray('      Format: 0.0.X@timestamp.seconds.nanoseconds'))
+        console.log(chalk.gray('      Explorer: https://hashscan.io/testnet'))
       } else {
-        console.log(`      https://sepolia.basescan.org/tx/0x399ff0743af587ec59c9f2c189a51ed43c0c5ede6480c4a1b98d73bdf38417fb`)
+        console.log(chalk.gray('      Note: Check terminal output above for Base Sepolia Transaction Hash'))
+        console.log(chalk.gray('      Format: 0x...'))
+        console.log(chalk.gray('      Explorer: https://sepolia.basescan.org'))
       }
       
       console.log('')
 
     } catch (error) {
-      console.error(chalk.red('\n❌ Payment execution failed:', error))
+      console.error(chalk.red('\n❌ Payment execution failed:'), error)
       console.log(chalk.yellow('\n💡 This might be due to:'))
       console.log(chalk.gray('   - Insufficient wallet balance'))
       console.log(chalk.gray('   - Network connectivity issues'))
       console.log(chalk.gray('   - Check wallet status: npm run check:wallets\n'))
     }
-
-    console.log(chalk.bold('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'))
-
-    // Phase 6: Business Impact
-    console.log(chalk.bold.yellow('💼 Phase 6: Business Impact\n'))
-    
-    console.log(chalk.blue('   📈 Traditional Process:'))
-    console.log(chalk.red('      ❌ Manual processing'))
-    console.log(chalk.red('      ❌ 24-48 hour delays'))
-    console.log(chalk.red('      ❌ $50/day in gas fees'))
-    console.log(chalk.red('      ❌ Human error risk\n'))
-
-    console.log(chalk.blue('   🚀 Our Solution:'))
-    console.log(chalk.green('      ✅ Autonomous execution'))
-    console.log(chalk.green('      ✅ 5-10 second settlement'))
-    console.log(chalk.green(`      ✅ $${PAYMENT_NETWORK === 'hedera-testnet' ? '0.0001' : '0.05'}/transaction fees`))
-    console.log(chalk.green('      ✅ Zero human intervention\n'))
-
-    console.log(chalk.bold.cyan('   💰 Annual Savings: $18,247 per marketplace\n'))
 
     console.log(chalk.bold('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'))
 
