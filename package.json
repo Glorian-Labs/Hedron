@@ -15,6 +15,7 @@
     "check:credentials": "ts-node scripts/maintenance/check-credentials-status.ts",
     "demo": "ts-node demo/orchestrator.ts",
     "demo:hackathon": "ts-node demo/hackathon-demo.ts",
+    "demo:invoice": "ts-node demo/invoice-automation-demo.ts",
     "check:wallets": "ts-node scripts/maintenance/check-wallet-status.ts",
     "test:unit": "ts-node tests/unit/test-analyzer.ts && ts-node tests/unit/test-verifier.ts && ts-node tests/unit/test-settlement.ts",
     "test:integration": "ts-node tests/integration/test-improved-x402.ts && ts-node tests/integration/test-merchant-agent.ts && ts-node tests/integration/test-payment-server.ts && ts-node tests/integration/test-enhanced-x402utils.ts && ts-node tests/integration/test-complete-x402-system.ts",
