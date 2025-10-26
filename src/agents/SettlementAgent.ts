@@ -1,8 +1,9 @@
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
-import { processPayment, x402Utils } from 'a2a-x402'
+import { processPayment, x402Utils, verifyPayment, settlePayment } from 'a2a-x402'
 import { Wallet, JsonRpcProvider } from 'ethers'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
+import { X402FacilitatorServer } from '../facilitator/X402FacilitatorServer'
 
 // Load environment variables
 dotenv.config()
@@ -12,6 +13,7 @@ export class SettlementAgent {
   private provider: JsonRpcProvider
   private wallet: Wallet
   private x402Utils: typeof x402Utils
+  private facilitator: X402FacilitatorServer
 
   constructor() {
     // Get agent credentials from environment variables
@@ -52,6 +54,9 @@ export class SettlementAgent {
 
     // Initialize x402Utils
     this.x402Utils = x402Utils
+
+    // Initialize facilitator server
+    this.facilitator = new X402FacilitatorServer()
   }
 
   // Public method to trigger settlement from external calls
@@ -116,33 +121,57 @@ export class SettlementAgent {
 
   private async executeSettlement(verification: any): Promise<void> {
     try {
-      console.log(chalk.yellow('Initiating x402 payment...'))
+      console.log(chalk.yellow('Initiating x402 payment flow...'))
 
-      // Create payment requirements (use a2a-x402 format)
+      // Step 1: Create payment requirements
       const requirements = {
         scheme: 'exact' as const,
         network: 'base-sepolia' as const,
         asset: process.env.USDC_CONTRACT || '',
         payTo: process.env.MERCHANT_WALLET_ADDRESS || '',
-        maxAmountRequired: '10000000', // 10 USDC in atomic units
+        maxAmountRequired: '1000000', // 1 USDC
         resource: '/agent-settlement',
         description: 'A2A agent settlement',
         mimeType: 'application/json',
         maxTimeoutSeconds: 120
       }
 
-      // Call processPayment
+      // Step 2: Create payment authorization
+      console.log(chalk.blue('📋 Step 1: Creating payment authorization...'))
       const paymentPayload = await processPayment(requirements, this.wallet)
+      const paymentHeader = Buffer.from(JSON.stringify(paymentPayload)).toString('base64')
 
-      // Extract tx hash from paymentPayload (check actual structure)
-      const txHash = (paymentPayload as any).transactionHash || (paymentPayload as any).txHash || 'unknown'
+      // Debug: Log the actual paymentPayload structure
+      console.log(chalk.blue('📋 Payment payload structure:'), JSON.stringify(paymentPayload, null, 2))
 
-      console.log(chalk.green('✓ Payment complete'), txHash)
+      // Step 3: Verify payment via facilitator
+      console.log(chalk.blue('📋 Step 2: Verifying payment...'))
+      const verificationResult = await this.facilitator.verify(paymentHeader, requirements)
+      
+      if (!verificationResult.isValid) {
+        throw new Error(`Payment verification failed: ${verificationResult.invalidReason}`)
+      }
+      console.log(chalk.green('✅ Payment verification successful'))
 
-      // Call recordSettlement
-      await this.recordSettlement(txHash, 10)
+      // Step 4: Settle payment via facilitator (executes actual USDC transfer)
+      console.log(chalk.blue('📋 Step 3: Settling payment and executing USDC transfer...'))
+      const settlementResult = await this.facilitator.settle(paymentHeader, requirements)
+      
+      if (!settlementResult.success) {
+        throw new Error(`Payment settlement failed: ${settlementResult.error}`)
+      }
+      
+      console.log(chalk.green('✅ Payment settled successfully!'))
+      console.log(chalk.blue(`📋 Transaction Hash: ${settlementResult.txHash}`))
+      console.log(chalk.blue(`📋 Network: ${settlementResult.networkId}`))
+      console.log(chalk.blue(`📋 Amount: 1 USDC`))
+
+      // Step 5: Record settlement with actual transaction hash
+      await this.recordSettlement(settlementResult.txHash!, 1)
+
     } catch (error) {
       console.error('❌ Error executing settlement:', error)
+      throw error // Fail entire settlement if any step fails (strict error handling)
     }
   }
 
@@ -159,13 +188,16 @@ export class SettlementAgent {
       // Send via hcsClient.sendMessage to ANALYZER_TOPIC_ID (broadcast)
       const analyzerTopicId = process.env.ANALYZER_TOPIC_ID
       if (!analyzerTopicId) {
-        throw new Error('Missing required environment variable: ANALYZER_TOPIC_ID')
+        console.warn(chalk.yellow('⚠️ Missing ANALYZER_TOPIC_ID - skipping HCS recording'))
+        return
       }
 
       await this.hcsClient.sendMessage(analyzerTopicId, JSON.stringify(settlement))
-      console.log(chalk.yellow('→ Recording settlement on HCS'))
+      console.log(chalk.green('✅ Settlement recorded via HCS'))
     } catch (error) {
-      console.error('❌ Error recording settlement:', error)
+      console.warn(chalk.yellow('⚠️ HCS communication failed (non-critical):'), (error as Error).message)
+      console.log(chalk.blue('💡 Settlement completed successfully despite HCS communication issue'))
+      // Don't throw error - settlement was successful, HCS is just for coordination
     }
   }
 }

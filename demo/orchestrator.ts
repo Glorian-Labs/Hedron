@@ -79,11 +79,17 @@ async function main(): Promise<void> {
       console.log('')
       
       // Execute settlement by calling the public triggerSettlement method
-      console.log(chalk.yellow('🔧 Executing x402 payment...'))
+      console.log(chalk.yellow('🔧 Executing full x402 payment flow...'))
+      console.log(chalk.gray('   1. Creating payment authorization'))
+      console.log(chalk.gray('   2. Verifying payment via facilitator'))
+      console.log(chalk.gray('   3. Settling payment and executing USDC transfer'))
+      console.log('')
+      
       try {
         // Use triggerSettlement to execute the payment
         await settlement.triggerSettlement(verificationResult)
-        console.log(chalk.green('✅ Payment executed successfully!'))
+        console.log(chalk.green('✅ Complete x402 payment flow executed successfully!'))
+        console.log(chalk.blue('📋 Real USDC transfer completed on Base Sepolia'))
         console.log(chalk.blue('📋 Check BaseScan for the transaction'))
       } catch (error) {
         console.error(chalk.red('❌ Payment execution failed:'), error)
