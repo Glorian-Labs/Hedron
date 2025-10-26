@@ -1,6 +1,8 @@
 # Hedera A2A Agents System
 
-A comprehensive multi-agent system built on Hedera Hashgraph for autonomous agent-to-agent communication and settlement using the x402 payment protocol. This system demonstrates advanced blockchain integration, cross-chain payments, and decentralized autonomous operations.
+**[HCS-10 Compatible]** 🤖 A comprehensive multi-agent system built on Hedera Hashgraph for autonomous agent-to-agent communication and settlement using the x402 payment protocol. This system demonstrates advanced blockchain integration, cross-chain payments, and decentralized autonomous operations.
+
+> 🏆 **Hackathon Project**: Implementing HCS-10 standard for AI agent communication and coordination on Hedera
 
 ## 🚀 Overview
 
@@ -8,12 +10,14 @@ The Hedera A2A Agents System implements a three-agent workflow that processes, v
 
 ### Key Features
 
+- **🤖 HCS-10 Compatible**: Multi-agent communication using Hedera Consensus Service standard
 - **🤖 Autonomous Operation**: Agents operate independently without human intervention
 - **🔗 Cross-Chain Integration**: Seamless operation between Hedera and Ethereum ecosystems
 - **💳 x402 Payment Protocol**: Advanced autonomous payment processing
 - **📡 Decentralized Communication**: Uses Hedera Consensus Service for message passing
 - **🔒 Secure Architecture**: Comprehensive security and key management
 - **📊 Real-time Monitoring**: Complete audit trail and transaction tracking
+- **🎯 Agent Discovery**: Registry-based agent discovery and coordination
 
 ## 🏗️ System Architecture
 
@@ -489,6 +493,36 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 - **Agent Registration Failures**: Check Hedera account balance and credentials
 - **Payment Failures**: Verify Base Sepolia wallet has sufficient USDC
 - **Message Processing Issues**: Check HCS topic configuration and agent credentials
+
+## 🏆 Hackathon Demo
+
+### Quick Start
+
+```bash
+# Run hackathon demo with compelling use case
+npm run demo:hackathon
+
+# Base Sepolia (USDC) payment
+PAYMENT_NETWORK=base-sepolia npm run demo:hackathon 0.0.123456 50 base-sepolia
+
+# Hedera Native (HBAR) payment
+PAYMENT_NETWORK=hedera-testnet npm run demo:hackathon 0.0.123456 50 hedera-testnet
+```
+
+### Use Case: Automated NFT Royalty Settlement
+
+**Problem**: NFT marketplaces waste $18K/year on manual royalty settlement  
+**Solution**: Autonomous agents that detect NFT sales and automatically settle royalties in seconds  
+**Impact**: Instant payments, $18K annual savings, zero manual work
+
+**How it works**:
+
+1. AnalyzerAgent detects NFT sale on Hedera
+2. VerifierAgent validates royalty calculation (10% of sale)
+3. SettlementAgent executes cross-chain payment (HBAR → USDC on Base/Ethereum)
+4. Complete audit trail on Hedera Consensus Service
+
+📚 See `docs/HACKATHON_DEMO.md` for complete demo walkthrough
 
 ## 🎯 Roadmap
 
