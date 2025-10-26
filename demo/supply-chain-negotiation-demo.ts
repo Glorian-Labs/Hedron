@@ -302,25 +302,45 @@ export class SupplyChainNegotiationDemo {
       }
     }
     
-    // Show blockchain-ready workflow (conserves testnet tokens)
+    // Record agreement on Hedera blockchain (real transaction)
     if (vendorTerms) {
-      const simulatedContractId = `0.0.${Math.floor(Math.random() * 1000000)}`
-      const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
+      console.log(chalk.blue('\n📝 Recording Agreement on Hedera Blockchain...\n'))
       
-      console.log(chalk.blue('\n📝 Contract Deployment (Production-Ready)'))
-      console.log(chalk.yellow('⚠️  Skipping actual deployment to conserve testnet tokens'))
-      console.log(chalk.yellow('    In production, this would deploy real contract\n'))
-      
-      console.log(chalk.green(`📋 Negotiated Contract Terms:`))
-      console.log(chalk.gray(`   Contract ID: ${simulatedContractId}`))
-      console.log(chalk.gray(`   Price: $${vendorTerms.terms.pricePerUnit}/unit × ${vendorTerms.terms.quantity} units`))
-      console.log(chalk.gray(`   Total Value: $${totalValue.toLocaleString()}`))
-      console.log(chalk.gray(`   Delivery: ${vendorTerms.terms.deliveryDate}`))
-      console.log(chalk.gray(`   Payment: ${vendorTerms.terms.paymentSchedule}`))
-      console.log(chalk.gray(`   Warranty: ${vendorTerms.terms.warrantyMonths} months\n`))
-      
-      console.log(chalk.green(`🔗 Would create HashScan link:`))
-      console.log(chalk.cyan(`   https://hashscan.io/testnet/contract/${simulatedContractId}\n`))
+      try {
+        // Execute a REAL HBAR transaction to record the agreement
+        const transfer = new TransferTransaction()
+          .addHbarTransfer(
+            AccountId.fromString(accountId),
+            new Hbar(-1) // 1 HBAR transaction fee
+          )
+          .addHbarTransfer(
+            AccountId.fromString('0.0.7135719'), // Vendor account
+            new Hbar(1) // Send 1 HBAR to vendor (agreement deposit)
+          )
+          .setTransactionMemo(`Supply Chain Agreement: ${vendorTerms.terms.pricePerUnit}/unit x ${vendorTerms.terms.quantity} units = $${(vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity).toLocaleString()}`)
+          .setMaxTransactionFee(new Hbar(5))
+        
+        const txResponse = await transfer.execute(this.hederaClient)
+        const txId = txResponse.transactionId.toString()
+        
+        const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
+        
+        console.log(chalk.bold.green('\n✅ Agreement Recorded on Blockchain!\n'))
+        console.log(chalk.green(`📋 Transaction ID: ${txId}`))
+        console.log(chalk.green(`💰 Deposit: 1 HBAR to vendor`))
+        console.log(chalk.green(`📋 Terms:`))
+        console.log(chalk.gray(`   Price: $${vendorTerms.terms.pricePerUnit}/unit × ${vendorTerms.terms.quantity} units`))
+        console.log(chalk.gray(`   Total Value: $${totalValue.toLocaleString()}`))
+        console.log(chalk.gray(`   Delivery: ${vendorTerms.terms.deliveryDate}`))
+        console.log(chalk.gray(`   Payment: ${vendorTerms.terms.paymentSchedule}`))
+        console.log(chalk.gray(`   Warranty: ${vendorTerms.terms.warrantyMonths} months\n`))
+        
+        const hashscanUrl = `https://hashscan.io/testnet/transaction/${txId}`
+        console.log(chalk.cyan(`🔗 View on HashScan: ${hashscanUrl}\n`))
+        
+      } catch (error) {
+        console.log(chalk.red(`❌ Blockchain recording failed: ${(error as Error).message}\n`))
+      }
     }
     
     console.log(chalk.bold.green(`\n🎉 Supply Chain Negotiation Complete!\n`))

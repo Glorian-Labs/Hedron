@@ -45,7 +45,8 @@
     "test:x402-server": "ts-node tests/integration/test-payment-server.ts",
     "test:e2e-payment": "ts-node tests/e2e/test-payment-flow.ts",
     "deploy:supply-chain": "ts-node scripts/deploy-supply-chain.ts",
-    "deploy:real": "ts-node scripts/deploy-real.ts"
+    "deploy:real": "ts-node scripts/deploy-real.ts",
+    "deploy:simple": "ts-node scripts/deploy-simple.ts"
   },
   "repository": {
     "type": "git",
