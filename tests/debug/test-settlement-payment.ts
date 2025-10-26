@@ -1,4 +1,4 @@
-import { SettlementAgent } from './src/agents/SettlementAgent'
+import { SettlementAgent } from '../../src/agents/SettlementAgent'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 

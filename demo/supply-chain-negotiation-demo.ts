@@ -12,6 +12,7 @@
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 import { AccountBalanceQuery, AccountId, Client, FileCreateTransaction, Hbar, PrivateKey, TransferTransaction } from '@hashgraph/sdk'
+import { SettlementAgent } from '../src/agents/SettlementAgent'
 import * as fs from 'fs'
 
 dotenv.config()
@@ -354,29 +355,63 @@ export class SupplyChainNegotiationDemo {
           console.log(chalk.green(`   Block: ${agreementResponse.transactionId}`))
           console.log(chalk.green('   ✅ Buyer Agent approves payment\n'))
           
-          // Step 3: Execute full payment after verification
-          console.log(chalk.blue('💸 Step 3: Executing Payment Transfer...\n'))
+          // Step 3: Execute payment (support both Hedera HBAR and x402 USDC)
+          const useX402 = process.env.USE_X402_PAYMENT === 'true'
           
-          const paymentTx = new TransferTransaction()
-            .addHbarTransfer(
-              AccountId.fromString(accountId),
-              new Hbar(-1)
-            )
-            .addHbarTransfer(
-              AccountId.fromString('0.0.7135719'),
-              new Hbar(1)
-            )
-            .setTransactionMemo(`Payment approved for: ${agreementTxId}`)
-            .setMaxTransactionFee(new Hbar(5))
-          
-          console.log(chalk.yellow('⏳ Executing payment transaction...'))
-          const paymentResponse = await paymentTx.execute(this.hederaClient)
-          const paymentTxId = paymentResponse.transactionId.toString()
-          
-          console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
-          console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
-          console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
-          console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
+          if (useX402) {
+            // Execute x402 payment on Base Sepolia
+            console.log(chalk.blue('💸 Step 3: Executing x402 Payment on Base Sepolia...\n'))
+            
+            const settlement = new SettlementAgent()
+            await settlement.init()
+            
+            const totalAmount = (vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity * 1000000).toString()
+            
+            const verificationResult = {
+              type: 'verification_result',
+              agentId: 'buyer-agent',
+              proposalId: `supply-chain-${agreementTxId}`,
+              approved: true,
+              reasoning: `Supply chain agreement verified. Executing x402 payment.`,
+              paymentDetails: {
+                amount: totalAmount,
+                asset: process.env.USDC_CONTRACT || '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+                payTo: process.env.MERCHANT_WALLET_ADDRESS || '0xb36faaA498D6E40Ee030fF651330aefD1b8D24D2'
+              }
+            }
+            
+            console.log(chalk.yellow(`💰 Total: ${vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity} USDC\n`))
+            
+            await settlement.triggerSettlement(verificationResult)
+            
+            console.log(chalk.bold.green('\n✅ x402 Payment Complete!\n'))
+            console.log(chalk.green(`💰 Amount: $${vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity} USDC`))
+            console.log(chalk.green(`🔗 Network: Base Sepolia\n`))
+          } else {
+            // Execute HBAR transfer on Hedera
+            console.log(chalk.blue('💸 Step 3: Executing HBAR Payment on Hedera...\n'))
+            
+            const paymentTx = new TransferTransaction()
+              .addHbarTransfer(
+                AccountId.fromString(accountId),
+                new Hbar(-1)
+              )
+              .addHbarTransfer(
+                AccountId.fromString('0.0.7135719'),
+                new Hbar(1)
+              )
+              .setTransactionMemo(`Payment approved for: ${agreementTxId}`)
+              .setMaxTransactionFee(new Hbar(5))
+            
+            console.log(chalk.yellow('⏳ Executing payment transaction...'))
+            const paymentResponse = await paymentTx.execute(this.hederaClient)
+            const paymentTxId = paymentResponse.transactionId.toString()
+            
+            console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
+            console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
+            console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
+            console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
+          }
         } else {
           console.log(chalk.red('❌ Agreement verification failed - payment cancelled\n'))
         }

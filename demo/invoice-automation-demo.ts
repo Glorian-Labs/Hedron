@@ -11,7 +11,7 @@
 
 import { AnalyzerAgent } from '../src/agents/AnalyzerAgent'
 import { VerifierAgent } from '../src/agents/VerifierAgent'
-import { SettlementAgentEnhanced } from '../src/agents/SettlementAgentEnhanced'
+import { SettlementAgent } from '../src/agents/SettlementAgent'
 import { A2AProtocol } from '../src/protocols/A2AProtocol'
 import { AP2Protocol } from '../src/protocols/AP2Protocol'
 import { HumanInTheLoopMode } from '../src/modes/HumanInTheLoopMode'
@@ -203,9 +203,33 @@ async function invoiceAutomationDemo() {
       console.log(chalk.blue(`📋 Transaction: ${settlement.txHash}`))
 
     } else {
-      // For Base Sepolia, would use X402/USDC
-      console.log(chalk.blue('📋 Would execute USDC transfer on Base Sepolia'))
-      console.log(chalk.yellow('⚠️  Base payment requires funded wallet'))
+      // For Base Sepolia, use x402/USDC via SettlementAgent
+      console.log(chalk.blue('📋 Executing x402 payment on Base Sepolia...'))
+      
+      // Initialize SettlementAgent for x402 payments
+      const settlement = new SettlementAgent()
+      await settlement.init()
+      
+      // Create verification result to trigger payment
+      const verificationResult = {
+        type: 'verification_result',
+        agentId: 'verifier-agent',
+        proposalId: `invoice-${invoice.invoiceId}`,
+        approved: true,
+        reasoning: `Invoice ${invoice.invoiceId} validated: ${invoice.description}`,
+        paymentDetails: {
+          amount: (invoice.amountUSD * 1000000).toString(), // USDC atomic units
+          asset: process.env.USDC_CONTRACT || '0x036CbD53842c5426634e7929541eC2318f3dCF7e',
+          payTo: process.env.MERCHANT_WALLET_ADDRESS || '0xb36faaA498D6E40Ee030fF651330aefD1b8D24D2'
+        }
+      }
+      
+      // Execute x402 payment
+      await settlement.triggerSettlement(verificationResult)
+      
+      console.log(chalk.green(`✅ Invoice payment completed via x402!`))
+      console.log(chalk.blue(`📋 Amount: ${invoice.amountUSD} USDC`))
+      console.log(chalk.blue(`📋 To: ${verificationResult.paymentDetails.payTo}`))
     }
 
     // SUMMARY

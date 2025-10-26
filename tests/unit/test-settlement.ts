@@ -1,4 +1,4 @@
-import { SettlementAgent } from './src/agents/SettlementAgent'
+import { SettlementAgent } from '../../src/agents/SettlementAgent'
 import chalk from 'chalk'
 
 async function testSettlementAgent() {
@@ -12,13 +12,12 @@ async function testSettlementAgent() {
     await settlementAgent.init()
     
     console.log(chalk.green('✅ SettlementAgent initialized successfully'))
-    console.log(chalk.yellow('📡 Agent is now listening for verification results...'))
     
-    // Keep the process running to listen for messages
-    process.on('SIGINT', () => {
-      console.log(chalk.yellow('\n🛑 Shutting down SettlementAgent...'))
+    // Test completed, exit after short delay
+    setTimeout(() => {
+      console.log(chalk.green('✅ SettlementAgent test passed'))
       process.exit(0)
-    })
+    }, 2000)
     
   } catch (error) {
     console.error(chalk.red('❌ Failed to test SettlementAgent:'), error)

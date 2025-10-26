@@ -1,12 +1,19 @@
 /**
  * Intelligent Invoice Automation Demo with LLM Reasoning
  * 
- * REAL blockchain operations with AI-enhanced decision making
+ * Bounty 2: Hedera Agent Kit - Hedera Token Settlement
+ * 
+ * Real blockchain operations with AI-enhanced decision making
  * No mocks, no fake data - just intelligent agents making real decisions
+ * 
+ * Technology:
+ * - LLM reasoning for invoice validation
+ * - Fraud detection with AI
+ * - Hedera token settlement (HBAR)
+ * - Human-in-the-Loop (HITL) for high-value transactions
  */
 
 import { IntelligentVerifierAgent } from '../src/agents/IntelligentVerifierAgent'
-import { AP2Protocol } from '../src/protocols/AP2Protocol'
 import { HumanInTheLoopMode } from '../src/modes/HumanInTheLoopMode'
 import { Client, PrivateKey, AccountId, TransferTransaction, Hbar, AccountBalanceQuery } from '@hashgraph/sdk'
 import chalk from 'chalk'
@@ -168,37 +175,18 @@ async function intelligentInvoiceDemo() {
         console.log(chalk.green(`✅ Amount below threshold - proceeding autonomously`))
       }
 
-      // PHASE 4: Create AP2 Payment with Real Data
-      console.log(chalk.bold.yellow('\n💳 Phase 4: AP2 Payment Protocol'))
+      // PHASE 4: Prepare Hedera Token Settlement
+      console.log(chalk.bold.yellow('\n💎 Phase 4: Hedera Token Settlement'))
       console.log('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━')
 
-      const ap2Payment = AP2Protocol.createPaymentRequest(
-        `payment-${invoice.invoiceId}`,
-        (invoice.amountUSD * 1000000).toString(), // Real amount in smallest units
-        'USDC',
-        process.env.MERCHANT_WALLET_ADDRESS || invoice.vendorAccountId,
-        'base-sepolia',
-        {
-          purpose: invoice.description,
-          reference: invoice.invoiceId
-        }
-      )
+      console.log(chalk.blue('📋 Preparing HBAR settlement:'))
+      console.log(`   Invoice: ${invoice.invoiceId}`)
+      console.log(`   Amount: $${invoice.amountUSD} USD`)
+      console.log(`   Recipient: ${invoice.vendorAccountId}`)
+      console.log(`   Network: Hedera Testnet`)
+      console.log(`   Asset: HBAR (native Hedera token)`)
 
-      console.log(chalk.blue('📋 AP2 Payment Request:'))
-      console.log(`   Payment ID: ${ap2Payment.paymentId}`)
-      console.log(`   Amount: ${invoice.amountUSD} USDC`)
-      console.log(`   Recipient: ${ap2Payment.recipient}`)
-      console.log(`   Network: ${ap2Payment.network}`)
-
-      // Validate AP2 payment
-      const validation = AP2Protocol.validatePaymentRequest(ap2Payment)
-      
-      if (validation.valid) {
-        console.log(chalk.green('✅ AP2 payment request validated'))
-      } else {
-        console.log(chalk.red(`❌ Payment validation failed: ${validation.error}`))
-        continue
-      }
+      console.log(chalk.green('✅ Hedera settlement prepared'))
 
       // PHASE 5: Execute Real Payment on Hedera
       console.log(chalk.bold.yellow('\n💰 Phase 5: Real Payment Execution'))
