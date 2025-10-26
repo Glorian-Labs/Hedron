@@ -142,8 +142,8 @@ export class AP2Protocol {
     const response: AP2PaymentResponse = {
       paymentId,
       status,
-      transactionHash,
-      error,
+      ...(transactionHash !== undefined && { transactionHash }),
+      ...(error !== undefined && { error }),
       timestamp: Date.now()
     }
 
