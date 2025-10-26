@@ -120,8 +120,8 @@ Hedron enables autonomous systems across multiple industries:
 
 ```bash
 # Clone repository
-git clone https://github.com/Hebx/hedera-a2a-agents.git
-cd hedera-a2a-agents
+git clone https://github.com/Hebx/hedron.git
+cd hedron
 
 # Install dependencies
 npm install
@@ -170,7 +170,7 @@ npm run demo:negotiation        # Supply chain negotiation
 
 - [Bounty 1: Hedera x402 Payment Standard](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md) - Cross-chain payment protocol
 - [Bounty 2: Hedera Agent Kit](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md) - Autonomous agent systems
-- [Bounties Comparison](./docs/BOUNTIES_COMPARISON.md) - Side-by-side comparison
+- [Bounties Comparison](./docs/BOUNTIES_GUIDE.md) - Side-by-side comparison
 
 ### Core Documentation
 
@@ -190,8 +190,6 @@ npm run demo:negotiation        # Supply chain negotiation
 
 - [Usage Guide](./docs/USAGE_GUIDE.md) - How to use Hedron
 - [Demo Guide](./demo/README.md) - Demo showcase guide
-- [Hackathon Showcase](./docs/HACKATHON_SHOWCASE_GUIDE.md) - Presentation guide
-
 ---
 
 ## 🧪 Testing
@@ -201,8 +199,6 @@ npm run demo:negotiation        # Supply chain negotiation
 ```bash
 npm run test:all  # Unit + Integration tests
 ```
-
-See [Test Status](./docs/TEST_STATUS.md) for detailed results.
 
 ### Test Coverage
 
@@ -324,8 +320,8 @@ ISC License - see LICENSE file for details.
 
 ## 🏆 Built For
 
-- **Hedera x402 Payment Standard Bounty** - Cross-chain payment protocol
-- **Hedera Agent Kit Bounty** - Autonomous agent systems
+- **Hedera x402 Payment Standard Bounty** - Agentic Cross-chain payment protocol
+- **Hedera Agent Kit Bounty** - Autonomous agent systems and protocols
 
 ---
 
