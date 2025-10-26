@@ -33,9 +33,9 @@ The Hedera A2A Agents System is a distributed, event-driven architecture that en
 ┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
 │  AnalyzerAgent  │───▶│  VerifierAgent  │───▶│ SettlementAgent │
 │                 │    │                 │    │                 │
-│ • Account Query │    │ • Validation    │    │ • Payment Exec │
-│ • Threshold     │    │ • Decision      │    │ • Settlement    │
-│ • Proposal      │    │ • Routing       │    │ • Recording     │
+│ • Account Query │    │ • Validation    │    │ • x402 Payment  │
+│ • Threshold     │    │ • Decision      │    │ • Facilitator   │
+│ • Proposal      │    │ • Routing       │    │ • Settlement    │
 └─────────────────┘    └─────────────────┘    └─────────────────┘
          │                       │                       │
          ▼                       ▼                       ▼
@@ -44,6 +44,15 @@ The Hedera A2A Agents System is a distributed, event-driven architecture that en
 │  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
 │  │ Analyzer    │  │ Verifier    │  │ Settlement  │              │
 │  │ Topic       │  │ Topic       │  │ Topic       │              │
+│  └─────────────┘  └─────────────┘  └─────────────┘              │
+└─────────────────────────────────────────────────────────────────┘
+                                │
+                                ▼
+┌─────────────────────────────────────────────────────────────────┐
+│                    x402 Facilitator Server                     │
+│  ┌─────────────┐  ┌─────────────┐  ┌─────────────┐              │
+│  │ Verify      │  │ Settle      │  │ USDC        │              │
+│  │ Payment     │  │ Payment     │  │ Transfer    │              │
 │  └─────────────┘  └─────────────┘  └─────────────┘              │
 └─────────────────────────────────────────────────────────────────┘
                                 │
@@ -79,12 +88,14 @@ The Hedera A2A Agents System is a distributed, event-driven architecture that en
 
 #### 2.2.3 SettlementAgent
 
-- **Purpose**: Executes payments and records settlements
+- **Purpose**: Executes complete x402 payment flow with facilitator server
 - **Responsibilities**:
-  - Process approved proposals
-  - Execute x402 payments on Base Sepolia
-  - Record settlement completion on HCS
-  - Handle payment failures and retries
+  - Process approved proposals from VerifierAgent
+  - Create payment authorization using x402 protocol
+  - Verify payments via local facilitator server
+  - Execute actual USDC transfers on Base Sepolia
+  - Record settlement completion with real transaction hashes
+  - Handle payment failures with strict error handling
 
 ---
 
@@ -155,12 +166,14 @@ class SettlementAgent {
   private provider: JsonRpcProvider; // Ethereum/EVM provider
   private wallet: Wallet; // Ethereum wallet
   private x402Utils: typeof x402Utils; // x402 payment utilities
+  private facilitator: X402FacilitatorServer; // Local facilitator server
 
   // Core Methods
   async init(): Promise<void>; // Initialize agent
+  async triggerSettlement(verification: any); // Public settlement trigger
   private startMessagePolling(topicId: string); // Poll for messages
   private async handleMessage(message: any); // Process messages
-  private async executeSettlement(verification: any); // Execute payments
+  private async executeSettlement(verification: any); // Execute complete x402 flow
   private async recordSettlement(txHash: string, amount: number); // Record completion
 }
 ```
@@ -168,19 +181,21 @@ class SettlementAgent {
 #### 3.3.1 Data Flow
 
 1. **Message Reception**: Receive verification results from VerifierAgent
-2. **Payment Execution**: Create x402 payment requirements and execute
-3. **Transaction Monitoring**: Track payment status on Base Sepolia
-4. **Settlement Recording**: Record completion on HCS for audit trail
+2. **Payment Authorization**: Create x402 payment authorization with signature
+3. **Payment Verification**: Validate payment via local facilitator server
+4. **Payment Settlement**: Execute actual USDC transfer on Base Sepolia
+5. **Settlement Recording**: Record completion with real transaction hash
 
-#### 3.3.2 Payment Flow
+#### 3.3.2 Complete x402 Payment Flow
 
 ```typescript
+// Step 1: Create payment authorization
 const requirements = {
   scheme: "exact",
   network: "base-sepolia",
   asset: USDC_CONTRACT_ADDRESS,
   payTo: MERCHANT_WALLET_ADDRESS,
-  maxAmountRequired: "10000000", // 10 USDC
+  maxAmountRequired: "1000000", // 1 USDC
   resource: "/agent-settlement",
   description: "A2A agent settlement",
   mimeType: "application/json",
@@ -188,6 +203,29 @@ const requirements = {
 };
 
 const paymentPayload = await processPayment(requirements, wallet);
+const paymentHeader = Buffer.from(JSON.stringify(paymentPayload)).toString('base64');
+
+// Step 2: Verify payment via facilitator
+const verificationResult = await this.facilitator.verify(paymentHeader, requirements);
+
+// Step 3: Settle payment and execute USDC transfer
+const settlementResult = await this.facilitator.settle(paymentHeader, requirements);
+```
+
+#### 3.3.3 x402 Facilitator Server
+
+```typescript
+class X402FacilitatorServer {
+  private provider: JsonRpcProvider; // Base Sepolia provider
+  private wallet: Wallet; // Settlement wallet
+
+  // Core Methods
+  async verify(paymentHeader: string, requirements: any); // Local verification
+  async settle(paymentHeader: string, requirements: any); // Execute USDC transfer
+  getSupportedSchemes(); // Return supported schemes
+  private validatePaymentLocally(paymentPayload: any, requirements: any); // Validation logic
+  private async executeUSDCTransfer(paymentPayload: any, requirements: any); // Actual transfer
+}
 ```
 
 ---

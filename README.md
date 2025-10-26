@@ -91,14 +91,22 @@ await verifier.init();
 
 ### SettlementAgent
 
-**Purpose**: Executes x402 payments and records settlement completion.
+**Purpose**: Executes complete x402 payment flow with facilitator server and real USDC transfers.
 
 **Key Capabilities**:
 
 - Process approved proposals from VerifierAgent
-- Execute x402 payments on Base Sepolia network
-- Handle USDC token transfers
-- Record settlement completion on HCS
+- Create payment authorization using x402 protocol
+- Verify payments via local facilitator server
+- Execute actual USDC transfers on Base Sepolia network
+- Record settlement completion with real transaction hashes
+- Handle payment failures with strict error handling
+
+**x402 Payment Flow**:
+1. **Authorization**: Create payment authorization with signature
+2. **Verification**: Validate payment via local facilitator server
+3. **Settlement**: Execute actual USDC transfer on Base Sepolia
+4. **Recording**: Record settlement with real transaction hash
 
 **Usage**:
 
@@ -107,7 +115,45 @@ import { SettlementAgent } from "./src/agents/SettlementAgent";
 
 const settlement = new SettlementAgent();
 await settlement.init();
-// Agent automatically processes verification results and executes payments
+// Agent automatically processes verification results and executes complete x402 payments
+```
+
+## 🔧 x402 Facilitator Server
+
+The system includes a local facilitator server that implements the complete x402 payment protocol:
+
+### X402FacilitatorServer
+
+**Purpose**: Provides local verification and settlement for x402 payments without external dependencies.
+
+**Key Methods**:
+
+- `verify(paymentHeader, requirements)`: Validates x402 payment authorization locally
+- `settle(paymentHeader, requirements)`: Executes actual USDC transfers on Base Sepolia
+- `getSupportedSchemes()`: Returns supported payment schemes (exact/base-sepolia)
+
+**Local Verification Process**:
+1. Decodes payment header from base64
+2. Validates x402 version, scheme, and network
+3. Checks authorization details (amount, recipient, validity period)
+4. Ensures all requirements match the payment payload
+
+**Local Settlement Process**:
+1. Decodes payment authorization
+2. Creates USDC contract instance
+3. Checks wallet balance before transfer
+4. Executes actual USDC transfer on Base Sepolia
+5. Waits for transaction confirmation
+6. Returns real transaction hash
+
+**Usage**:
+
+```typescript
+import { X402FacilitatorServer } from "./src/facilitator/X402FacilitatorServer";
+
+const facilitator = new X402FacilitatorServer();
+const verification = await facilitator.verify(paymentHeader, requirements);
+const settlement = await facilitator.settle(paymentHeader, requirements);
 ```
 
 ## 🛠️ Quick Start
@@ -218,9 +264,10 @@ npm run register-agents
 
 3. **Settlement Phase**
    - SettlementAgent receives verification result
-   - Creates x402 payment requirements
-   - Executes payment on Base Sepolia
-   - Records settlement completion on HCS
+   - **Step 1**: Creates x402 payment authorization with signature
+   - **Step 2**: Verifies payment via local facilitator server
+   - **Step 3**: Executes actual USDC transfer on Base Sepolia
+   - **Step 4**: Records settlement completion with real transaction hash
 
 ### Message Flow
 
