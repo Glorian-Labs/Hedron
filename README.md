@@ -103,6 +103,7 @@ await verifier.init();
 - Handle payment failures with strict error handling
 
 **x402 Payment Flow**:
+
 1. **Authorization**: Create payment authorization with signature
 2. **Verification**: Validate payment via local facilitator server
 3. **Settlement**: Execute actual USDC transfer on Base Sepolia
@@ -133,12 +134,14 @@ The system includes a local facilitator server that implements the complete x402
 - `getSupportedSchemes()`: Returns supported payment schemes (exact/base-sepolia)
 
 **Local Verification Process**:
+
 1. Decodes payment header from base64
 2. Validates x402 version, scheme, and network
 3. Checks authorization details (amount, recipient, validity period)
 4. Ensures all requirements match the payment payload
 
 **Local Settlement Process**:
+
 1. Decodes payment authorization
 2. Creates USDC contract instance
 3. Checks wallet balance before transfer
