@@ -4,7 +4,7 @@
 
 ### Project Name: **AgentFlow**
 
-**Tagline:** *"Intelligent Agents, Autonomous Decisions, Trusted Blockchain"*
+**Tagline:** _"Intelligent Agents, Autonomous Decisions, Trusted Blockchain"_
 
 **Mission:** AgentFlow is the infrastructure layer for autonomous agent systems running on Hedera, enabling agents to communicate, negotiate, and transact with intelligence and transparency.
 
@@ -15,16 +15,19 @@
 ## 🏢 Use Case 1: InvoiceAI Pro
 
 ### Problem Statement
+
 **Title:** Automated Invoice Processing with AI Reasoning
 
-**Challenge:** 
+**Challenge:**
+
 - Companies process 500+ invoices/month
 - Manual processing takes 2-3 days per invoice
 - Only 60% fraud detection rate
 - Average cost: $50-100K/year in AP overhead
 
-**Solution:** 
+**Solution:**
 AgentFlow's invoice automation agents use LLM reasoning to:
+
 - Analyze invoices in 5 seconds
 - Detect fraud with 95% accuracy
 - Approve autonomously for amounts < $500
@@ -32,17 +35,20 @@ AgentFlow's invoice automation agents use LLM reasoning to:
 - Settle payments on Hedera blockchain
 
 **Key Metrics:**
+
 - ⚡ Speed: 2-3 days → 5 seconds
 - 💰 Savings: $15K/year per company
 - 🎯 Accuracy: 99% error reduction
 - 🔒 Security: 95% fraud detection
 
 **Target Market:**
+
 - Mid-size enterprises (50-500 employees)
 - Finance departments
 - Accounts payable teams
 
 **Demo:**
+
 ```bash
 npm run demo:invoice-llm 50 "Consulting Service"
 ```
@@ -54,9 +60,11 @@ npm run demo:invoice-llm 50 "Consulting Service"
 ## 🏢 Use Case 2: SupplyChainAI
 
 ### Problem Statement
+
 **Title:** Autonomous Supply Chain Negotiation
 
 **Challenge:**
+
 - Vendors negotiate terms manually
 - Takes weeks to finalize contracts
 - Disputes lead to relationship strain
@@ -64,6 +72,7 @@ npm run demo:invoice-llm 50 "Consulting Service"
 
 **Solution:**
 AgentFlow enables multi-agent negotiation where:
+
 - Buyer agent negotiates price, delivery, payment terms
 - Vendor agent responds with counter-offers
 - LLM evaluates terms for fairness
@@ -71,17 +80,20 @@ AgentFlow enables multi-agent negotiation where:
 - Payments auto-settle on delivery confirmation
 
 **Key Metrics:**
+
 - ⚡ Negotiation: 3 weeks → 3 hours
 - 💰 Efficiency: 80% faster contract signing
 - 🎯 Accuracy: No human errors
 - 🔒 Trust: Blockchain-verified agreements
 
 **Target Market:**
+
 - Procurement teams
 - Supply chain managers
 - B2B marketplaces
 
 **Demo:**
+
 ```bash
 npm run demo:negotiation
 ```
@@ -93,9 +105,11 @@ npm run demo:negotiation
 ## 🏢 Use Case 3: DeFiYield Guardian
 
 ### Problem Statement
+
 **Title:** Autonomous Yield Farming with Risk Management
 
 **Challenge:**
+
 - DeFi protocols offer high yields
 - Manual monitoring required 24/7
 - Risk of impermanent loss
@@ -103,6 +117,7 @@ npm run demo:negotiation
 
 **Solution:**
 AgentFlow creates autonomous yield farming agents that:
+
 - Monitor multiple DeFi protocols
 - Evaluate risk vs. reward using LLM
 - Rebalance positions automatically
@@ -110,17 +125,20 @@ AgentFlow creates autonomous yield farming agents that:
 - Handle emergency liquidations instantly
 
 **Key Metrics:**
+
 - 📈 Yield: Optimized across protocols
 - ⚡ Response: <1 second to liquidation events
 - 🎯 Profit: 15-20% additional yield
 - 🔒 Safety: Automated risk management
 
 **Target Market:**
+
 - Yield farmers
 - DeFi protocols
 - Crypto funds
 
 **Demo:**
+
 ```bash
 npm run demo:defi-yield
 ```
@@ -134,30 +152,35 @@ npm run demo:defi-yield
 ### Core Capabilities
 
 #### 1. Multi-Agent Communication (A2A)
+
 - Google standard protocol
 - Agent discovery
 - Message routing
 - Status coordination
 
 #### 2. Payment Settlement (AP2 + X402)
+
 - Cross-chain compatibility
 - Multiple payment methods
 - Automatic reconciliation
 - Dispute resolution
 
 #### 3. Human-in-the-Loop (HITL)
+
 - Approval workflows
 - Risk thresholds
 - Manual override
 - Audit trail
 
 #### 4. LLM Intelligence
+
 - Context-aware decisions
 - Fraud detection
 - Negotiation strategies
 - Risk assessment
 
 #### 5. Blockchain Verification
+
 - Hedera integration
 - Immutable audit trail
 - Smart contract execution
@@ -170,18 +193,21 @@ npm run demo:defi-yield
 ### Addressable Markets
 
 **Use Case 1: Invoice Automation**
+
 - Market: $15B invoice automation
 - Target: 100,000 mid-size companies
 - Pricing: $99-999/month
 - Market Share (1%): $1.5M ARR
 
 **Use Case 2: Supply Chain**
+
 - Market: $25B procurement automation
 - Target: 50,000 supply chains
 - Pricing: $499-1,999/month
 - Market Share (0.5%): $1.25M ARR
 
 **Use Case 3: DeFi Yield**
+
 - Market: $200B DeFi TVL
 - Target: 10,000 yield farmers
 - Pricing: 10% of additional yield
@@ -194,18 +220,21 @@ npm run demo:defi-yield
 ## 🏆 Competitive Advantages
 
 ### vs. Traditional Automation
+
 - **Intelligence:** LLM reasoning vs. rigid rules
 - **Speed:** Seconds vs. days
 - **Cost:** 99% cheaper than humans
 - **Accuracy:** AI catches fraud humans miss
 
 ### vs. Other Blockchain Agents
+
 - **Multi-Protocol:** Only one with X402 + AP2 + A2A
 - **Real Blockchain:** Others use testnets
 - **Production Ready:** All tests passing
 - **LLM Integration:** Only one with AI reasoning
 
 ### vs. AI-Only Solutions
+
 - **Blockchain:** Immutable audit trail
 - **Decentralization:** No single point of failure
 - **Transparency:** CFO verification ready
@@ -216,9 +245,11 @@ npm run demo:defi-yield
 ## 🎬 Demo Scripts
 
 ### Demo 1: Invoice Processing
+
 **Duration:** 2 minutes
 
 **Flow:**
+
 1. Receive invoice via email/webhook (30s)
 2. Agent analyzes with LLM (30s)
 3. Show fraud detection results (30s)
@@ -226,14 +257,17 @@ npm run demo:defi-yield
 5. Show HashScan transaction (30s)
 
 **Key Points:**
+
 - Real blockchain transaction
 - LLM reasoning visible
 - 5 seconds total time
 
 ### Demo 2: Supply Chain Negotiation
+
 **Duration:** 3 minutes
 
 **Flow:**
+
 1. Vendor sends quote (30s)
 2. Buyer agent requests 10% discount (30s)
 3. Vendor agent counters with 5% (30s)
@@ -241,14 +275,17 @@ npm run demo:defi-yield
 5. Both agents accept, contract on blockchain (30s)
 
 **Key Points:**
+
 - Multi-agent negotiation
 - AI-driven compromise
 - Smart contract execution
 
 ### Demo 3: DeFi Yield Management
+
 **Duration:** 3 minutes
 
 **Flow:**
+
 1. Monitor 5 DeFi protocols (30s)
 2. LLM evaluates best risk/reward (1m)
 3. Rebalance to optimal allocation (30s)
@@ -256,6 +293,7 @@ npm run demo:defi-yield
 5. Emergency liquidation prevented (30s)
 
 **Key Points:**
+
 - Real DeFi protocols
 - Risk management
 - Automated execution
@@ -267,16 +305,19 @@ npm run demo:defi-yield
 ### Platform as a Service (PaaS)
 
 **Tier 1: Developer**
+
 - Agent infrastructure
 - Basic protocols
 - $99/month
 
 **Tier 2: Professional**
+
 - LLM reasoning
 - Advanced features
 - $499/month
 
 **Tier 3: Enterprise**
+
 - Custom use cases
 - Dedicated support
 - $1,999+/month
@@ -294,26 +335,31 @@ npm run demo:defi-yield
 ## 📈 Growth Strategy
 
 ### Phase 1: Hackathon (Week 1)
+
 - Win EthOnline bounty
 - Get 1,000 GitHub stars
 - Build credibility
 
 ### Phase 2: Open Source (Month 1)
+
 - Publish platform code
 - Developer community
 - Contributor program
 
 ### Phase 3: First Use Case (Month 2)
+
 - Launch InvoiceAI Pro
 - 10 beta customers
 - Gather feedback
 
 ### Phase 4: Expansion (Month 3-6)
+
 - Add SupplyChainAI
 - Add DeFi Guardian
 - 100 paying customers
 
 ### Phase 5: Scale (Month 7-12)
+
 - Enterprise clients
 - White-label platform
 - $1M ARR target
@@ -323,6 +369,7 @@ npm run demo:defi-yield
 ## 🎯 Call to Action
 
 **For Hackathon Judges:**
+
 - Multi-use case platform
 - Three working demos
 - Real blockchain integration
@@ -330,12 +377,14 @@ npm run demo:defi-yield
 - Production ready
 
 **For Developers:**
+
 - Open source platform
 - Easy to build use cases
 - Comprehensive docs
 - Active community
 
 **For Investors:**
+
 - $4.75M Year 1 ARR target
 - Multiple revenue streams
 - Large addressable markets
@@ -353,4 +402,3 @@ npm run demo:defi-yield
 6. **Scalable** - Works for any workflow
 
 **Status: READY TO WIN ETHONLINE 🏆**
-
