@@ -2,26 +2,31 @@
 
 ## 🎯 Project Name
 
-### Recommended: **"InvoiceAI Pro"**
-*AI-Powered Autonomous Payment Agents on Hedera*
+### Recommended: **"AgentFlow"**
+*Intelligent Agents, Autonomous Decisions, Trusted Blockchain*
 
 **Alternative Names:**
-- **HederaPay AI** - Simple, Hedera-focused
-- **AgentFlow** - Emphasizes agent orchestration
-- **PayGuardian** - Security-focused
-- **SmartSettle** - Emphasizes intelligent settlement
+- **FlowAgents** - Emphasizes orchestration
+- **AgentStack** - Platform-focused
+- **AutonomousAI** - AI-first approach
+
+**Why AgentFlow:**
+- Generic platform name (not use-case specific)
+- Suggests orchestration and flow
+- Professional, scalable brand
+- Works across industries
 
 ## 🎨 Brand Identity
 
 ### Tagline
-**"Autonomous Payments, Intelligent Decisions, Real Blockchain"**
+**"Intelligent Agents, Autonomous Decisions, Trusted Blockchain"**
 
 ### Core Value Proposition
 > InvoiceAI Pro transforms invoice processing from a 2-3 day manual workflow into a 5-second automated AI decision, saving $15K/year per company while maintaining 99% accuracy.
 
 ## 📊 Elevator Pitch (30 seconds)
 
-*"InvoiceAI Pro is an AI-powered autonomous payment system running on Hedera's blockchain. Using GPT-4 reasoning, our agents autonomously process invoices, detect fraud, negotiate payments, and settle on Hedera with human oversight for high-value transactions. We've reduced invoice processing time from 2-3 days to 5 seconds while saving $15K annually per client."*
+*"AgentFlow is the platform for building AI-powered autonomous agents on Hedera blockchain. Our agents communicate via A2A protocol, negotiate deals, detect fraud with GPT-4 reasoning, and settle transactions autonomously with human oversight. We power multiple use cases from invoice automation to supply chain negotiation to DeFi yield management - all with real blockchain verification."*
 
 ## 🎯 Target Audience
 
@@ -191,21 +196,24 @@
 ## 🎤 Pitch Deck Outline
 
 ### Slide 1: Title
-**InvoiceAI Pro**
-*AI-Powered Autonomous Payment Agents*
-*Hedera x Google A2A*
+**AgentFlow**
+*The Platform for Intelligent Autonomous Agents*
+*Powered by Hedera x Google A2A*
 
 ### Slide 2: Problem
-- 500M invoices processed manually
-- 2-3 days average processing time
-- $15K annual cost per company
-- Only 60% fraud detection
+**The Autonomous Agent Infrastructure Gap**
+- Agents need infrastructure to communicate, transact, and negotiate
+- Each use case builds from scratch
+- No standardized protocols across agents
+- Limited intelligence and decision-making
 
 ### Slide 3: Solution
-- AI analyzes in 5 seconds
-- 95% fraud detection
-- Autonomous for small invoices
-- Human oversight for large
+**AgentFlow Platform**
+- Multi-protocol support: A2A, AP2, X402
+- LLM reasoning for intelligent decisions
+- Real blockchain verification on Hedera
+- Human-in-the-loop for critical choices
+- Works across use cases: invoices, supply chain, DeFi
 
 ### Slide 4: Demo
 - Live transaction on Hedera
@@ -225,18 +233,24 @@
 - Judges impressed ✅
 
 ### Slide 7: Market
-- $15B invoice automation market
-- 100,000 target companies
-- 12% CAGR growth
+**Multi-Use Case Markets**
+- Invoice Automation: $15B market
+- Supply Chain: $25B market  
+- DeFi Yield: $200B TVL
+- Total Addressable: $240B+
+- Year 1 Target: $4.75M ARR
 
 ### Slide 8: Competition
 - Other solutions: Slow, expensive, centraliz
 - InvoiceAI Pro: Fast, AI-powered, decentralized
 
 ### Slide 9: Business Model
-- $99-999/month SaaS
-- Pilot → Production
-- $360K ARR Year 1
+**Multi-Revenue Streams**
+- SaaS: $99-1,999/month
+- Transaction Fees: 0.1% per settlement
+- Premium Features: HITL, advanced LLM
+- Custom Builds: $10K-50K per use case
+- Year 1: $4.75M ARR projection
 
 ### Slide 10: Ask
 - Win hackathon bounty

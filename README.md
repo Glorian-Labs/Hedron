@@ -1,4 +1,6 @@
-# Hedera A2A Agents System
+# AgentFlow: Multi-Protocol Autonomous Agents Platform
+
+**Powered by Hedera x Google A2A** System
 
 **[A2A Protocol + AP2 Payments]** 🤖 A comprehensive multi-agent system built on Hedera Hashgraph with Google A2A protocol for autonomous agent-to-agent communication and AP2 payment settlement. This system demonstrates advanced blockchain integration, cross-chain payments, human-in-the-loop control, and multi-agent negotiation.
 
