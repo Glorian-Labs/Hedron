@@ -527,6 +527,7 @@ npm run demo:hackathon 0.0.123456 50
 7. Complete audit trail on HCS
 
 **Try it now**:
+
 ```bash
 npm run demo:invoice 150     # Medium invoice
 npm run demo:invoice 50      # Small invoice (auto-approved)

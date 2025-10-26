@@ -16,6 +16,7 @@
     "demo": "ts-node demo/orchestrator.ts",
     "demo:hackathon": "ts-node demo/hackathon-demo.ts",
     "demo:invoice": "ts-node demo/invoice-automation-demo.ts",
+    "demo:invoice-llm": "ts-node demo/intelligent-invoice-demo.ts",
     "check:wallets": "ts-node scripts/maintenance/check-wallet-status.ts",
     "test:unit": "ts-node tests/unit/test-analyzer.ts && ts-node tests/unit/test-verifier.ts && ts-node tests/unit/test-settlement.ts",
     "test:integration": "ts-node tests/integration/test-improved-x402.ts && ts-node tests/integration/test-merchant-agent.ts && ts-node tests/integration/test-payment-server.ts && ts-node tests/integration/test-enhanced-x402utils.ts && ts-node tests/integration/test-complete-x402-system.ts",
@@ -34,7 +35,14 @@
     "test:improved": "ts-node tests/integration/test-improved-x402.ts",
     "test:usdc": "ts-node tests/debug/test-direct-usdc-transfer.ts",
     "test:funded": "ts-node tests/debug/test-funded-payment.ts",
-    "test:hedera": "ts-node tests/integration/test-hedera-x402.ts"
+    "test:hedera": "ts-node tests/integration/test-hedera-x402.ts",
+    "test:a2a-protocol": "ts-node tests/integration/test-a2a-protocol.ts",
+    "test:a2a-unit": "ts-node tests/unit/test-a2a-unit.ts",
+    "test:ap2-payments": "ts-node tests/integration/test-ap2-payments.ts",
+    "test:hitl": "ts-node tests/e2e/test-human-in-the-loop.ts",
+    "test:x402-complete": "ts-node tests/integration/test-complete-x402-system.ts",
+    "test:x402-server": "ts-node tests/integration/test-payment-server.ts",
+    "test:e2e-payment": "ts-node tests/e2e/test-payment-flow.ts"
   },
   "repository": {
     "type": "git",
@@ -51,12 +59,16 @@
   "dependencies": {
     "@hashgraph/sdk": "^2.75.0",
     "@hashgraphonline/standards-agent-kit": "^0.2.164",
+    "@langchain/core": "^1.0.1",
+    "@langchain/ollama": "^1.0.0",
+    "@langchain/openai": "^1.0.0",
     "a2a-x402": "^0.0.5",
     "axios": "^1.12.2",
     "chalk": "^5.6.2",
     "dotenv": "^16.6.1",
     "ethers": "^6.15.0",
-    "hedera-agent-kit": "^3.4.0"
+    "hedera-agent-kit": "^3.4.0",
+    "langchain": "^1.0.1"
   },
   "devDependencies": {
     "@types/axios": "^0.9.36",
