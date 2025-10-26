@@ -338,29 +338,48 @@ export class SupplyChainNegotiationDemo {
         console.log(chalk.green(`📋 Transaction ID: ${agreementTxId}`))
         console.log(chalk.cyan(`🔗 View Agreement: https://hashscan.io/testnet/transaction/${agreementTxId}\n`))
         
-        // Step 2: Execute full payment after agreement approval
-        console.log(chalk.blue('💸 Step 2: Executing Payment Transfer...\n'))
+        // Step 2: Buyer agent verifies agreement on blockchain
+        console.log(chalk.blue('🔍 Step 2: Buyer Agent Verifying Agreement on Blockchain...\n'))
         
-        const paymentTx = new TransferTransaction()
-          .addHbarTransfer(
-            AccountId.fromString(accountId),
-            new Hbar(-1)
-          )
-          .addHbarTransfer(
-            AccountId.fromString('0.0.7135719'),
-            new Hbar(1)
-          )
-          .setTransactionMemo(`Payment for Agreement: ${agreementTxId}`)
-          .setMaxTransactionFee(new Hbar(5))
+        // Query the transaction to verify it exists
+        const TransactionQuery = await import('@hashgraph/sdk').then(m => m.TransactionReceiptQuery)
+        const receiptQuery = new TransactionQuery()
+          .setTransactionId(agreementResponse.transactionId)
         
-        console.log(chalk.yellow('⏳ Executing payment transaction...'))
-        const paymentResponse = await paymentTx.execute(this.hederaClient)
-        const paymentTxId = paymentResponse.transactionId.toString()
+        const verificationReceipt = await receiptQuery.execute(this.hederaClient)
         
-        console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
-        console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
-        console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
-        console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
+        if (verificationReceipt.status.toString() === 'SUCCESS') {
+          console.log(chalk.bold.green('✅ Agreement Verified on Blockchain!\n'))
+          console.log(chalk.green('   Status: CONFIRMED'))
+          console.log(chalk.green(`   Block: ${agreementResponse.transactionId}`))
+          console.log(chalk.green('   ✅ Buyer Agent approves payment\n'))
+          
+          // Step 3: Execute full payment after verification
+          console.log(chalk.blue('💸 Step 3: Executing Payment Transfer...\n'))
+          
+          const paymentTx = new TransferTransaction()
+            .addHbarTransfer(
+              AccountId.fromString(accountId),
+              new Hbar(-1)
+            )
+            .addHbarTransfer(
+              AccountId.fromString('0.0.7135719'),
+              new Hbar(1)
+            )
+            .setTransactionMemo(`Payment approved for: ${agreementTxId}`)
+            .setMaxTransactionFee(new Hbar(5))
+          
+          console.log(chalk.yellow('⏳ Executing payment transaction...'))
+          const paymentResponse = await paymentTx.execute(this.hederaClient)
+          const paymentTxId = paymentResponse.transactionId.toString()
+          
+          console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
+          console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
+          console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
+          console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
+        } else {
+          console.log(chalk.red('❌ Agreement verification failed - payment cancelled\n'))
+        }
         
       } catch (error) {
         console.log(chalk.red(`❌ Failed: ${(error as Error).message}\n`))
