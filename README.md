@@ -490,6 +490,35 @@ This project is licensed under the ISC License - see the [LICENSE](LICENSE) file
 - **Payment Failures**: Verify Base Sepolia wallet has sufficient USDC
 - **Message Processing Issues**: Check HCS topic configuration and agent credentials
 
+## 🏆 Hackathon Demo
+
+### Quick Start
+
+```bash
+# Run hackathon demo with compelling use case
+npm run demo:hackathon
+
+# Base Sepolia (USDC) payment
+PAYMENT_NETWORK=base-sepolia npm run demo:hackathon 0.0.123456 50 base-sepolia
+
+# Hedera Native (HBAR) payment
+PAYMENT_NETWORK=hedera-testnet npm run demo:hackathon 0.0.123456 50 hedera-testnet
+```
+
+### Use Case: Automated NFT Royalty Settlement
+
+**Problem**: NFT marketplaces waste $18K/year on manual royalty settlement  
+**Solution**: Autonomous agents that detect NFT sales and automatically settle royalties in seconds  
+**Impact**: Instant payments, $18K annual savings, zero manual work
+
+**How it works**:
+1. AnalyzerAgent detects NFT sale on Hedera
+2. VerifierAgent validates royalty calculation (10% of sale)
+3. SettlementAgent executes cross-chain payment (HBAR → USDC on Base/Ethereum)
+4. Complete audit trail on Hedera Consensus Service
+
+📚 See `docs/HACKATHON_DEMO.md` for complete demo walkthrough
+
 ## 🎯 Roadmap
 
 ### Planned Features
