@@ -1,5 +1,6 @@
 import { verifyPayment, settlePayment } from 'a2a-x402'
 import { ethers } from 'ethers'
+import { Client, PrivateKey, AccountId, TransferTransaction, Hbar } from '@hashgraph/sdk'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 
@@ -9,6 +10,8 @@ dotenv.config()
 export class X402FacilitatorServer {
   private provider: ethers.JsonRpcProvider
   private wallet: ethers.Wallet
+  private hederaClient?: Client
+  private paymentNetwork: 'hedera-testnet' | 'base-sepolia'
 
   constructor() {
     const baseRpcUrl = process.env.BASE_RPC_URL
@@ -20,6 +23,24 @@ export class X402FacilitatorServer {
 
     this.provider = new ethers.JsonRpcProvider(baseRpcUrl)
     this.wallet = new ethers.Wallet(walletPrivateKey, this.provider)
+
+    // Determine payment network
+    this.paymentNetwork = (process.env.PAYMENT_NETWORK || 'base-sepolia') as 'hedera-testnet' | 'base-sepolia'
+
+    // Initialize Hedera client if using Hedera network
+    if (this.paymentNetwork === 'hedera-testnet') {
+      const mainAccountId = process.env.HEDERA_ACCOUNT_ID
+      const mainPrivateKey = process.env.HEDERA_PRIVATE_KEY
+      
+      if (!mainAccountId || !mainPrivateKey) {
+        throw new Error('Missing required Hedera credentials for Hedera network: HEDERA_ACCOUNT_ID and HEDERA_PRIVATE_KEY')
+      }
+
+      this.hederaClient = Client.forTestnet()
+      const accountId = AccountId.fromString(mainAccountId)
+      const privateKeyObj = PrivateKey.fromString(mainPrivateKey)
+      this.hederaClient.setOperator(accountId, privateKeyObj)
+    }
   }
 
   // POST /verify endpoint
@@ -107,30 +128,36 @@ export class X402FacilitatorServer {
   // POST /settle endpoint
   async settle(paymentHeader: string, paymentRequirements: any): Promise<any> {
     try {
-      console.log(chalk.blue('🏦 Facilitator: Settling payment locally...'))
+      console.log(chalk.blue(`🏦 Facilitator: Settling payment locally on ${this.paymentNetwork}...`))
       
       // Decode payment header
       const paymentPayload = JSON.parse(Buffer.from(paymentHeader, 'base64').toString())
       
-      // Execute actual USDC transfer
-      const txHash = await this.executeUSDCTransfer(paymentPayload, paymentRequirements)
+      // Execute transfer based on network
+      let txHash: string | null = null
+      
+      if (this.paymentNetwork === 'hedera-testnet') {
+        txHash = await this.executeHederaTransfer(paymentPayload, paymentRequirements)
+      } else {
+        txHash = await this.executeUSDCTransfer(paymentPayload, paymentRequirements)
+      }
       
       if (txHash) {
         console.log(chalk.green('✅ Facilitator: Payment settled successfully'))
         console.log(chalk.blue(`📋 Transaction Hash: ${txHash}`))
-        console.log(chalk.blue(`📋 Network: base-sepolia`))
+        console.log(chalk.blue(`📋 Network: ${this.paymentNetwork}`))
         
         return {
           success: true,
           error: null,
           txHash: txHash,
-          networkId: 'base-sepolia'
+          networkId: this.paymentNetwork
         }
       } else {
         console.log(chalk.red('❌ Facilitator: Payment settlement failed'))
         return {
           success: false,
-          error: 'Failed to execute USDC transfer',
+          error: 'Failed to execute transfer',
           txHash: null,
           networkId: null
         }
@@ -143,6 +170,57 @@ export class X402FacilitatorServer {
         txHash: null,
         networkId: null
       }
+    }
+  }
+
+  // Execute Hedera HBAR transfer
+  private async executeHederaTransfer(paymentPayload: any, requirements: any): Promise<string | null> {
+    try {
+      console.log(chalk.blue('💰 Executing actual Hedera HBAR transfer...'))
+      
+      if (!this.hederaClient) {
+        throw new Error('Hedera client not initialized')
+      }
+
+      const authorization = paymentPayload.payload?.authorization
+      if (!authorization) {
+        throw new Error('No authorization found in payment payload')
+      }
+
+      // Parse amounts
+      const tinybarAmount = BigInt(authorization.value)
+      const hbarAmount = Number(tinybarAmount) / 100_000_000
+      const recipientId = AccountId.fromString(authorization.to)
+
+      console.log(chalk.blue(`📋 Transfer amount: ${hbarAmount} HBAR (${tinybarAmount.toString()} tinybars)`))
+      console.log(chalk.blue(`📋 Recipient: ${recipientId.toString()}`))
+
+      // Get current account info
+      const operatorId = this.hederaClient.operatorAccountId
+      if (!operatorId) {
+        throw new Error('No operator account configured')
+      }
+
+      // Create transfer transaction
+      const transfer = new TransferTransaction()
+        .addHbarTransfer(operatorId, Hbar.fromTinybars(-Number(tinybarAmount)))
+        .addHbarTransfer(recipientId, Hbar.fromTinybars(Number(tinybarAmount)))
+        .setTransactionMemo('A2A agent settlement via X402')
+
+      console.log(chalk.yellow(`📋 Submitting Hedera transfer transaction...`))
+      
+      // Execute and wait for confirmation
+      const response = await transfer.execute(this.hederaClient)
+      const receipt = await response.getReceipt(this.hederaClient)
+      
+      console.log(chalk.green(`✅ Transfer confirmed with status: ${receipt.status}`))
+      console.log(chalk.blue(`📋 Transaction ID: ${response.transactionId.toString()}`))
+      
+      // Return transaction ID as string
+      return response.transactionId.toString()
+    } catch (error) {
+      console.error('❌ Hedera transfer error:', error)
+      return null
     }
   }
 
@@ -195,10 +273,15 @@ export class X402FacilitatorServer {
 
   // GET /supported endpoint
   getSupportedSchemes(): { kinds: Array<{ scheme: string; network: string }> } {
-    return {
-      kinds: [
-        { scheme: 'exact', network: 'base-sepolia' }
-      ]
+    const kinds = [
+      { scheme: 'exact', network: 'base-sepolia' }
+    ]
+
+    // Add Hedera if using Hedera network
+    if (this.paymentNetwork === 'hedera-testnet') {
+      kinds.push({ scheme: 'exact', network: 'hedera-testnet' })
     }
+
+    return { kinds }
   }
 }
