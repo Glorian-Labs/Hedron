@@ -1,6 +1,8 @@
 # Hedera A2A Agents System
 
-A comprehensive multi-agent system built on Hedera Hashgraph for autonomous agent-to-agent communication and settlement using the x402 payment protocol. This system demonstrates advanced blockchain integration, cross-chain payments, and decentralized autonomous operations.
+**[HCS-10 Compatible]** 🤖 A comprehensive multi-agent system built on Hedera Hashgraph for autonomous agent-to-agent communication and settlement using the x402 payment protocol. This system demonstrates advanced blockchain integration, cross-chain payments, and decentralized autonomous operations.
+
+> 🏆 **Hackathon Project**: Implementing HCS-10 standard for AI agent communication and coordination on Hedera
 
 ## 🚀 Overview
 
@@ -8,12 +10,14 @@ The Hedera A2A Agents System implements a three-agent workflow that processes, v
 
 ### Key Features
 
+- **🤖 HCS-10 Compatible**: Multi-agent communication using Hedera Consensus Service standard
 - **🤖 Autonomous Operation**: Agents operate independently without human intervention
 - **🔗 Cross-Chain Integration**: Seamless operation between Hedera and Ethereum ecosystems
 - **💳 x402 Payment Protocol**: Advanced autonomous payment processing
 - **📡 Decentralized Communication**: Uses Hedera Consensus Service for message passing
 - **🔒 Secure Architecture**: Comprehensive security and key management
 - **📊 Real-time Monitoring**: Complete audit trail and transaction tracking
+- **🎯 Agent Discovery**: Registry-based agent discovery and coordination
 
 ## 🏗️ System Architecture
 

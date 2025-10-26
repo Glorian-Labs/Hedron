@@ -1,6 +1,7 @@
 import { AnalyzerAgent } from '../src/agents/AnalyzerAgent'
 import { VerifierAgent } from '../src/agents/VerifierAgent'
 import { SettlementAgent } from '../src/agents/SettlementAgent'
+import { initializeHCS10Agents } from '../src/agents/AgentRegistry'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 
@@ -11,7 +12,8 @@ dotenv.config()
 console.log(chalk.bold.cyan(`
 ╔═══════════════════════════════════════════════════════════════╗
 ║                                                               ║
-║     🏆 HEDERA HACKATHON DEMO: NFT ROYALTY SETTLEMENT 🏆     ║
+║  🏆 HCS-10 Multi-Agent System on Hedera                      ║
+║     NFT Royalty Settlement with Autonomous Agents             ║
 ║                                                               ║
 ╚═══════════════════════════════════════════════════════════════╝
 `))
@@ -44,24 +46,37 @@ console.log(chalk.bold('━━━━━━━━━━━━━━━━━━�
 
 async function hackathonDemo() {
   try {
-    // Phase 1: Initialize Agents
-    console.log(chalk.bold.yellow('📡 Phase 1: Initializing Autonomous Agents\n'))
+    // Phase 1: Initialize HCS-10 Agents
+    console.log(chalk.bold.yellow('📡 Phase 1: Initializing HCS-10 Agents\n'))
     console.log(chalk.gray('   Creating decentralized agent network on Hedera...\n'))
+
+    // Initialize agent registry
+    initializeHCS10Agents()
+
+    console.log(chalk.bold('\n   Connecting HCS-10 Agents...\n'))
 
     const analyzer = new AnalyzerAgent()
     const verifier = new VerifierAgent()
     const settlement = new SettlementAgent()
 
     await analyzer.init()
-    console.log(chalk.green('   ✅ AnalyzerAgent: Ready to analyze NFT sales'))
+    console.log(chalk.green('   ✅ AnalyzerAgent: Ready (HCS-10 Compatible)'))
+    console.log(chalk.gray('      → Capabilities: Account analysis, threshold evaluation'))
+    console.log(chalk.gray('      → Topics: Analyzer, Settlement\n'))
     
     await verifier.init()
-    console.log(chalk.green('   ✅ VerifierAgent: Ready to validate royalty calculations'))
+    console.log(chalk.green('   ✅ VerifierAgent: Ready (HCS-10 Compatible)'))
+    console.log(chalk.gray('      → Capabilities: Proposal validation, approval decisions'))
+    console.log(chalk.gray('      → Topics: Verifier, Settlement\n'))
     
     await settlement.init()
-    console.log(chalk.green('   ✅ SettlementAgent: Ready to execute cross-chain payments\n'))
+    console.log(chalk.green('   ✅ SettlementAgent: Ready (HCS-10 Compatible)'))
+    console.log(chalk.gray('      → Capabilities: X402 payments, cross-chain settlement'))
+    console.log(chalk.gray('      → Topics: Settlement, Analyzer\n'))
 
-    console.log(chalk.bold.green('✨ All agents initialized and ready!\n'))
+    console.log(chalk.bold.green('✨ All HCS-10 agents initialized and ready!\n'))
+    console.log(chalk.blue('📡 Agent-to-Agent Communication: Enabled via HCS Topics'))
+    console.log(chalk.blue('🔗 Standard: HCS-10 (Hashgraph Consensus Service)\n'))
 
     console.log(chalk.bold('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'))
 
