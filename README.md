@@ -190,13 +190,27 @@ const settlement = await facilitator.settle(paymentHeader, requirements);
    # Edit .env with your credentials
    ```
 
-4. **Register agents**
+4. **Fix HCS-11 Memo Issue (IMPORTANT)**
 
    ```bash
-   npm run register-agents
+   # This fixes the "Failed to retrieve profile" error
+   npm run setup:hcs11-fixed
    ```
 
-5. **Test the system**
+5. **Check credentials status**
+
+   ```bash
+   # Verify all credentials are working
+   npm run check:credentials
+   ```
+
+6. **Register agents (Optional)**
+
+   ```bash
+   npm run setup:agents
+   ```
+
+7. **Test the system**
 
    ```bash
    # Test individual agents
@@ -207,6 +221,23 @@ const settlement = await facilitator.settle(paymentHeader, requirements);
    # Run complete demo
    npm run demo
    ```
+
+### 🚨 Common Issue Resolution
+
+If you encounter the error:
+
+```
+Error: Failed to retrieve profile
+Account 0.0.7132337 does not have a valid HCS-11 memo. Current memo: HCS-11:agent-coordinator
+```
+
+**Solution**: Run the fixed memo setup:
+
+```bash
+npm run setup:hcs11-fixed
+```
+
+This updates the memo to the proper HCS-11 format: `HCS-11:profile:agent-coordinator:v1.0`
 
 ## ⚙️ Configuration
 
@@ -341,11 +372,19 @@ hedera-a2a-agents/
 ### Available Scripts
 
 ```bash
-npm run test:analyzer    # Test AnalyzerAgent
-npm run test:verifier    # Test VerifierAgent
-npm run test:settlement   # Test SettlementAgent
-npm run demo            # Run complete demo
-npm run register-agents  # Register agents on Hedera
+# Setup and Configuration
+npm run setup:hcs11-fixed    # Fix HCS-11 memo format issue
+npm run setup:agents         # Register agents on Hedera
+npm run check:credentials    # Check all credentials status
+
+# Testing
+npm run test:analyzer        # Test AnalyzerAgent
+npm run test:verifier        # Test VerifierAgent
+npm run test:settlement      # Test SettlementAgent
+npm run demo                 # Run complete demo
+
+# Debug and Monitoring
+npm run check:wallets        # Check wallet status
 ```
 
 ## 🔗 Dependencies
