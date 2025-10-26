@@ -307,31 +307,10 @@ export class SupplyChainNegotiationDemo {
       console.log(chalk.blue('\n📝 Creating Agreement Contract on Hedera Blockchain...\n'))
       
       try {
-        // Create file with agreement terms (this simulates a smart contract)
-        const agreementTerms = JSON.stringify({
-          protocol: 'SupplyChainAgreement',
-          version: '1.0',
-          buyer: accountId,
-          vendor: '0.0.7135719',
-          pricePerUnit: vendorTerms.terms.pricePerUnit,
-          quantity: vendorTerms.terms.quantity,
-          deliveryDate: vendorTerms.terms.deliveryDate,
-          paymentSchedule: vendorTerms.terms.paymentSchedule,
-          warrantyMonths: vendorTerms.terms.warrantyMonths,
-          totalValue: vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity,
-          createdAt: new Date().toISOString()
-        })
+        const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
         
-        // Store agreement on Hedera as a file (immutable contract terms)
-        const fileTx = await new FileCreateTransaction()
-          .setContents(agreementTerms)
-          .execute(this.hederaClient)
-        
-        const fileReceipt = await fileTx.getReceipt(this.hederaClient)
-        const fileId = fileReceipt.fileId!
-        
-        console.log(chalk.bold.green('\n✅ Agreement Contract Created!\n'))
-        console.log(chalk.green(`📋 Contract/File ID: ${fileId}`))
+        // Record agreement terms directly in payment transaction
+        const agreementDetails = `SC Agreement: $${vendorTerms.terms.pricePerUnit}/unit x ${vendorTerms.terms.quantity}, Total: $${totalValue}, Delivery: ${vendorTerms.terms.deliveryDate}`
         console.log(chalk.green(`📋 Agreement Terms:`))
         console.log(chalk.gray(`   Price: $${vendorTerms.terms.pricePerUnit}/unit × ${vendorTerms.terms.quantity} units`))
         console.log(chalk.gray(`   Total Value: $${(vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity).toLocaleString()}`))
@@ -339,10 +318,7 @@ export class SupplyChainNegotiationDemo {
         console.log(chalk.gray(`   Payment: ${vendorTerms.terms.paymentSchedule}`))
         console.log(chalk.gray(`   Warranty: ${vendorTerms.terms.warrantyMonths} months\n`))
         
-        const hashscanUrl = `https://hashscan.io/testnet/file/${fileId}`
-        console.log(chalk.cyan(`🔗 View Agreement on HashScan: ${hashscanUrl}\n`))
-        
-        // Now execute the payment transfer
+        // Execute payment transfer with agreement terms in memo
         console.log(chalk.blue('💸 Executing Payment Transfer...\n'))
         const transfer = new TransferTransaction()
           .addHbarTransfer(
@@ -353,7 +329,7 @@ export class SupplyChainNegotiationDemo {
             AccountId.fromString('0.0.7135719'),
             new Hbar(1)
           )
-          .setTransactionMemo(`Payment for Agreement: ${fileId}`)
+          .setTransactionMemo(agreementDetails)
           .setMaxTransactionFee(new Hbar(5))
         
         const txResponse = await transfer.execute(this.hederaClient)
