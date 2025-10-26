@@ -7,12 +7,15 @@ Complete documentation for the Hedron autonomous agent ecosystem.
 ## 🎯 Bounty Information
 
 ### [Bounty 1: x402 Payment Standard](./BOUNTY_1_HEDERA_X402_STANDARD.md)
+
 Cross-chain payment protocol for USDC on Base Sepolia and HBAR on Hedera.
 
 ### [Bounty 2: Hedera Agent Kit](./BOUNTY_2_HEDERA_AGENT_KIT.md)
+
 Autonomous agent-to-agent systems with LLM reasoning and Hedera token settlement.
 
 ### [Bounties Guide](./BOUNTIES_GUIDE.md)
+
 Complete overview and comparison of both bounties.
 
 ---
@@ -20,18 +23,23 @@ Complete overview and comparison of both bounties.
 ## 📚 Core Documentation
 
 ### [Usage Guide](./USAGE_GUIDE.md)
+
 Complete guide to using Hedron for autonomous workflows.
 
 ### [API Reference](./API_REFERENCE.md)
+
 Complete API documentation for all components.
 
 ### [A2A Protocol Implementation](./A2A_PROTOCOL_IMPLEMENTATION.md)
+
 Agent-to-agent protocol implementation details.
 
 ### [Smart Contract Deployment](./SMART_CONTRACT_DEPLOYMENT.md)
+
 Supply chain smart contract deployment guide.
 
 ### [Human-in-the-Loop](./HUMAN_IN_THE_LOOP.md)
+
 HITL mode configuration and usage.
 
 ---
@@ -39,12 +47,15 @@ HITL mode configuration and usage.
 ## 🔧 Setup & Configuration
 
 ### [HCS-11 Setup Guide](./HCS11_SETUP_GUIDE.md)
+
 Complete guide for HCS-11 profile setup.
 
 ### [Local HCS Resolver](./LOCAL_HCS_RESOLVER.md)
+
 Local HCS profile resolver documentation.
 
 ### [Hackathon Ready](./HACKATHON_READY.md)
+
 Submission checklist and readiness status.
 
 ---

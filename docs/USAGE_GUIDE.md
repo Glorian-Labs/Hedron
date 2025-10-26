@@ -58,6 +58,7 @@ npm run demo:invoice-llm
 ```
 
 **Features**:
+
 - LLM analyzes invoice context
 - Fraud detection
 - Automatic approval/rejection
@@ -74,6 +75,7 @@ npm run demo:negotiation
 ```
 
 **Features**:
+
 - Buyer and vendor agents negotiate
 - Multiple negotiation rounds
 - Agreement recorded on Hedera
@@ -90,6 +92,7 @@ npm run demo:nft-royalty 150
 ```
 
 **Features**:
+
 - Automatic 10% royalty calculation
 - Cross-chain payment to creator
 - USDC on Base Sepolia
@@ -106,6 +109,7 @@ npm run demo:supply-chain-fraud
 ```
 
 **Features**:
+
 - AI-powered fraud detection
 - Memo verification on Hedera
 - Secure settlement
@@ -244,17 +248,20 @@ npm run demo:negotiation
 ## 💡 Tips
 
 ### For Development
+
 - Start with unit tests to understand agent behavior
 - Use `check:credentials` to verify configuration
 - Check `check:wallets` to verify wallet status
 
 ### For Production
+
 - Configure HITL for high-value transactions
 - Set up proper error handling
 - Monitor HCS topic messages
 - Use multiple network fallbacks
 
 ### For Demos
+
 - Run demos in order: setup → test → showcase
 - Check transaction IDs on explorers
 - Monitor terminal output for errors
@@ -263,4 +270,3 @@ npm run demo:negotiation
 ---
 
 **Ready to build?** Start with [Installation](#-getting-started) and choose a use case that fits your needs.
-

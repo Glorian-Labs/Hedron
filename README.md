@@ -11,6 +11,7 @@ Hedron is a complete implementation of autonomous agent-to-agent systems built o
 **Hedron** envisions a future where autonomous agents orchestrate complex workflows across blockchain networks—negotiating contracts, processing payments, detecting fraud, and making intelligent decisions—all without human intervention.
 
 Our ecosystem integrates:
+
 - **AP2 Protocol** - Agent-to-agent payment negotiations
 - **A2A Protocol** - Standardized agent communication
 - **x402 Payment Standard** - Autonomous cross-chain settlements
@@ -23,16 +24,19 @@ Our ecosystem integrates:
 Hedron is a **multi-protocol autonomous agent framework** that enables:
 
 ### 🔄 Autonomous Workflows
+
 - **Agent Negotiation**: Buyers and sellers negotiate terms autonomously
 - **Intelligent Verification**: LLM-powered decision making and fraud detection
 - **Automated Settlement**: Cross-chain payments executed without intermediaries
 
 ### 🌐 Multi-Chain Support
+
 - **Hedera Network**: Native HBAR transfers, HCS messaging, fast finality
 - **EVM Chains**: USDC on Base, Ethereum, or any EVM-compatible network
 - **Cross-Chain**: Seamless settlements across networks
 
 ### 🤖 Smart Agents
+
 - **AnalyzerAgent**: Queries account data, generates insights, proposes actions
 - **VerifierAgent**: Validates proposals, applies business rules, makes decisions
 - **SettlementAgent**: Executes payments via x402, records settlements on-chain
@@ -79,26 +83,31 @@ Hedron is a **multi-protocol autonomous agent framework** that enables:
 Hedron enables autonomous systems across multiple industries:
 
 ### 🧾 Invoice Automation
+
 - **Autonomous Processing**: AI analyzes invoices, validates business rules, and approves payments
 - **Fraud Detection**: ML algorithms flag suspicious transactions
 - **Instant Settlement**: Automated USDC or HBAR transfers
 
 ### 📦 Supply Chain
+
 - **Agent Negotiation**: Buyer and vendor agents negotiate terms autonomously
 - **Agreement Recording**: Smart contracts record finalized terms on Hedera
 - **Automated Payments**: x402 protocol executes settlements
 
 ### 🎨 NFT Royalties
+
 - **Automatic Calculation**: 10% royalty calculated on each NFT sale
 - **Cross-Chain Payments**: Creators receive USDC on preferred network
 - **Transparent Trail**: All payments recorded on blockchain
 
 ### 💰 Financial Services
+
 - **Autonomous Trading**: Agents execute trades based on market conditions
 - **Risk Management**: AI evaluates risk and makes decisions
 - **Multi-Asset Settlement**: USDC, HBAR, or any supported token
 
 ### 🔒 Security & Compliance
+
 - **Fraud Detection**: AI analyzes transaction patterns
 - **Memo Verification**: Blockchain-verified agreement recording
 - **Audit Trails**: Complete transparency via HCS
@@ -109,17 +118,17 @@ Hedron enables autonomous systems across multiple industries:
 
 ### Installation
 
-   ```bash
+```bash
 # Clone repository
-   git clone https://github.com/Hebx/hedera-a2a-agents.git
-   cd hedera-a2a-agents
+git clone https://github.com/Hebx/hedera-a2a-agents.git
+cd hedera-a2a-agents
 
 # Install dependencies
-   npm install
+npm install
 
 # Configure environment
-   cp env.example .env
-   # Edit .env with your credentials
+cp env.example .env
+# Edit .env with your credentials
 
 # Setup HCS-11 profile
 npm run setup:hcs11-fixed
@@ -128,6 +137,7 @@ npm run setup:hcs11-fixed
 ### Configuration
 
 Configure your `.env` file with:
+
 - Hedera testnet account ID and private key
 - Base Sepolia wallet with USDC
 - Agent credentials (auto-generated)
@@ -157,11 +167,13 @@ npm run demo:negotiation        # Supply chain negotiation
 ## 📚 Documentation
 
 ### Bounty Submissions
+
 - [Bounty 1: Hedera x402 Payment Standard](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md) - Cross-chain payment protocol
 - [Bounty 2: Hedera Agent Kit](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md) - Autonomous agent systems
 - [Bounties Comparison](./docs/BOUNTIES_COMPARISON.md) - Side-by-side comparison
 
 ### Core Documentation
+
 - [Complete Documentation Index](./docs/INDEX.md) - All available documentation
 - [API Reference](./docs/API_REFERENCE.md) - Complete API documentation
 - [A2A Protocol Implementation](./docs/A2A_PROTOCOL_IMPLEMENTATION.md) - Agent communication
@@ -169,11 +181,13 @@ npm run demo:negotiation        # Supply chain negotiation
 - [Smart Contract Deployment](./docs/SMART_CONTRACT_DEPLOYMENT.md) - Contract deployment
 
 ### Setup Guides
+
 - [HCS-11 Setup Guide](./docs/HCS11_SETUP_GUIDE.md) - Profile registration
 - [Local HCS Resolver](./docs/LOCAL_HCS_RESOLVER.md) - Local profile resolver
 - [Hackathon Ready](./docs/HACKATHON_READY.md) - Submission checklist
 
 ### Usage & Demos
+
 - [Usage Guide](./docs/USAGE_GUIDE.md) - How to use Hedron
 - [Demo Guide](./demo/README.md) - Demo showcase guide
 - [Hackathon Showcase](./docs/HACKATHON_SHOWCASE_GUIDE.md) - Presentation guide
@@ -201,10 +215,12 @@ See [Test Status](./docs/TEST_STATUS.md) for detailed results.
 ## 🌍 Network Support
 
 ### Hedera Networks
+
 - **Testnet**: Primary development environment
 - **Mainnet**: Production deployments
 
 ### EVM Networks
+
 - **Base Sepolia**: Primary settlement network for USDC
 - **Ethereum Sepolia**: Alternative network
 - **Any EVM**: Compatible with any EVM-compatible chain
@@ -256,24 +272,28 @@ hedron/
 ## 🚀 Key Features
 
 ### ✅ Multi-Protocol Support
+
 - A2A for standardized communication
 - AP2 for payment negotiations
 - x402 for autonomous settlements
 - HCS for decentralized messaging
 
 ### ✅ Intelligent Agents
+
 - AI-powered decision making
 - Fraud detection algorithms
 - Risk assessment
 - Business rule validation
 
 ### ✅ Cross-Chain Capabilities
+
 - USDC on Base/Ethereum
 - HBAR on Hedera
 - Automatic network selection
 - Seamless bridging
 
 ### ✅ Production Ready
+
 - Error handling
 - Human-in-the-loop (HITL)
 - Complete audit trails
@@ -309,4 +329,4 @@ ISC License - see LICENSE file for details.
 
 ---
 
-**Hedron** - *Autonomous agents, intelligent decisions, seamless settlements.*
+**Hedron** - _Autonomous agents, intelligent decisions, seamless settlements._
