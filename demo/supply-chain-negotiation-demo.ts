@@ -12,6 +12,7 @@
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 import { AccountBalanceQuery, AccountId, Client, Hbar, PrivateKey, TransferTransaction } from '@hashgraph/sdk'
+import * as fs from 'fs'
 
 dotenv.config()
 
@@ -265,25 +266,57 @@ export class SupplyChainNegotiationDemo {
       return
     }
     
-    // Simulate smart contract creation (in production, this would deploy a real smart contract)
-    console.log(chalk.bold.yellow('\n━━━━━━━━━━ Blockchain Execution (Simulated) ━━━━━━━━━━'))
-    console.log(chalk.blue('\n📝 Smart Contract Terms Would Be Deployed on Hedera...'))
-    console.log(chalk.yellow('⚠️  Note: This demo simulates contract deployment'))
-    console.log(chalk.yellow('    In production, this would use Hedera smart contracts'))
-    console.log(chalk.yellow('    to create escrow and enforce terms\n'))
+    // Deploy smart contract (or simulate if not configured)
+    console.log(chalk.bold.yellow('\n━━━━━━━━━━ Blockchain Execution ━━━━━━━━━━'))
     
-    const simulatedContractId = `0.0.${Math.floor(Math.random() * 1000000)}`
-    console.log(chalk.green(`📋 Contract ID (simulated): ${simulatedContractId}`))
-    console.log(chalk.green(`✅ Negotiation terms recorded`))
-    if (vendorTerms) {
-      const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
-      console.log(chalk.green(`💰 Contract value: $${totalValue.toLocaleString()}`))
-      console.log(chalk.gray(`\n   Would create payment escrow on Hedera mainnet`))
-      console.log(chalk.gray(`   Would execute smart contract with terms:`))
-      console.log(chalk.gray(`   - Price: $${vendorTerms.terms.pricePerUnit}/unit`))
-      console.log(chalk.gray(`   - Delivery: ${vendorTerms.terms.deliveryDate}`))
-      console.log(chalk.gray(`   - Payment: ${vendorTerms.terms.paymentSchedule}`))
-      console.log(chalk.gray(`   - Warranty: ${vendorTerms.terms.warrantyMonths} months\n`))
+    const useRealContracts = process.env.DEPLOY_REAL_CONTRACTS === 'true'
+    
+    if (useRealContracts && vendorTerms) {
+      // Real deployment
+      console.log(chalk.blue('\n📝 Deploying Smart Contract to Hedera...\n'))
+      
+      try {
+        const { deployAgreement } = await import('../scripts/deploy-supply-chain')
+        
+        const result = await deployAgreement(
+          process.env.BUYER_ADDRESS || '0x' + '0'.repeat(40),
+          process.env.VENDOR_ADDRESS || '0x' + '0'.repeat(40),
+          vendorTerms.terms.pricePerUnit,
+          vendorTerms.terms.quantity,
+          vendorTerms.terms.deliveryDate,
+          30, // payment schedule days
+          vendorTerms.terms.warrantyMonths
+        )
+        
+        console.log(chalk.green(`✅ Contract Deployed: ${result.contractId}`))
+        console.log(chalk.green(`✅ EVM Address: ${result.contractAddress}`))
+        console.log(chalk.green(`✅ Escrow created: $${(vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity).toLocaleString()}`))
+        console.log(chalk.cyan(`\n🔗 View on HashScan: https://hashscan.io/testnet/contract/${result.contractId}\n`))
+        
+      } catch (error) {
+        console.log(chalk.red(`❌ Contract deployment failed: ${(error as Error).message}`))
+        console.log(chalk.yellow('⚠️  Falling back to simulated deployment\n'))
+        // Fall through to simulation
+      }
+    }
+    
+    // Simulation (fallback or default)
+    if (!useRealContracts || !vendorTerms) {
+      const simulatedContractId = `0.0.${Math.floor(Math.random() * 1000000)}`
+      console.log(chalk.blue('\n📝 Simulating Contract Deployment...'))
+      console.log(chalk.yellow('⚠️  Set DEPLOY_REAL_CONTRACTS=true to deploy real contracts'))
+      console.log(chalk.yellow('    See docs/SMART_CONTRACT_DEPLOYMENT.md for details\n'))
+      
+      console.log(chalk.green(`📋 Contract ID (simulated): ${simulatedContractId}`))
+      if (vendorTerms) {
+        const totalValue = vendorTerms.terms.pricePerUnit * vendorTerms.terms.quantity
+        console.log(chalk.green(`💰 Contract value: $${totalValue.toLocaleString()}`))
+        console.log(chalk.gray(`\n   In production, this would:`))
+        console.log(chalk.gray(`   - Deploy Solidity contract to Hedera EVM`))
+        console.log(chalk.gray(`   - Create payment escrow for $${totalValue.toLocaleString()}`))
+        console.log(chalk.gray(`   - Enforce delivery deadline: ${vendorTerms.terms.deliveryDate}`))
+        console.log(chalk.gray(`   - Auto-release funds after delivery confirmation\n`))
+      }
     }
     
     console.log(chalk.bold.green(`\n🎉 Supply Chain Negotiation Complete!\n`))

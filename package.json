@@ -43,7 +43,8 @@
     "test:hitl": "ts-node tests/e2e/test-human-in-the-loop.ts",
     "test:x402-complete": "ts-node tests/integration/test-complete-x402-system.ts",
     "test:x402-server": "ts-node tests/integration/test-payment-server.ts",
-    "test:e2e-payment": "ts-node tests/e2e/test-payment-flow.ts"
+    "test:e2e-payment": "ts-node tests/e2e/test-payment-flow.ts",
+    "deploy:supply-chain": "ts-node scripts/deploy-supply-chain.ts"
   },
   "repository": {
     "type": "git",
