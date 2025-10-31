@@ -92,6 +92,10 @@ See [HCS-11 Setup Guide](./docs/HCS11_SETUP_GUIDE.md) for detailed instructions.
 
 ## 🎬 Demo Showcase
 
+**8 Production-Ready Demos - All with HCS-10 OpenConvAI Support**
+
+Enable HCS-10 features: `export USE_HCS10_CONNECTIONS=true`
+
 ### Bounty 1: x402 Payment Standard
 
 #### Demo 1: NFT Royalty Payment (Cross-Chain x402)
@@ -114,7 +118,8 @@ npm run demo:nft-royalty 150
 
 #### Demo 2: HBAR Direct Transfer (Native x402)
 ```bash
-npm run demo:hbar-x402 10
+npm run demo:hbar-x402 10   # Small amount
+npm run demo:hbar-x402 100  # Large amount (triggers HCS-10 approval)
 ```
 
 **What it demonstrates:**

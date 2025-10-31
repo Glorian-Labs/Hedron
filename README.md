@@ -86,11 +86,23 @@ const accountInfo = await agent.queryAccount('0.0.123456')
 
 ## 🎬 Demos & Examples
 
-Hedron includes comprehensive demos showcasing real-world use cases with actual blockchain transactions.
+Hedron includes **8 production-ready demos** showcasing real-world use cases with actual blockchain transactions. All demos support **HCS-10 OpenConvAI Protocol** for enhanced security and auditability.
+
+### 🔗 HCS-10 OpenConvAI Protocol
+
+All demos include optional HCS-10 features:
+- **Connection Management** - Establish trusted agent connections
+- **Transaction Approval** - Multi-signature workflows for high-value transactions
+- **Fee-Based Connections** - Agent monetization support
+- **Enhanced Audit Trail** - Complete on-chain transaction history
+
+Enable HCS-10: `export USE_HCS10_CONNECTIONS=true`
+
+---
 
 ### Bounty 1: x402 Payment Standard Demos
 
-#### NFT Royalty Payment (Cross-Chain x402)
+#### 1. NFT Royalty Payment (Cross-Chain x402)
 ```bash
 npm run demo:nft-royalty 150
 ```
@@ -100,40 +112,76 @@ npm run demo:nft-royalty 150
 - Automatic 10% royalty calculation ($15)
 - Cross-chain x402 payment execution
 - USDC transfer on Base Sepolia
+- Fee-based connection configuration (HCS-10)
 - Complete payment receipt
 
 **Network:** Base Sepolia | **Asset:** USDC | **Protocol:** x402
 
-#### HBAR Direct Transfer (Native x402)
+#### 2. HBAR Direct Transfer (Native x402)
 ```bash
-npm run demo:hbar-x402 10
+npm run demo:hbar-x402 10    # Small amount
+npm run demo:hbar-x402 100   # Large amount (triggers HCS-10 approval)
 ```
 
 **Demonstrates:**
 - Direct Hedera HBAR transfer
 - x402 verification on native Hedera
 - Fast, low-cost settlement
+- **HCS-10 transaction approval** for large amounts (>=50 HBAR)
 - Payment authorization and settlement
 
 **Network:** Hedera Testnet | **Asset:** HBAR | **Protocol:** x402
 
+---
+
 ### Bounty 2: Hedera Agent Kit Demos
 
-#### Intelligent Invoice with LLM Reasoning
+#### 3. Main Orchestrator (Complete 3-Agent Workflow)
 ```bash
-npm run demo:invoice-llm
+npm run demo 0.0.XXXXXX 10 hedera-testnet
+```
+
+**Demonstrates:**
+- Complete 3-agent coordination (Analyzer → Verifier → Settlement)
+- **HCS-10 connection establishment** between agents
+- Connection-based proposal messaging
+- **HCS-10 transaction approval** for HBAR payments
+- Cross-chain settlement execution
+- Full autonomous workflow
+
+**Technology:** A2A Protocol + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
+
+#### 4. Intelligent Invoice with LLM Reasoning
+```bash
+npm run demo:invoice-llm 150      # Low-value (auto-approved)
+npm run demo:invoice-llm 800      # High-value (HCS-10 approval)
 ```
 
 **Demonstrates:**
 - LLM-powered invoice validation (GPT-4)
 - AI decision making with reasoning
+- **HCS-10 transaction approval** replaces CLI HITL prompts
+- On-chain storage of LLM reasoning in transaction memo
 - Autonomous approval/rejection
 - Hedera token settlement
-- Complete agent coordination workflow
 
-**Technology:** LLM + A2A Protocol | **Network:** Hedera Testnet | **Asset:** HBAR
+**Technology:** LLM + A2A Protocol + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
 
-#### Supply Chain Fraud Detection
+#### 5. Supply Chain Negotiation
+```bash
+npm run demo:negotiation
+```
+
+**Demonstrates:**
+- Multi-agent price negotiation
+- Vendor payment workflow
+- **HCS-10 transaction approval** for vendor payments
+- Multi-signature approval before execution
+- Hedera token settlement
+
+**Technology:** A2A Protocol + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
+
+#### 6. Supply Chain Fraud Detection
 ```bash
 npm run demo:supply-chain-fraud
 ```
@@ -142,12 +190,63 @@ npm run demo:supply-chain-fraud
 - Multi-agent price negotiation
 - AI fraud detection algorithms
 - Blockchain memo verification
+- **HCS-10 transaction approval** for fraud-checked payments
+- Enhanced security with multi-signature approval
 - Hedera token settlement
-- Complete security workflow
 
-**Technology:** Fraud Detection + Memo Verification + A2A | **Network:** Hedera Testnet | **Asset:** HBAR
+**Technology:** Fraud Detection + Memo Verification + A2A + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
 
-### Additional Supporting Demos
+#### 7. Invoice Automation
+```bash
+npm run demo:invoice 150      # Low-value (direct execution)
+npm run demo:invoice 600      # High-value (HCS-10 approval)
+```
+
+**Demonstrates:**
+- Automated invoice processing
+- **HCS-10 connection establishment** between Analyzer and Verifier
+- Agent-to-agent communication via connections
+- **HCS-10 transaction approval** for high-value invoices (>= $500)
+- Human-in-the-loop integration
+- Cross-chain payment support
+
+**Technology:** A2A Protocol + HCS-10 + x402 | **Network:** Hedera Testnet + Base Sepolia | **Asset:** HBAR/USDC
+
+---
+
+### Track 1: RWA Tokenization
+
+#### 8. Tokenized RWA Invoice
+```bash
+npm run demo:rwa-invoice 250      # Low-value
+npm run demo:rwa-invoice 600      # High-value (HCS-10 approval)
+```
+
+**Demonstrates:**
+- Invoice tokenization as Real-World Asset (RWA)
+- Hedera Token Service (HTS) token creation
+- RWA token trading/transfer (invoice factoring)
+- **HCS-10 transaction approval** for high-value settlements (>= $500)
+- Automated settlement via x402 payment standard
+- Cross-chain payment execution (HBAR or USDC)
+- Complete RWA lifecycle on-chain
+
+**Technology:** HTS Tokenization + x402 + HCS-10 | **Network:** Hedera Testnet + Base Sepolia | **Asset:** HTS Tokens + HBAR/USDC
+
+---
+
+### Demo Feature Matrix
+
+| Demo | HCS-10 Connections | HCS-10 Approval | Network | Asset | Command |
+|------|-------------------|-----------------|---------|-------|---------|
+| Orchestrator | ✅ | ✅ (HBAR) | Hedera | HBAR | `npm run demo` |
+| NFT Royalty | ✅ (fee config) | ❌ | Base | USDC | `npm run demo:nft-royalty 150` |
+| HBAR Direct | ❌ | ✅ (>=50 HBAR) | Hedera | HBAR | `npm run demo:hbar-x402 100` |
+| Intelligent Invoice | ❌ | ✅ (>= $500) | Hedera | HBAR | `npm run demo:invoice-llm 800` |
+| Supply Chain Negotiation | ❌ | ✅ | Hedera | HBAR | `npm run demo:negotiation` |
+| Supply Chain Fraud | ❌ | ✅ | Hedera | HBAR | `npm run demo:supply-chain-fraud` |
+| Invoice Automation | ✅ | ✅ (>= $500) | Hedera/Base | HBAR/USDC | `npm run demo:invoice 600` |
+| RWA Invoice | ❌ | ✅ (>= $500) | Hedera/Base | HBAR/USDC | `npm run demo:rwa-invoice 600` |
 
 ```bash
 npm run demo                    # Complete 3-agent workflow
