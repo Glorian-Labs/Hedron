@@ -236,6 +236,19 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
     console.log(chalk.gray(`   3. Settling ${settlementAsset} on ${paymentNetwork}`))
     console.log('')
 
+    // Calculate payment amount based on network
+    let paymentAmount: string
+    if (paymentNetwork === 'hedera-testnet') {
+      // Convert USD to HBAR (approximate rate: $0.05 per HBAR)
+      const hbarAmount = Math.ceil(invoice.amountUSD / 0.05)
+      const tinybarAmount = hbarAmount * 100_000_000
+      paymentAmount = tinybarAmount.toString()
+      console.log(chalk.blue(`📋 Converted $${invoice.amountUSD} to ${hbarAmount} HBAR (${tinybarAmount} tinybars)`))
+    } else {
+      // USDC atomic units (6 decimals)
+      paymentAmount = (invoice.amountUSD * 1000000).toString()
+    }
+
     const verificationResult = {
       type: 'verification_result',
       agentId: 'rwa-invoice-agent',
@@ -243,7 +256,7 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
       approved: true,
       reasoning: `Invoice ${invoice.invoiceId} due - automated settlement via x402. Tokenized invoice: ${tokenId}`,
       paymentDetails: {
-        amount: (invoice.amountUSD * 1000000).toString(), // USDC atomic units (6 decimals) or HBAR tinybars
+        amount: paymentAmount,
         asset: paymentNetwork === 'base-sepolia' 
           ? (process.env.USDC_CONTRACT || '0x036CbD53842c5426634e7929541eC2318f3dCF7e')
           : 'HBAR',

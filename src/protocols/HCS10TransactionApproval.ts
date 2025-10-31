@@ -6,7 +6,7 @@
  */
 
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
-import { Transaction, ScheduleCreateTransaction, ScheduleSignTransaction, ScheduleId, TransactionReceipt, Hbar } from '@hashgraph/sdk'
+import { Transaction, ScheduleCreateTransaction, ScheduleSignTransaction, ScheduleId, TransactionReceipt, Hbar, Timestamp } from '@hashgraph/sdk'
 import chalk from 'chalk'
 
 /**
@@ -81,7 +81,8 @@ export class HCS10TransactionApproval {
       if (options?.expirationTime) {
         // Set expiration time (in seconds from now)
         const expirationDate = new Date(Date.now() + options.expirationTime * 1000)
-        scheduledTx.setExpirationTime(expirationDate)
+        const expirationTimestamp = Timestamp.fromDate(expirationDate)
+        scheduledTx.setExpirationTime(expirationTimestamp)
       }
 
       if (options?.adminKey) {
@@ -113,7 +114,7 @@ export class HCS10TransactionApproval {
         transactionId: response.transactionId.toString(),
         status: 'pending',
         createdAt: Date.now(),
-        expirationTime: options?.expirationTime ? Date.now() + options.expirationTime * 1000 : undefined,
+        ...(options?.expirationTime && { expirationTime: Date.now() + options.expirationTime * 1000 }),
         requiredSignatures: 2, // Default to 2 signatures (sender + approver)
         currentSignatures: 1 // Sender has already signed
       }
@@ -241,15 +242,18 @@ export class HCS10TransactionApproval {
       
       for (const [scheduleIdStr, scheduledTx] of this.pendingTransactions.entries()) {
         if (scheduledTx.status === 'pending') {
-          pending.push({
+          const pendingTx: PendingTransaction = {
             scheduleId: scheduledTx.scheduleId,
             description: `Transaction ${scheduleIdStr}`,
             transactionType: 'scheduled',
             createdAt: scheduledTx.createdAt,
-            expirationTime: scheduledTx.expirationTime,
             requiredSignatures: scheduledTx.requiredSignatures,
             currentSignatures: scheduledTx.currentSignatures
-          })
+          }
+          if (scheduledTx.expirationTime !== undefined) {
+            pendingTx.expirationTime = scheduledTx.expirationTime
+          }
+          pending.push(pendingTx)
         }
       }
 

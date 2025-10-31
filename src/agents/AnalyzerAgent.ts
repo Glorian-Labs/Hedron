@@ -126,4 +126,15 @@ export class AnalyzerAgent {
       throw error
     }
   }
+
+  getHcsClient(): HCS10Client {
+    return this.hcsClient
+  }
+
+  /**
+   * Get connection manager instance (if initialized)
+   */
+  getConnectionManager(): HCS10ConnectionManager | undefined {
+    return this.connectionManager
+  }
 }

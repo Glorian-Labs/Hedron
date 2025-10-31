@@ -8,7 +8,7 @@
  * Used for the hackathon bonus points requirement: "Multiple Hedera services"
  */
 
-import { Client, TokenCreateTransaction, TokenType, PrivateKey, AccountId } from '@hashgraph/sdk'
+import { Client, TokenCreateTransaction, TokenType, PrivateKey, AccountId, AccountBalanceQuery } from '@hashgraph/sdk'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 
@@ -74,7 +74,9 @@ export class TokenService {
     try {
       console.log(chalk.blue(`📊 Getting token balance for account ${accountId}`))
 
-      const balance = await this.client.getAccountBalance(AccountId.fromString(accountId))
+      const balanceQuery = new AccountBalanceQuery()
+        .setAccountId(AccountId.fromString(accountId))
+      const balance = await balanceQuery.execute(this.client)
 
       console.log(chalk.blue(`💰 Token balance retrieved`))
 
@@ -195,16 +197,15 @@ export class TokenService {
       // For simplicity, we'll use whole numbers (1 token = $1, so $150 invoice = 150 tokens)
       const tokenSupply = Math.floor(invoiceAmount)
       
-      // Create token memo with invoice metadata
-      const invoiceMetadata = JSON.stringify({
-        invoiceId,
-        invoiceAmount,
-        vendorAccountId,
-        description,
-        dueDate: dueDate.toISOString(),
-        type: 'RWA_INVOICE',
-        settled: false
-      })
+      // Create token memo with invoice metadata (Hedera memo limit is 100 bytes)
+      // Use shortened format to fit within limit
+      const invoiceMetadata = `RWA:${invoiceId}:$${invoiceAmount}:${dueDate.toISOString().substring(0, 10)}`
+      
+      // Ensure memo doesn't exceed 100 bytes
+      const maxMemoLength = 100
+      const tokenMemo = invoiceMetadata.length > maxMemoLength 
+        ? `RWA:${invoiceId.substring(0, 20)}:$${invoiceAmount}`
+        : invoiceMetadata
 
       // Create the token
       const transaction = new TokenCreateTransaction()
@@ -215,7 +216,7 @@ export class TokenService {
         .setDecimals(decimals)
         .setTreasuryAccountId(operatorId)
         .setAutoRenewAccountId(operatorId)
-        .setTokenMemo(invoiceMetadata)
+        .setTokenMemo(tokenMemo)
 
       // Execute the transaction
       const response = await transaction.execute(this.client)

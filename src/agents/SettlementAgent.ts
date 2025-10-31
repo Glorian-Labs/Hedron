@@ -2,6 +2,8 @@ import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
 import { processPayment, x402Utils, verifyPayment, settlePayment } from 'a2a-x402'
 import { Wallet, JsonRpcProvider } from 'ethers'
 import { Client, PrivateKey, AccountId, TransferTransaction, Hbar, AccountBalanceQuery } from '@hashgraph/sdk'
+import { HCS10ConnectionManager } from '../protocols/HCS10ConnectionManager'
+import { HCS10TransactionApproval } from '../protocols/HCS10TransactionApproval'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 import { X402FacilitatorServer } from '../facilitator/X402FacilitatorServer'
@@ -17,6 +19,8 @@ export class SettlementAgent {
   private paymentNetwork: 'hedera-testnet' | 'base-sepolia'
   private x402Utils: typeof x402Utils
   private facilitator: X402FacilitatorServer
+  private connectionManager?: HCS10ConnectionManager
+  private transactionApproval?: HCS10TransactionApproval
 
   constructor() {
     // Get agent credentials from environment variables
@@ -44,9 +48,23 @@ export class SettlementAgent {
       
       // Initialize HCS10Client with main account for now
       this.hcsClient = new HCS10Client(mainAccountId, mainPrivateKey, 'testnet')
+      
+      // Initialize connection manager and transaction approval (optional)
+      const useConnections = process.env.USE_HCS10_CONNECTIONS === 'true'
+      if (useConnections) {
+        this.connectionManager = new HCS10ConnectionManager(this.hcsClient, mainAccountId)
+        this.transactionApproval = new HCS10TransactionApproval(this.hcsClient, mainAccountId)
+      }
     } else {
       // Initialize HCS10Client with actual agent credentials
       this.hcsClient = new HCS10Client(agentId, privateKey, 'testnet')
+      
+      // Initialize connection manager and transaction approval (optional)
+      const useConnections = process.env.USE_HCS10_CONNECTIONS === 'true'
+      if (useConnections) {
+        this.connectionManager = new HCS10ConnectionManager(this.hcsClient, agentId)
+        this.transactionApproval = new HCS10TransactionApproval(this.hcsClient, agentId)
+      }
     }
 
     // Initialize provider with BASE_RPC_URL
@@ -307,5 +325,23 @@ export class SettlementAgent {
       console.log(chalk.blue('💡 Settlement completed successfully despite HCS communication issue'))
       // Don't throw error - settlement was successful, HCS is just for coordination
     }
+  }
+
+  /**
+   * Get connection manager instance (if initialized)
+   */
+  getConnectionManager(): HCS10ConnectionManager | undefined {
+    return this.connectionManager
+  }
+
+  /**
+   * Get transaction approval manager instance (if initialized)
+   */
+  getTransactionApproval(): HCS10TransactionApproval | undefined {
+    return this.transactionApproval
+  }
+
+  getHcsClient(): HCS10Client {
+    return this.hcsClient
   }
 }
