@@ -183,9 +183,9 @@ async function main(): Promise<void> {
           const merchantAccountId = process.env.HEDERA_MERCHANT_ACCOUNT_ID || '0.0.98'
           const paymentAmount = parseFloat(process.env.HBAR_PAYMENT_AMOUNT || '10')
           
-          const connection = settlementConn.getConnection(verifierId)
+          const connection = settlementConn?.getConnection(verifierId)
           
-          if (connection && connection.status === 'established' && connection.connectionTopicId) {
+          if (settlementConn && connection && connection.status === 'established' && connection.connectionTopicId) {
             // Create payment transaction
             const paymentTx = new TransferTransaction()
               .addHbarTransfer(
