@@ -19,7 +19,7 @@
 
 import { SettlementAgent } from '../src/agents/SettlementAgent'
 import { TokenService } from '../src/services/TokenService'
-import { Client, PrivateKey, AccountId } from '@hashgraph/sdk'
+import { Client, PrivateKey, AccountId, TransferTransaction, Hbar, HbarUnit } from '@hashgraph/sdk'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 
@@ -217,6 +217,10 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
     console.log(chalk.yellow('⏳ Initializing SettlementAgent...'))
     await settlement.init()
     console.log(chalk.green('✅ SettlementAgent ready\n'))
+    
+    // HCS-10: Optional transaction approval for high-value RWA settlements
+    const useHCS10Connections = process.env.USE_HCS10_CONNECTIONS === 'true'
+    const useTransactionApproval = useHCS10Connections && invoice.amountUSD >= 500 // High-value threshold
 
     // Determine payment network
     const paymentNetwork = process.env.PAYMENT_NETWORK || 'base-sepolia'
@@ -267,10 +271,74 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
       }
     }
 
-    try {
-      await settlement.triggerSettlement(verificationResult)
-
-      console.log(chalk.bold.green('\n✅ INVOICE SETTLEMENT EXECUTED!\n'))
+    // HCS-10: Use transaction approval for high-value settlements
+    let settlementMethod = 'Direct x402 Execution'
+    let txId: string | null = null
+    
+    if (useTransactionApproval && paymentNetwork === 'hedera-testnet') {
+      try {
+        const txApproval = settlement.getTransactionApproval()
+        const settlementConn = settlement.getConnectionManager()
+        
+        if (txApproval && settlementConn) {
+          console.log(chalk.yellow('📋 Using HCS-10 transaction approval for high-value RWA settlement...\n'))
+          
+          // Try to establish connection to vendor
+          const connection = await settlementConn.requestConnection(invoice.vendorAccountId, { timeout: 30000 })
+          
+          if (connection && connection.status === 'established' && connection.connectionTopicId) {
+            console.log(chalk.blue('✅ Connection established for transaction approval'))
+            
+            // Calculate HBAR amount
+            const hbarAmount = Math.ceil(invoice.amountUSD / 0.05)
+            
+            const paymentTx = new TransferTransaction()
+              .addHbarTransfer(
+                AccountId.fromString(accountId),
+                Hbar.from(-hbarAmount, HbarUnit.Hbar)
+              )
+              .addHbarTransfer(
+                AccountId.fromString(invoice.vendorAccountId),
+                Hbar.from(hbarAmount, HbarUnit.Hbar)
+              )
+              .setTransactionMemo(`RWA Invoice Settlement: ${invoice.invoiceId} | Token: ${tokenId}`)
+            
+            const scheduledTx = await txApproval.sendTransaction(
+              connection.connectionTopicId,
+              paymentTx,
+              `RWA Invoice Settlement: $${invoice.amountUSD} for tokenized invoice`,
+              {
+                scheduleMemo: `Invoice: ${invoice.invoiceId} | Token: ${tokenId} | ${invoice.description}`,
+                expirationTime: 3600
+              }
+            )
+            
+            console.log(chalk.blue(`📋 Transaction scheduled: ${scheduledTx.scheduleId.toString()}`))
+            console.log(chalk.yellow('⏳ Vendor approval required for RWA settlement...'))
+            console.log(chalk.gray(`   Token ID: ${tokenId}`))
+            console.log(chalk.gray(`   Amount: $${invoice.amountUSD}`))
+            
+            // Auto-approve for demo (in production, vendor would approve)
+            await txApproval.approveTransaction(scheduledTx.scheduleId)
+            console.log(chalk.green('✅ Transaction approved and executed via HCS-10!'))
+            txId = scheduledTx.scheduleId.toString()
+            settlementMethod = 'HCS-10 Transaction Approval'
+          } else {
+            throw new Error('Connection not established')
+          }
+        }
+      } catch (error) {
+        console.log(chalk.yellow(`⚠️  Transaction approval failed: ${(error as Error).message}`))
+        console.log(chalk.gray('   Falling back to direct x402 execution...\n'))
+      }
+    }
+    
+    // Fallback: Direct x402 execution
+    if (!useTransactionApproval || !txId || paymentNetwork !== 'hedera-testnet') {
+      try {
+        await settlement.triggerSettlement(verificationResult)
+        
+        console.log(chalk.bold.green('\n✅ INVOICE SETTLEMENT EXECUTED!\n'))
       console.log(chalk.bold('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━\n'))
 
       // Phase 5: Settlement Summary
@@ -285,6 +353,10 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
       console.log(`   Network: ${paymentNetwork}`)
       console.log(`   Asset: ${settlementAsset}`)
       console.log(`   Vendor: ${invoice.vendorAccountId}`)
+      console.log(`   Settlement Method: ${settlementMethod}`)
+      if (txId) {
+        console.log(`   Transaction ID: ${txId}`)
+      }
       console.log('')
 
       console.log(chalk.blue('🔗 Transaction Details:'))
