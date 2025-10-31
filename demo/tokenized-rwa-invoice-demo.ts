@@ -403,6 +403,7 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
       console.log(chalk.gray('   • Check wallet status: npm run check:wallets'))
       throw error
     }
+    }
 
   } catch (error) {
     console.error(chalk.red('❌ Demo failed:'), error)
