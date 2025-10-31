@@ -12,10 +12,10 @@
 
 import { ChatOpenAI } from '@langchain/openai'
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
+import { loadEnvIfNeeded } from '../utils/env'
 import chalk from 'chalk'
-import dotenv from 'dotenv'
 
-dotenv.config()
+loadEnvIfNeeded()
 
 export class IntelligentVerifierAgent {
   private llm?: ChatOpenAI

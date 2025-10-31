@@ -82,15 +82,15 @@ async function setupHCS11Profile(): Promise<void> {
     // Add some basic profile data to the topic
     const profileData = {
       name: 'Agent Coordinator',
-      description: 'Main coordinator account for Hedera A2A Agents system',
+      description: 'Main coordinator account for Hedron system',
       version: '1.0.0',
       capabilities: ['coordinate', 'manage', 'orchestrate'],
       properties: {
         accountType: 'coordinator',
         network: 'testnet',
-        system: 'hedera-a2a-agents'
+        system: 'hedron'
       },
-      bio: 'Agent Coordinator - Main account for managing Hedera A2A agent operations',
+      bio: 'Agent Coordinator - Main account for managing Hedron agent operations',
       type: 'coordinator',
       model: 'agent-coordinator-2024'
     }

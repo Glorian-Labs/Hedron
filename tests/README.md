@@ -1,6 +1,6 @@
-# Hedera A2A Agents Test Suite
+# Hedron Test Suite
 
-This directory contains comprehensive tests for the Hedera A2A Agents System, organized by test type and functionality.
+This directory contains comprehensive tests for the Hedron System, organized by test type and functionality.
 
 ## 📁 Test Organization
 

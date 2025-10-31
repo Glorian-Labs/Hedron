@@ -18,12 +18,12 @@ interface CredentialStatus {
 /**
  * Credentials Management and Status Checker
  * 
- * This script helps manage and verify all credentials in the Hedera A2A Agents system.
+ * This script helps manage and verify all credentials in the Hedron system.
  * It checks the status of the main account and all agent accounts.
  */
 async function checkCredentialsStatus(): Promise<void> {
   try {
-    console.log(chalk.bold('🔍 Hedera A2A Agents - Credentials Status Check'))
+    console.log(chalk.bold('🔍 Hedron - Credentials Status Check'))
     console.log(chalk.gray('Checking all account credentials and status...'))
     console.log('')
 

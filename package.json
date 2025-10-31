@@ -1,6 +1,63 @@
 {
-  "name": "hedera-a2a-agents",
+  "name": "hedron-agent-sdk",
   "version": "1.0.0",
+  "description": "Autonomous Agent Ecosystem SDK for Hedera Hashgraph - A2A Protocol, x402 Payment Standard, and Multi-Protocol Agent Communication",
+  "main": "./dist/src/index.js",
+  "types": "./dist/src/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "require": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    },
+    "./agents": {
+      "import": "./dist/src/agents/index.js",
+      "require": "./dist/src/agents/index.js",
+      "types": "./dist/src/agents/index.d.ts"
+    },
+    "./protocols": {
+      "import": "./dist/src/protocols/index.js",
+      "require": "./dist/src/protocols/index.js",
+      "types": "./dist/src/protocols/index.d.ts"
+    },
+    "./services": {
+      "import": "./dist/src/services/index.js",
+      "require": "./dist/src/services/index.js",
+      "types": "./dist/src/services/index.d.ts"
+    },
+    "./modes": {
+      "import": "./dist/src/modes/index.js",
+      "require": "./dist/src/modes/index.js",
+      "types": "./dist/src/modes/index.d.ts"
+    },
+    "./facilitator": {
+      "import": "./dist/src/facilitator/index.js",
+      "require": "./dist/src/facilitator/index.js",
+      "types": "./dist/src/facilitator/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/src",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "hedera",
+    "hashgraph",
+    "agent",
+    "autonomous-agents",
+    "a2a-protocol",
+    "x402",
+    "payment",
+    "blockchain",
+    "hcs",
+    "cross-chain",
+    "ai",
+    "llm",
+    "agent-communication",
+    "supply-chain",
+    "invoice-automation"
+  ],
   "scripts": {
     "build": "tsc",
     "start": "node dist/index.js",
@@ -55,14 +112,12 @@
     "type": "git",
     "url": "git+https://github.com/Hebx/hedera-a2a-agents.git"
   },
-  "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
     "url": "https://github.com/Hebx/hedera-a2a-agents/issues"
   },
   "homepage": "https://github.com/Hebx/hedera-a2a-agents#readme",
-  "description": "",
   "dependencies": {
     "@hashgraph/sdk": "^2.75.0",
     "@hashgraphonline/standards-agent-kit": "^0.2.164",

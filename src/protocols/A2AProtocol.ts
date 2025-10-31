@@ -58,8 +58,12 @@ export class A2AProtocol {
     this.hcsClient = hcsClient
     this.agentId = agentId
     this.capabilities = capabilities
-    this.connectionManager = connectionManager
-    this.transactionApproval = transactionApproval
+    if (connectionManager !== undefined) {
+      this.connectionManager = connectionManager
+    }
+    if (transactionApproval !== undefined) {
+      this.transactionApproval = transactionApproval
+    }
   }
 
   /**

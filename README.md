@@ -1,8 +1,12 @@
 # Hedron
 
-**Autonomous Agent Ecosystem on Hedera Hashgraph**
+**Autonomous Agent Ecosystem SDK for Hedera Hashgraph**
 
-Hedron is a complete implementation of autonomous agent-to-agent systems built on the Hedera network. It combines Google's A2A Protocol, x402 Payment Standard, and Hedera Consensus Service (HCS) to enable truly autonomous, multi-protocol agent communication and settlement.
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
+[![Hedera](https://img.shields.io/badge/Hedera-Testnet-green.svg)](https://hedera.com)
+
+Hedron is a complete SDK and framework for building autonomous agent-to-agent systems on the Hedera network. It combines Google's A2A Protocol, x402 Payment Standard, and Hedera Consensus Service (HCS) to enable truly autonomous, multi-protocol agent communication and settlement.
 
 ---
 
@@ -21,7 +25,7 @@ Our ecosystem integrates:
 
 ## 🎯 What Is Hedron?
 
-Hedron is a **multi-protocol autonomous agent framework** that enables:
+Hedron is both a **production-ready SDK** and a **complete framework** that enables:
 
 ### 🔄 Autonomous Workflows
 
@@ -41,6 +45,148 @@ Hedron is a **multi-protocol autonomous agent framework** that enables:
 - **VerifierAgent**: Validates proposals, applies business rules, makes decisions
 - **SettlementAgent**: Executes payments via x402, records settlements on-chain
 - **IntelligentVerifierAgent**: AI-powered validation with GPT-4 reasoning
+
+---
+
+## 📦 SDK Installation
+
+Hedron is available as an npm package for easy integration into your projects.
+
+### Install
+
+```bash
+npm install hedron-agent-sdk
+```
+
+### Quick Start
+
+```typescript
+import { 
+  AnalyzerAgent, 
+  VerifierAgent, 
+  SettlementAgent,
+  A2AProtocol 
+} from 'hedron-agent-sdk'
+
+// Initialize an agent
+const agent = new AnalyzerAgent()
+await agent.init()
+
+// Query account data
+const accountInfo = await agent.queryAccount('0.0.123456')
+```
+
+### SDK Documentation
+
+- **[SDK README](./SDK_README.md)** - Complete SDK installation and usage guide
+- **[API Reference](./docs/API_REFERENCE.md)** - Full API documentation
+- **[Usage Guide](./docs/USAGE_GUIDE.md)** - Integration examples
+
+---
+
+## 🎬 Demos & Examples
+
+Hedron includes comprehensive demos showcasing real-world use cases with actual blockchain transactions.
+
+### Bounty 1: x402 Payment Standard Demos
+
+#### NFT Royalty Payment (Cross-Chain x402)
+```bash
+npm run demo:nft-royalty 150
+```
+
+**Demonstrates:**
+- NFT sale simulation ($150)
+- Automatic 10% royalty calculation ($15)
+- Cross-chain x402 payment execution
+- USDC transfer on Base Sepolia
+- Complete payment receipt
+
+**Network:** Base Sepolia | **Asset:** USDC | **Protocol:** x402
+
+#### HBAR Direct Transfer (Native x402)
+```bash
+npm run demo:hbar-x402 10
+```
+
+**Demonstrates:**
+- Direct Hedera HBAR transfer
+- x402 verification on native Hedera
+- Fast, low-cost settlement
+- Payment authorization and settlement
+
+**Network:** Hedera Testnet | **Asset:** HBAR | **Protocol:** x402
+
+### Bounty 2: Hedera Agent Kit Demos
+
+#### Intelligent Invoice with LLM Reasoning
+```bash
+npm run demo:invoice-llm
+```
+
+**Demonstrates:**
+- LLM-powered invoice validation (GPT-4)
+- AI decision making with reasoning
+- Autonomous approval/rejection
+- Hedera token settlement
+- Complete agent coordination workflow
+
+**Technology:** LLM + A2A Protocol | **Network:** Hedera Testnet | **Asset:** HBAR
+
+#### Supply Chain Fraud Detection
+```bash
+npm run demo:supply-chain-fraud
+```
+
+**Demonstrates:**
+- Multi-agent price negotiation
+- AI fraud detection algorithms
+- Blockchain memo verification
+- Hedera token settlement
+- Complete security workflow
+
+**Technology:** Fraud Detection + Memo Verification + A2A | **Network:** Hedera Testnet | **Asset:** HBAR
+
+### Additional Supporting Demos
+
+```bash
+npm run demo                    # Complete 3-agent workflow
+npm run demo:invoice            # Invoice automation
+npm run demo:negotiation        # Supply chain negotiation
+npm run demo:rwa-invoice        # Tokenized RWA invoice demo
+```
+
+### Demo Documentation
+
+- **[Demo Guide](./demo/README.md)** - Complete demo showcase guide
+- **[Bounty 1 Details](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md)** - x402 implementation
+- **[Bounty 2 Details](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md)** - Agent Kit implementation
+
+---
+
+## 🏆 Hackathon Submission
+
+Hedron was built for the **Hedera Africa Hackathon**, implementing both bounties with production-ready code:
+
+- ✅ **Bounty 1: Hedera x402 Payment Standard SDK** - Complete cross-chain payment protocol
+- ✅ **Bounty 2: Hedera Agent Kit & Google A2A Protocol** - Autonomous agent systems with AI-powered decision making
+
+### Quick Hackathon Overview
+
+**What We Built:**
+- 80+ files of production-ready code
+- 11 passing tests (unit, integration, e2e)
+- 7 working demos with real blockchain transactions
+- 21+ comprehensive documentation files
+- 2 deployed smart contracts
+
+**Key Highlights:**
+- First x402 implementation connecting Hedera and Base
+- LLM reasoning for autonomous invoice validation
+- Fraud detection with blockchain memo verification
+- Multi-protocol agent communication (A2A, AP2, x402)
+
+📖 **[Read Complete Hackathon README](./HACKATHON_README.md)** for full submission details, setup instructions, and demo walkthroughs.
 
 ---
 
@@ -114,7 +260,7 @@ Hedron enables autonomous systems across multiple industries:
 
 ---
 
-## ⚡ Quick Start
+## ⚡ Quick Start (Development)
 
 ### Installation
 
@@ -145,51 +291,6 @@ Configure your `.env` file with:
 
 See [Environment Setup](./docs/HCS11_SETUP_GUIDE.md) for detailed instructions.
 
-### Run Demos
-
-```bash
-# Bounty 1: x402 Payment Standard
-npm run demo:nft-royalty 150    # Cross-chain royalty (USDC on Base)
-npm run demo:hbar-x402 10       # Native HBAR settlement
-
-# Bounty 2: Hedera Agent Kit
-npm run demo:invoice-llm        # LLM-powered invoice validation
-npm run demo:supply-chain-fraud # Fraud detection + memo verification
-
-# Supporting demos
-npm run demo                    # Complete 3-agent workflow
-npm run demo:invoice            # Invoice automation
-npm run demo:negotiation        # Supply chain negotiation
-```
-
----
-
-## 📚 Documentation
-
-### Bounty Submissions
-
-- [Bounty 1: Hedera x402 Payment Standard](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md) - Cross-chain payment protocol
-- [Bounty 2: Hedera Agent Kit](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md) - Autonomous agent systems
-- [Bounties Comparison](./docs/BOUNTIES_GUIDE.md) - Side-by-side comparison
-
-### Core Documentation
-
-- [Complete Documentation Index](./docs/INDEX.md) - All available documentation
-- [API Reference](./docs/API_REFERENCE.md) - Complete API documentation
-- [A2A Protocol Implementation](./docs/A2A_PROTOCOL_IMPLEMENTATION.md) - Agent communication
-- [Human-in-the-Loop Mode](./docs/HUMAN_IN_THE_LOOP.md) - HITL configuration
-- [Smart Contract Deployment](./docs/SMART_CONTRACT_DEPLOYMENT.md) - Contract deployment
-
-### Setup Guides
-
-- [HCS-11 Setup Guide](./docs/HCS11_SETUP_GUIDE.md) - Profile registration
-- [Local HCS Resolver](./docs/LOCAL_HCS_RESOLVER.md) - Local profile resolver
-- [Hackathon Ready](./docs/HACKATHON_READY.md) - Submission checklist
-
-### Usage & Demos
-
-- [Usage Guide](./docs/USAGE_GUIDE.md) - How to use Hedron
-- [Demo Guide](./demo/README.md) - Demo showcase guide
 ---
 
 ## 🧪 Testing
@@ -197,7 +298,7 @@ npm run demo:negotiation        # Supply chain negotiation
 ### Run All Tests
 
 ```bash
-npm run test:all  # Unit + Integration tests
+npm run test:all  # Unit + Integration + E2E tests
 ```
 
 ### Test Coverage
@@ -205,6 +306,8 @@ npm run test:all  # Unit + Integration tests
 - **Unit Tests**: Agent logic, protocol implementations
 - **Integration Tests**: Cross-protocol workflows, payment flows
 - **E2E Tests**: Complete agent coordination (requires HCS-11 setup)
+
+**Status:** ✅ All tests passing
 
 ---
 
@@ -228,7 +331,7 @@ npm run test:all  # Unit + Integration tests
 ### Build
 
 ```bash
-npm run build
+npm run build  # Build SDK and source code
 ```
 
 ### Deploy Contracts
@@ -247,20 +350,54 @@ npm run check:wallets        # Check wallet status
 
 ---
 
+## 📚 Documentation
+
+### SDK Documentation
+
+- **[SDK README](./SDK_README.md)** - SDK installation and usage
+- **[API Reference](./docs/API_REFERENCE.md)** - Complete API documentation
+- **[Usage Guide](./docs/USAGE_GUIDE.md)** - How to use Hedron
+
+### Bounty Submissions
+
+- [Bounty 1: Hedera x402 Payment Standard](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md) - Cross-chain payment protocol
+- [Bounty 2: Hedera Agent Kit](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md) - Autonomous agent systems
+- [Bounties Comparison](./docs/BOUNTIES_GUIDE.md) - Side-by-side comparison
+
+### Core Documentation
+
+- [Complete Documentation Index](./docs/INDEX.md) - All available documentation
+- [A2A Protocol Implementation](./docs/A2A_PROTOCOL_IMPLEMENTATION.md) - Agent communication
+- [Human-in-the-Loop Mode](./docs/HUMAN_IN_THE_LOOP.md) - HITL configuration
+- [Smart Contract Deployment](./docs/SMART_CONTRACT_DEPLOYMENT.md) - Contract deployment
+
+### Setup Guides
+
+- [HCS-11 Setup Guide](./docs/HCS11_SETUP_GUIDE.md) - Profile registration
+- [Local HCS Resolver](./docs/LOCAL_HCS_RESOLVER.md) - Local profile resolver
+- [Hackathon Ready](./docs/HACKATHON_READY.md) - Submission checklist
+
+---
+
 ## 📦 Project Structure
 
 ```
 hedron/
 ├── src/
-│   ├── agents/              # Agent implementations
-│   ├── protocols/           # A2A, AP2, x402 protocols
-│   ├── facilitator/         # x402 facilitator server
-│   ├── modes/              # Human-in-the-loop
-│   └── services/            # Token services
+│   ├── agents/              # Agent implementations (SDK)
+│   ├── protocols/           # A2A, AP2, x402 protocols (SDK)
+│   ├── facilitator/         # x402 facilitator server (SDK)
+│   ├── modes/              # Human-in-the-loop (SDK)
+│   ├── services/           # Token services (SDK)
+│   └── utils/              # Utility functions (SDK)
 ├── contracts/              # Solidity smart contracts
 ├── tests/                  # Test suite (unit, integration, e2e)
 ├── demo/                   # Showcase demos
-└── docs/                   # Complete documentation
+├── docs/                   # Complete documentation
+├── dist/                   # Built SDK files
+├── SDK_README.md          # SDK-specific documentation
+├── HACKATHON_README.md    # Hackathon submission details
+└── README.md              # This file
 ```
 
 ---
@@ -295,14 +432,12 @@ hedron/
 - Complete audit trails
 - Security best practices
 
----
+### ✅ SDK Ready
 
-## 📖 Learn More
-
-- [Documentation Index](./docs/INDEX.md) - Browse all documentation
-- [API Reference](./docs/API_REFERENCE.md) - Complete API docs
-- [Usage Guide](./docs/USAGE_GUIDE.md) - How to use Hedron
-- [Bounty Guides](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md) - Bounty details
+- npm package available
+- TypeScript definitions
+- Modular exports
+- Optional environment configuration
 
 ---
 
@@ -318,10 +453,20 @@ ISC License - see LICENSE file for details.
 
 ---
 
+## 🔗 Links
+
+- **GitHub Repository**: [github.com/Hebx/hedron](https://github.com/Hebx/hedron)
+- **Issues**: [GitHub Issues](https://github.com/Hebx/hedron/issues)
+- **Documentation**: See `docs/` directory
+- **SDK Package**: `hedron-agent-sdk` on npm
+
+---
+
 ## 🏆 Built For
 
 - **Hedera x402 Payment Standard Bounty** - Agentic Cross-chain payment protocol
 - **Hedera Agent Kit Bounty** - Autonomous agent systems and protocols
+- **Hedera Africa Hackathon** - Complete submission with both bounties
 
 ---
 

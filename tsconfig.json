@@ -1,6 +1,8 @@
 {
   // Visit https://aka.ms/tsconfig to read more about this file
-  "include": ["src/**/*", "tests/**/*", "demo/**/*", "scripts/**/*"],
+  // SDK build: Only include src for npm package
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist", "tests", "demo", "scripts"],
   "compilerOptions": {
     // File Layout
     "rootDir": ".",

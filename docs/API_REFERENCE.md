@@ -1,4 +1,4 @@
-# API Reference - Hedera A2A Agent System
+# API Reference - Hedron Agent System
 
 Complete API documentation for all agents and their methods.
 
@@ -513,7 +513,7 @@ MERCHANT_WALLET_ADDRESS=0x...
 
 ```bash
 # Debug mode
-DEBUG=hedera-a2a-agents:*
+DEBUG=hedron-agent-sdk:*
 
 # Custom polling interval (default: 5000ms)
 POLLING_INTERVAL=5000

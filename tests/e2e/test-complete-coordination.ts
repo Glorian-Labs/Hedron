@@ -142,7 +142,7 @@ async function testCompleteAgentCoordination(): Promise<void> {
     console.log('   BaseScan (x402 Payment):')
     console.log('     https://sepolia.basescan.org')
     console.log('')
-    console.log(chalk.green('✅ The Hedera A2A Agents System successfully demonstrated'))
+    console.log(chalk.green('✅ The Hedron System successfully demonstrated'))
     console.log(chalk.green('   autonomous agent coordination with x402 payments!'))
 
   } catch (error) {

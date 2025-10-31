@@ -4,12 +4,12 @@ import { Wallet, JsonRpcProvider } from 'ethers'
 import { Client, PrivateKey, AccountId, TransferTransaction, Hbar, AccountBalanceQuery } from '@hashgraph/sdk'
 import { HCS10ConnectionManager } from '../protocols/HCS10ConnectionManager'
 import { HCS10TransactionApproval } from '../protocols/HCS10TransactionApproval'
-import chalk from 'chalk'
-import dotenv from 'dotenv'
 import { X402FacilitatorServer } from '../facilitator/X402FacilitatorServer'
+import { loadEnvIfNeeded } from '../utils/env'
+import chalk from 'chalk'
 
-// Load environment variables
-dotenv.config()
+// Load environment variables (optional for SDK usage)
+loadEnvIfNeeded()
 
 export class SettlementAgent {
   private hcsClient: HCS10Client

@@ -1,9 +1,9 @@
 import express, { Request, Response } from 'express'
 import { Client, PrivateKey, AccountId, TopicMessageQuery, TopicMessage } from '@hashgraph/sdk'
+import { loadEnvIfNeeded } from '../utils/env'
 import chalk from 'chalk'
-import dotenv from 'dotenv'
 
-dotenv.config()
+loadEnvIfNeeded()
 
 /**
  * Local HCS-11 Profile Resolver

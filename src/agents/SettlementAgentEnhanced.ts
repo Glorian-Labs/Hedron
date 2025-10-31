@@ -12,15 +12,15 @@ import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
 import { Wallet, JsonRpcProvider } from 'ethers'
 import { Client, PrivateKey, AccountId, TransferTransaction, Hbar, AccountBalanceQuery } from '@hashgraph/sdk'
 import { processPayment } from 'a2a-x402'
-import chalk from 'chalk'
-import dotenv from 'dotenv'
 import { A2AProtocol } from '../protocols/A2AProtocol'
 import { A2ANegotiation, NegotiationState } from '../protocols/A2ANegotiation'
 import { AP2Protocol, AP2PaymentRequest } from '../protocols/AP2Protocol'
 import { HumanInTheLoopMode, ApprovalRequest } from '../modes/HumanInTheLoopMode'
 import { X402FacilitatorServer } from '../facilitator/X402FacilitatorServer'
+import { loadEnvIfNeeded } from '../utils/env'
+import chalk from 'chalk'
 
-dotenv.config()
+loadEnvIfNeeded()
 
 export class SettlementAgentEnhanced {
   private hcsClient: HCS10Client
@@ -39,6 +39,8 @@ export class SettlementAgentEnhanced {
     const privateKey = process.env.SETTLEMENT_PRIVATE_KEY
     const baseRpcUrl = process.env.BASE_RPC_URL
     const walletPrivateKey = process.env.SETTLEMENT_WALLET_PRIVATE_KEY
+    const mainAccountId = process.env.HEDERA_ACCOUNT_ID
+    const mainPrivateKey = process.env.HEDERA_PRIVATE_KEY
 
     if (!agentId || !privateKey || !baseRpcUrl || !walletPrivateKey) {
       throw new Error('Missing required environment variables')
@@ -46,9 +48,6 @@ export class SettlementAgentEnhanced {
 
     // Initialize HCS client
     if (privateKey.startsWith('placeholder-key-for-')) {
-      const mainAccountId = process.env.HEDERA_ACCOUNT_ID
-      const mainPrivateKey = process.env.HEDERA_PRIVATE_KEY
-      
       if (!mainAccountId || !mainPrivateKey) {
         throw new Error('Missing main Hedera credentials')
       }
@@ -67,9 +66,6 @@ export class SettlementAgentEnhanced {
 
     // Initialize Hedera client if needed
     if (this.paymentNetwork === 'hedera-testnet') {
-      const mainAccountId = process.env.HEDERA_ACCOUNT_ID
-      const mainPrivateKey = process.env.HEDERA_PRIVATE_KEY
-      
       if (!mainAccountId || !mainPrivateKey) {
         throw new Error('Missing required Hedera credentials')
       }

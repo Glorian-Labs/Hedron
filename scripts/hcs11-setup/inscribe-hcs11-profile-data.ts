@@ -53,8 +53,8 @@ async function inscribeHCS11ProfileData(): Promise<void> {
       "@type": "HCS11Profile",
       "id": `hedera:testnet:account:${accountId}`,
       "name": "Agent Coordinator",
-      "displayName": "Hedera A2A Agent Coordinator",
-      "description": "Main coordinator account for Hedera A2A Agents system",
+      "displayName": "Hedron Agent Coordinator",
+      "description": "Main coordinator account for Hedron system",
       "version": "1.0.0",
       "capabilities": [
         "coordinate",
@@ -66,12 +66,12 @@ async function inscribeHCS11ProfileData(): Promise<void> {
       "properties": {
         "accountType": "coordinator",
         "network": "testnet",
-        "system": "hedera-a2a-agents",
+        "system": "hedron",
         "created": "2025-01-26T01:50:00Z",
         "lastUpdated": new Date().toISOString(),
         "status": "active"
       },
-      "bio": "Agent Coordinator - Main account for managing Hedera A2A agent operations and cross-chain payments",
+      "bio": "Agent Coordinator - Main account for managing Hedron agent operations and cross-chain payments",
       "type": "coordinator",
       "model": "agent-coordinator-2024",
       "members": [],
@@ -82,7 +82,7 @@ async function inscribeHCS11ProfileData(): Promise<void> {
         "0.0.7132822"  // Settlement topic
       ],
       "metadata": {
-        "agentSystem": "hedera-a2a-agents",
+        "agentSystem": "hedron",
         "version": "1.0.0",
         "capabilities": {
           "hcs10": true,
@@ -129,7 +129,7 @@ async function inscribeHCS11ProfileData(): Promise<void> {
       {
         "@type": "HCS11ProfileMetadata",
         "timestamp": new Date().toISOString(),
-        "system": "hedera-a2a-agents",
+        "system": "hedron",
         "version": "1.0.0"
       }
     ]

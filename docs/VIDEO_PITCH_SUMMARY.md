@@ -120,32 +120,71 @@
 > - Support for USDC on Base, HBAR on Hedera
 > - Local facilitator server for verification
 
+> **SDK Layer:**
+> - Production-ready npm package available
+> - Easy integration for developers
+> - Modular exports for flexibility
+
 > This is all production-ready code with error handling, security, and human-in-the-loop capabilities."
 
 ---
 
-### **PART 6: USE CASES & IMPACT (3:00 - 3:45)**
+### **PART 6: SDK & DEVELOPER EXPERIENCE (3:00 - 3:30)**
+
+> "But here's what makes Hedron unique - we've packaged everything as a production-ready SDK.
+
+> [**DEMO: Show SDK Installation**]
+
+> "Watch me install the SDK: `npm install hedron-agent-sdk`
+
+> [**DEMO: Show Code Example**]
+
+> "And here's how easy it is to use:
+
+> ```typescript
+> import { AnalyzerAgent, A2AProtocol } from 'hedron-agent-sdk'
+> 
+> const agent = new AnalyzerAgent()
+> await agent.init()
+> const data = await agent.queryAccount('0.0.123456')
+> ```
+
+> That's it! Developers can build autonomous agent applications in minutes, not weeks.
+
+> The SDK includes:
+> - All agent classes ready to use
+> - Complete protocol implementations
+> - TypeScript definitions for type safety
+> - Modular exports for optimal bundle size
+> - Production-ready error handling
+
+> This makes Hedron the first complete agent framework SDK for Hedera."
+
+---
+
+### **PART 7: USE CASES & IMPACT (3:30 - 4:00)**
 
 > "Hedron solves real-world problems:
 
-> **Invoice Automation** - SMEs can automate invoice processing, reducing costs by 80%
+> **Invoice Automation** - SMEs can automate invoice processing, reducing costs by 80%. Now with SDK, any developer can integrate this.
 
-> **Supply Chain Finance** - Vendors get instant payments through agent negotiation
+> **Supply Chain Finance** - Vendors get instant payments through agent negotiation. SDK makes it accessible to all developers.
 
-> **Content Creator Economy** - NFT creators receive automatic royalty payments
+> **Content Creator Economy** - NFT creators receive automatic royalty payments. Easy to implement with our SDK.
 
-> **Enterprise Automation** - Trustless multi-party workflows with blockchain verification
+> **Enterprise Automation** - Trustless multi-party workflows with blockchain verification. SDK enables rapid development.
 
 > The market opportunity is massive:
 > - $40 trillion global supply chain
 > - $15 trillion digital payments
 > - $200 billion AI automation by 2030
+> - Growing SDK and developer tools market
 
-> Hedron positions us at the intersection of all three."
+> Hedron positions us at the intersection of all four, with an SDK that enables developers to build on our foundation."
 
 ---
 
-### **PART 7: WHAT MAKES US STAND OUT (3:45 - 4:15)**
+### **PART 8: WHAT MAKES US STAND OUT (4:00 - 4:15)**
 
 > "Why should Hedron win?
 
@@ -159,23 +198,27 @@
 
 > **Fifth**, our code is production-ready with comprehensive tests, documentation, and error handling.
 
-> **Finally**, we've delivered 80+ files, 11 passing tests, and 21 documentation files - showing commitment to quality."
+> **Sixth**, and this is a first - we've packaged everything as a production-ready SDK that developers can use immediately.
+
+> **Finally**, we've delivered 80+ files, 11 passing tests, 21 documentation files, and a complete SDK - showing commitment to quality and developer experience."
 
 ---
 
-### **PART 8: CALL TO ACTION (4:15 - 4:30)**
+### **PART 9: CALL TO ACTION (4:15 - 4:30)**
 
 > "You can try Hedron yourself:
 
-> Clone our repository, run `npm install`, set up your environment, and execute:
+> **As a Developer:** Install the SDK: `npm install hedron-agent-sdk`
+
+> **Or Clone the Repo:** Run `npm install`, set up your environment, and execute:
 > - `npm run demo:nft-royalty 150` for cross-chain x402
 > - `npm run demo:hbar-x402 10` for native x402
 > - `npm run demo:invoice-llm` for AI reasoning
 > - `npm run demo:supply-chain-fraud` for fraud detection
 
-> All our documentation is in the docs folder, and we're ready to answer any questions.
+> All our documentation is in the docs folder, including complete SDK guides. We're ready to answer any questions.
 
-> Thank you, judges! **Hedron** - autonomous agents, intelligent decisions, seamless settlements."
+> Thank you, judges! **Hedron** - autonomous agents, intelligent decisions, seamless settlements, now available as a production SDK."
 
 ---
 
@@ -184,16 +227,18 @@
 ### **Screen Recording Segments:**
 
 1. **Terminal Output**
-   - Show npm commands running
+   - Show npm commands running (`npm install hedron-agent-sdk`)
    - Display transaction hashes
    - Show agent communication logs
    - Highlight payment receipts
+   - SDK installation and usage
 
 2. **Code Snippets**
    - Agent implementations
    - x402 payment flow
    - A2A protocol usage
    - Smart contract interactions
+   - **SDK import and usage examples**
 
 3. **Blockchain Explorers**
    - Hedera Explorer (transaction links)
@@ -217,6 +262,7 @@
 - ✅ **11 passing tests** (100% pass rate)
 - ✅ **21 documentation files**
 - ✅ **7 working demos**
+- ✅ **Production SDK** - `hedron-agent-sdk` on npm
 
 ### **Technology Stack:**
 
@@ -234,6 +280,7 @@
 - Fraud detection with blockchain verification
 - Multi-protocol agent communication
 - Production-ready code
+- **First production SDK for Hedera agents** - `hedron-agent-sdk`
 
 ---
 

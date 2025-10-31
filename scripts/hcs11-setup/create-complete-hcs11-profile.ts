@@ -56,8 +56,8 @@ async function createCompleteHCS11Profile(): Promise<void> {
       "@type": "HCS11Profile",
       "id": `did:hedera:testnet:${accountId}`,
       "name": "Agent Coordinator",
-      "displayName": "Hedera A2A Agent Coordinator",
-      "description": "Main coordinator account for Hedera A2A Agents system",
+      "displayName": "Hedron Agent Coordinator",
+      "description": "Main coordinator account for Hedron system",
       "version": "1.0.0",
       "created": "2025-01-26T01:50:00Z",
       "updated": new Date().toISOString(),
@@ -72,11 +72,11 @@ async function createCompleteHCS11Profile(): Promise<void> {
       "properties": {
         "accountType": "coordinator",
         "network": "testnet",
-        "system": "hedera-a2a-agents",
+        "system": "hedron",
         "status": "active",
         "lastActivity": new Date().toISOString()
       },
-      "bio": "Agent Coordinator - Main account for managing Hedera A2A agent operations and cross-chain payments",
+      "bio": "Agent Coordinator - Main account for managing Hedron agent operations and cross-chain payments",
       "type": "coordinator",
       "model": "agent-coordinator-2024",
       "members": [],
@@ -87,7 +87,7 @@ async function createCompleteHCS11Profile(): Promise<void> {
         "0.0.7132822"  // Settlement topic
       ],
       "metadata": {
-        "agentSystem": "hedera-a2a-agents",
+        "agentSystem": "hedron",
         "version": "1.0.0",
         "capabilities": {
           "hcs10": true,
@@ -195,7 +195,7 @@ async function createCompleteHCS11Profile(): Promise<void> {
       {
         "id": `did:hedera:testnet:${accountId}`,
         "name": "Agent Coordinator",
-        "description": "Hedera A2A Agent Coordinator",
+        "description": "Hedron Agent Coordinator",
         "status": "active",
         "network": "testnet"
       }

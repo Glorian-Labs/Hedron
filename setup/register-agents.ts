@@ -97,15 +97,15 @@ async function registerAgents(): Promise<void> {
         
         const agentMetadata = {
           name: agent.name,
-          description: `${agent.name} for Hedera A2A operations`,
+          description: `${agent.name} for Hedron operations`,
           version: '1.0.0',
           capabilities: ['analyze', 'verify', 'settle'],
           properties: {
             agentType: agent.name.toLowerCase().replace('agent', ''),
             network: 'testnet',
-            description: `${agent.name} for Hedera A2A operations`
+            description: `${agent.name} for Hedron operations`
           },
-          bio: `${agent.name} - A specialized agent for Hedera A2A operations`,
+          bio: `${agent.name} - A specialized agent for Hedron operations`,
           type: 'autonomous',
           model: 'agent-model-2024'
         }
@@ -185,7 +185,7 @@ async function registerAgents(): Promise<void> {
     })
 
     console.log('\n🎉 All agents registered successfully!')
-    console.log('💡 You can now use these agents in your Hedera A2A operations.')
+    console.log('💡 You can now use these agents in your Hedron operations.')
 
   } catch (error) {
     console.error('❌ Agent registration failed:', error)

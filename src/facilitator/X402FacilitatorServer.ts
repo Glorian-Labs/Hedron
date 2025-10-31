@@ -1,11 +1,11 @@
 import { verifyPayment, settlePayment } from 'a2a-x402'
 import { ethers } from 'ethers'
 import { Client, PrivateKey, AccountId, TransferTransaction, Hbar } from '@hashgraph/sdk'
+import { loadEnvIfNeeded } from '../utils/env'
 import chalk from 'chalk'
-import dotenv from 'dotenv'
 
-// Load environment variables
-dotenv.config()
+// Load environment variables (optional for SDK usage)
+loadEnvIfNeeded()
 
 export class X402FacilitatorServer {
   private provider: ethers.JsonRpcProvider

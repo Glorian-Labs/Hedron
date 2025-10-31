@@ -88,7 +88,7 @@ async function testX402CompleteFlow(): Promise<void> {
     console.log('   2. The server to process the payment authorization')
     console.log('   3. The server to execute the actual token transfer')
     console.log('')
-    console.log(chalk.green('✅ The Hedera A2A Agents System successfully created x402 payment authorizations!'))
+    console.log(chalk.green('✅ The Hedron System successfully created x402 payment authorizations!'))
     console.log(chalk.blue('🔗 This demonstrates autonomous agent-to-agent payment coordination'))
 
   } catch (error) {

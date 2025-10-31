@@ -117,7 +117,7 @@ async function testAgentCoordinationWithWorkingHCS(): Promise<void> {
     console.log('   BaseScan (x402 Payment):')
     console.log('     https://sepolia.basescan.org')
     console.log('')
-    console.log(chalk.green('✅ The Hedera A2A Agents System successfully demonstrated'))
+    console.log(chalk.green('✅ The Hedron System successfully demonstrated'))
     console.log(chalk.green('   autonomous agent coordination with x402 payments!'))
     console.log('')
     console.log(chalk.yellow('💡 Note: HCS-11 memo issue bypassed by using direct agent communication'))

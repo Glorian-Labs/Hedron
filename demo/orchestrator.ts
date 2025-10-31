@@ -20,7 +20,7 @@ const sleep = (ms: number): Promise<void> => {
 async function main(): Promise<void> {
   try {
     // Print banner
-    console.log(chalk.bold('🤖 Hedera A2A Agent System Demo'))
+    console.log(chalk.bold('🤖 Hedron Agent System Demo'))
     console.log(chalk.gray('Query account data and trigger agent coordination workflow'))
     console.log('')
 

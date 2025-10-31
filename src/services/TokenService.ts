@@ -9,10 +9,10 @@
  */
 
 import { Client, TokenCreateTransaction, TokenType, PrivateKey, AccountId, AccountBalanceQuery } from '@hashgraph/sdk'
+import { loadEnvIfNeeded } from '../utils/env'
 import chalk from 'chalk'
-import dotenv from 'dotenv'
 
-dotenv.config()
+loadEnvIfNeeded()
 
 /**
  * HTS Token Service Implementation
@@ -48,7 +48,7 @@ export class TokenService {
         .setDecimals(decimals)
         .setTreasuryAccountId(operatorId)
         .setAutoRenewAccountId(operatorId)
-        .setTokenMemo('Hedera A2A Agents Royalty Token')
+        .setTokenMemo('Hedron Royalty Token')
 
       // Execute the transaction
       const response = await transaction.execute(this.client)

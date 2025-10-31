@@ -1,6 +1,6 @@
 # Scripts Directory
 
-This directory contains utility scripts for setting up, maintaining, and troubleshooting the Hedera A2A Agents system.
+This directory contains utility scripts for setting up, maintaining, and troubleshooting the Hedron system.
 
 ## 📁 Directory Structure
 

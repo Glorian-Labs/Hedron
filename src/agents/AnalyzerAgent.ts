@@ -1,11 +1,11 @@
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
 import { Client, AccountInfoQuery, AccountId } from '@hashgraph/sdk'
 import { HCS10ConnectionManager } from '../protocols/HCS10ConnectionManager'
+import { loadEnvIfNeeded } from '../utils/env'
 import axios from 'axios'
-import dotenv from 'dotenv'
 
-// Load environment variables
-dotenv.config()
+// Load environment variables (optional for SDK usage)
+loadEnvIfNeeded()
 
 export class AnalyzerAgent {
   private hcsClient: HCS10Client
