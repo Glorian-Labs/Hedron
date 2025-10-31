@@ -1,14 +1,15 @@
 # Hedron - Video Pitch Summary & Script
 
-**Hackathon Submission Video Pitch**
+**Hackathon Submission Video Pitch - 4 Minutes Maximum**
 
 ---
 
-## Video Structure (4-5 minutes)
+## Video Structure (4 minutes)
 
-### Part 1: Problem & Solution (1 minute)
-### Part 2: Technology Demonstration (2.5 minutes)
-### Part 3: Impact & Call to Action (1 minute)
+### Part 1: Problem & SDK Solution (0:45)
+### Part 2: RWA Demo - Featured (1:15)
+### Part 3: Real Use Cases with SDK (1:00)
+### Part 4: Why We Win + Call to Action (1:00)
 
 ---
 
@@ -16,277 +17,111 @@
 
 ### **OPENING (0:00 - 0:15)**
 
-> "Hello, Hedera Africa Hackathon judges! I'm excited to present **Hedron** - an autonomous agent ecosystem that solves real-world payment and supply chain challenges using Hedera Hashgraph.
+> "Hello, Hedera Africa Hackathon judges! I'm excited to present **Hedron** - a production-ready SDK that enables developers to build autonomous agent applications on Hedera Hashgraph.
 
-> Today, I'll show you how we've built a complete solution that implements both hackathon bounties, **integrates HCS-10 OpenConvAI protocol**, and is available as a production-ready SDK."
-
----
-
-### **PART 1: THE PROBLEM (0:15 - 0:45)**
-
-> "Let's start with the problems we're solving:
-
-> **First**, payment processing today requires human intervention at every step - it's slow, expensive, and error-prone.
-
-> **Second**, the blockchain ecosystem is fragmented. There's no standard way for agents to make cross-chain payments seamlessly.
-
-> **Third**, autonomous agents can't truly negotiate or make decisions independently. They need a trustless way to communicate and settle.
-
-> **Fourth**, supply chains suffer from manual verification, fraud, and inefficient settlement processes.
-
-> **Finally**, there's no standardized way for agents to establish trusted connections or require multi-signature approval for high-value transactions.
-
-> These are exactly the problems Hedron solves."
+> Today, I'll show you how we've built the **first complete agent framework SDK** for Hedera that solves real-world problems - with a special focus on Real-World Asset tokenization, which I'll demonstrate live."
 
 ---
 
-### **PART 2: OUR SOLUTION - HEDRON (0:45 - 1:00)**
+### **PART 1: THE PROBLEM & SDK SOLUTION (0:15 - 1:00)**
 
-> "**Hedron** is a complete autonomous agent ecosystem built on Hedera Hashgraph.
+> "Let's start with the real-world problems:
 
-> We enable:
-> - **Autonomous agent negotiation** - agents negotiate terms without human intervention
-> - **Cross-chain payments** - seamless settlements across Hedera and EVM chains
-> - **AI-powered decision making** - LLM reasoning for intelligent validation
-> - **Built-in security** - fraud detection and blockchain verification
-> - **HCS-10 OpenConvAI** - connection management and transaction approval
-> - **Production SDK** - easy integration for developers
+> **Invoice factoring is a $3 trillion market**, but SMEs struggle to get liquidity. Traditional processes take weeks.
 
-> We've implemented **both hackathon bounties**, integrated **HCS-10 OpenConvAI protocol**, and packaged everything as a production SDK."
+> **Payment automation requires complex integrations** - developers spend months building agent systems from scratch.
 
----
+> **There's no standard SDK** for autonomous agents on Hedera - every project rebuilds the same infrastructure.
 
-### **PART 3: BOUNTY 1 - x402 PAYMENT STANDARD (1:00 - 1:45)**
+> **That's why we built Hedron SDK** - a production-ready npm package that enables developers to build autonomous agent applications in minutes, not months.
 
-> "Let me show you **Bounty 1: Hedera x402 Payment Standard**.
+> With just a few lines of code, developers can:
+> - Tokenize invoices as Real-World Assets
+> - Execute autonomous payments across chains
+> - Enable AI-powered decision making
+> - Build multi-agent negotiation systems
 
-> [**DEMO: Run NFT Royalty Demo**]
-
-> "I'm running our NFT royalty demo. Watch as:
-> - An NFT sells for $150
-> - Our system automatically calculates a 10% royalty
-> - A cross-chain x402 payment executes
-> - USDC transfers on Base Sepolia to the creator
-> - HCS-10 fee-based connection configuration is shown
-> - A complete payment receipt is generated
-
-> [**DEMO: Run HBAR Direct Transfer (Large Amount)**]
-
-> "And here's our native x402 implementation with HCS-10:
-> - Large HBAR transfer (100 HBAR)
-> - HCS-10 transaction approval workflow triggers
-> - Multi-signature approval required
-> - Transaction scheduled and approved
-> - Fast, low-cost settlement
-
-> We've built a complete x402 implementation supporting both cross-chain USDC and native HBAR payments, now enhanced with HCS-10 transaction approval."
+> Let me show you the RWA tokenization use case - this solves a massive real-world problem."
 
 ---
 
-### **PART 4: BOUNTY 2 - HEDERA AGENT KIT + HCS-10 (1:45 - 2:30)**
+### **PART 2: RWA DEMO - FEATURED (1:00 - 2:15)**
 
-> "Now for **Bounty 2: Hedera Agent Kit with A2A Protocol**, enhanced with **HCS-10 OpenConvAI**.
+> "Now, let me show you **Real-World Asset tokenization** - this is our featured use case for Track 1.
 
-> [**DEMO: Run Orchestrator**]
+> [**DEMO: Run Tokenized RWA Invoice Demo**]
+> `npm run demo:rwa-invoice 600`
 
-> "Watch our complete 3-agent workflow:
-> - Analyzer Agent queries account data
-> - HCS-10 connections established between agents
-> - Proposals sent via connection topics
-> - Verifier Agent validates using HCS-10 connection
-> - Settlement Agent executes payment with transaction approval
-> - Multi-signature workflow ensures security
+> "Watch this live demonstration:
 
-> [**DEMO: Run Intelligent Invoice Demo (High-Value)**]
+> **Step 1: Invoice Creation** - We have a $600 invoice from a vendor for Q1 software services. In traditional finance, this would take weeks to process.
 
-> "Here's our intelligent invoice with HCS-10:
-> - High-value invoice ($800) requires approval
-> - LLM uses GPT-4 to reason about the invoice
-> - HCS-10 transaction approval replaces CLI prompts
-> - LLM reasoning stored in transaction memo on-chain
-> - Multi-signature approval workflow
-> - Autonomous decision with complete audit trail
+> **Step 2: Tokenization** - Using Hedron SDK, we convert this invoice into a tradeable token on Hedera. The token represents a Real-World Asset - a claim to the invoice amount. Watch the token creation happening on-chain right now.
 
-> [**DEMO: Run Supply Chain Fraud Detection**]
+> **Step 3: RWA Trading** - Here's the powerful part: This token can now be traded. Companies can sell 50% of their invoice to get immediate liquidity - that's invoice factoring, but on-chain and automated. Watch the token transfer executing now.
 
-> "And our supply chain fraud detection:
-> - Agents negotiate vendor contract
-> - Fraud detection algorithm analyzes transaction
-> - Memo verification confirms agreement on blockchain
-> - HCS-10 transaction approval for secure settlement
-> - Enhanced audit trail with fraud check results
+> **Step 4: Automated Settlement** - When the invoice is due, our autonomous agent automatically detects it and executes payment via x402 protocol. The payment happens on-chain, with complete transparency. The settlement is executing now - watch the transaction confirm.
 
-> We've built a complete multi-agent system with LLM reasoning, blockchain verification, and HCS-10 OpenConvAI protocol integration."
+> This solves a **$3 trillion invoice factoring market** problem. SMEs get liquidity in minutes, not weeks. All powered by Hedron SDK - developers can build this with just a few lines of code.
+
+> The SDK handles:
+> - Token creation on Hedera Token Service
+> - Cross-chain payment execution
+> - Automated settlement triggers
+> - Complete on-chain audit trail
+
+> This is production-ready code, running on testnet right now. All of this is available in our SDK for developers to build their own RWA platforms."
 
 ---
 
-### **PART 5: TECHNOLOGY & ARCHITECTURE (2:30 - 3:00)**
+### **PART 3: REAL USE CASES WITH SDK (2:15 - 3:15)**
 
-> "Let me explain our architecture:
+> "RWA is just one use case. Let me show you what developers are building with Hedron SDK:
 
-> **Three Core Agents:**
-> - **Analyzer Agent** - queries data, generates insights
-> - **Verifier Agent** - validates proposals, makes AI decisions
-> - **Settlement Agent** - executes payments via x402
+> **1. E-Commerce Payment Platform** - Build a Stripe-like service with autonomous payments. Developers use just a few lines of code to validate orders with AI and execute instant cross-chain payments.
 
-> **Communication Layer:**
-> - Hedera Consensus Service for decentralized messaging
-> - Google A2A Protocol for standardized agent communication
-> - **HCS-10 OpenConvAI** for connection management
+> **2. B2B Supply Chain Automation** - Vendors negotiate contracts autonomously. Agents handle the entire procurement process - from negotiation to payment - automatically.
 
-> **Settlement Layer:**
-> - x402 Payment Standard for cross-chain payments
-> - Support for USDC on Base, HBAR on Hedera
-> - **HCS-10 transaction approval** for multi-signature security
+> **3. Invoice Factoring Marketplace** - Financial platforms use our SDK to tokenize invoices and create secondary markets. This unlocks liquidity for SMEs instantly.
 
-> **SDK Layer:**
-> - Production-ready npm package available
-> - Easy integration for developers
-> - Modular exports for flexibility
-> - **HCS-10 features optional and backward compatible**
+> **4. Freelancer Payout System** - Platforms like Upwork can automate freelancer payments. Submit work, AI validates, payment executes - all autonomous.
 
-> This is all production-ready code with error handling, security, HCS-10 integration, and human-in-the-loop capabilities."
+> **5. NFT Royalty Distribution** - Content creators get automatic royalty payments when NFTs sell. Cross-chain USDC transfers happen instantly.
 
----
-
-### **PART 6: SDK & DEVELOPER EXPERIENCE (3:00 - 3:30)**
-
-> "But here's what makes Hedron unique - we've packaged everything as a production-ready SDK.
-
-> [**DEMO: Show SDK Installation**]
-
-> "Watch me install the SDK: `npm install hedron-agent-sdk`
-
-> [**DEMO: Show HCS-10 Code Example**]
-
-> "And here's how easy it is to use with HCS-10:
-
-> ```typescript
-> import { SettlementAgent, HCS10ConnectionManager } from 'hedron-agent-sdk'
-> 
-> const settlement = new SettlementAgent()
-> await settlement.init()
-> 
-> // Enable HCS-10
-> process.env.USE_HCS10_CONNECTIONS = 'true'
-> 
-> // Use transaction approval for high-value payments
-> if (amount >= 500) {
->   const conn = await connManager.requestConnection(vendorId)
->   const scheduledTx = await txApproval.sendTransaction(
->     conn.connectionTopicId,
->     paymentTx,
->     'High-value invoice payment'
->   )
->   await txApproval.approveTransaction(scheduledTx.scheduleId)
-> }
-> ```
-
-> That's it! Developers can build autonomous agent applications with HCS-10 support in minutes.
-
-> The SDK includes:
-> - All agent classes ready to use
-> - Complete protocol implementations
+> Each of these is production-ready code developers can implement in hours, not months. The SDK includes:
+> - Complete agent implementations
+> - x402 payment protocol
+> - A2A communication protocol  
 > - HCS-10 OpenConvAI integration
-> - TypeScript definitions for type safety
-> - Modular exports for optimal bundle size
-> - Production-ready error handling
+> - LLM reasoning capabilities
+> - Full TypeScript definitions
 
-> This makes Hedron the first complete agent framework SDK for Hedera with HCS-10 support."
+> This is the first complete agent framework SDK for Hedera - we're enabling developers to build the future of autonomous commerce."
 
----
-
-### **PART 7: COMPLETE DEMO SUITE (3:30 - 4:00)**
-
-> "We have **8 production-ready demos** showcasing our capabilities:
-
-> **1. Orchestrator** - Complete 3-agent workflow with HCS-10 connections
-
-> **2. NFT Royalty** - Cross-chain x402 with fee-based connection config
-
-> **3. HBAR Direct** - Native x402 with transaction approval for large amounts
-
-> **4. Intelligent Invoice** - LLM reasoning with HCS-10 transaction approval
-
-> **5. Supply Chain Negotiation** - Vendor payment with approval workflow
-
-> **6. Supply Chain Fraud Detection** - Fraud-checked payments with HCS-10
-
-> **7. Invoice Automation** - High-value processing with connections and approval
-
-> **8. Tokenized RWA Invoice** - RWA tokenization with HCS-10 settlement approval
-
-> All demos run on testnet with real transactions. All support HCS-10 when enabled."
-
----
-
-### **PART 8: USE CASES & IMPACT (4:00 - 4:30)**
-
-> "Hedron solves real-world problems:
-
-> **Invoice Automation** - SMEs can automate invoice processing with HCS-10 approval, reducing costs by 80%.
-
-> **Supply Chain Finance** - Vendors get instant payments through agent negotiation with connection security.
-
-> **Content Creator Economy** - NFT creators receive automatic royalty payments with optional connection fees.
-
-> **Enterprise Automation** - Trustless multi-party workflows with HCS-10 transaction approval for compliance.
-
-> **RWA Tokenization** - Invoice factoring with on-chain tokenization and secure settlement.
-
-> The market opportunity is massive:
-> - $40 trillion global supply chain
-> - $15 trillion digital payments
-> - $200 billion AI automation by 2030
-> - Growing agent network and SDK market
-
-> Hedron positions us at the intersection of all four, with HCS-10 protocol support and an SDK that enables developers."
-
----
-
-### **PART 9: WHAT MAKES US STAND OUT (4:30 - 4:45)**
+### **PART 4: WHY WE WIN + CALL TO ACTION (3:15 - 4:00)**
 
 > "Why should Hedron win?
 
-> **First**, we've implemented both bounties completely - not just partial solutions.
+> **First**, we've built the **first complete agent framework SDK** for Hedera - developers can start building in minutes.
 
-> **Second**, we've integrated HCS-10 OpenConvAI protocol across all 8 demos.
+> **Second**, we've implemented **both hackathon bounties completely** - x402 payment standard and Hedera Agent Kit with A2A protocol.
 
-> **Third**, our demos use real blockchain transactions - no mocks or simulations.
+> **Third**, we've integrated **HCS-10 OpenConvAI protocol** across all demos - connection management and transaction approval.
 
-> **Fourth**, we've built the first x402 implementation connecting Hedera and Base.
+> **Fourth**, we solve **real-world problems** - RWA tokenization for a $3 trillion invoice factoring market, plus e-commerce payments, supply chain automation, and more.
 
-> **Fifth**, we've integrated LLM reasoning for truly autonomous decisions.
+> **Fifth**, our demos use **real blockchain transactions** - everything runs on testnet with actual settlements, not simulations.
 
-> **Sixth**, our code is production-ready with comprehensive tests, documentation, and error handling.
+> **Sixth**, we've delivered a **production-ready SDK** with 8 working demos, comprehensive documentation, and developer-friendly APIs.
 
-> **Seventh**, we've packaged everything as a production-ready SDK that developers can use immediately.
+> You can try Hedron right now:
+> - Install: `npm install hedron-agent-sdk`
+> - Run RWA demo: `npm run demo:rwa-invoice 600`
+> - Build your own agent application
 
-> **Eighth**, we've delivered 100+ files, 15+ passing tests, 25+ documentation files, 8 production demos, and complete HCS-10 integration."
+> All documentation is available in our repository.
 
----
-
-### **PART 10: CALL TO ACTION (4:45 - 5:00)**
-
-> "You can try Hedron yourself:
-
-> **As a Developer:** Install the SDK: `npm install hedron-agent-sdk`
-
-> **Enable HCS-10:** Set `USE_HCS10_CONNECTIONS=true` to activate connection management and transaction approval
-
-> **Or Clone the Repo:** Run:
-> - `npm run demo` for complete 3-agent workflow
-> - `npm run demo:nft-royalty 150` for cross-chain x402
-> - `npm run demo:hbar-x402 100` for native x402 with approval
-> - `npm run demo:invoice-llm 800` for AI reasoning with HCS-10
-> - `npm run demo:supply-chain-fraud` for fraud detection
-> - `npm run demo:invoice 600` for invoice automation
-> - `npm run demo:negotiation` for supply chain negotiation
-> - `npm run demo:rwa-invoice 600` for RWA tokenization
-
-> All our documentation is in the docs folder, including HCS-10 guides and complete SDK documentation.
-
-> Thank you, judges! **Hedron** - autonomous agents, intelligent decisions, seamless settlements, now with HCS-10 OpenConvAI protocol and available as a production SDK."
+> Thank you, judges! **Hedron SDK** - enabling developers to build the future of autonomous commerce on Hedera Hashgraph."
 
 ---
 
@@ -294,36 +129,32 @@
 
 ### **Screen Recording Segments:**
 
-1. **Terminal Output**
-   - Show npm commands running (`npm install hedron-agent-sdk`)
-   - Display transaction hashes
-   - Show agent communication logs
-   - Highlight HCS-10 connection establishment
-   - Show transaction approval workflows
-   - Display payment receipts
-   - SDK installation and usage
+1. **RWA Demo (FEATURED - 1:15 minutes)**
+   - Run `npm run demo:rwa-invoice 600` in terminal
+   - Show invoice creation output
+   - **Highlight token creation** - Token ID appearing on Hedera
+   - Show token transfer executing (50% to factoring company)
+   - Show automated settlement transaction
+   - Display transaction hash and HashScan link
+   - Show "Invoice Status: SETTLED" confirmation
 
-2. **Code Snippets**
-   - Agent implementations
-   - x402 payment flow
-   - A2A protocol usage
-   - **HCS-10 connection management**
-   - **HCS-10 transaction approval**
-   - Smart contract interactions
-   - SDK import and usage examples
+2. **SDK Installation & Code**
+   - Show `npm install hedron-agent-sdk` command
+   - Display SDK package.json exports
+   - Show simple code example using SDK:
+     ```typescript
+     import { SettlementAgent, TokenService } from 'hedron-agent-sdk'
+     ```
 
-3. **Blockchain Explorers**
-   - Hedera Explorer (transaction links)
-   - Base Sepolia Explorer (USDC transfers)
-   - Show actual on-chain data
-   - Show scheduled transactions
+3. **Real Use Cases - Quick Visuals**
+   - Screenshot of e-commerce payment code
+   - Screenshot of supply chain automation code
+   - Screenshot of invoice factoring code
 
-4. **Architecture Diagram**
-   - Agent network visualization
-   - HCS-10 connection flow
-   - HCS messaging flow
-   - Multi-chain settlement layer
-   - Transaction approval workflow
+4. **Blockchain Explorers**
+   - Show HashScan transaction for RWA token creation
+   - Show token transfer transaction
+   - Show settlement transaction confirmation
 
 ---
 
@@ -331,91 +162,111 @@
 
 ### **Key Numbers to Mention:**
 
-- ✅ **2 complete bounties** implemented
-- ✅ **HCS-10 OpenConvAI** fully integrated
-- ✅ **8 production demos** ready
-- ✅ **100+ files** of production code
-- ✅ **15+ passing tests** (100% pass rate)
-- ✅ **25+ documentation files**
+- ✅ **First complete agent framework SDK** for Hedera
+- ✅ **$3 trillion invoice factoring market** - RWA use case addresses this
+- ✅ **2 complete bounties** implemented (x402 + Agent Kit)
 - ✅ **Production SDK** - `hedron-agent-sdk` on npm
+- ✅ **8 production demos** including featured RWA demo
+- ✅ **5+ real-world use cases** - E-commerce, Supply Chain, Freelancer, NFT, RWA
 
 ### **Technology Stack:**
 
-- Hedera Hashgraph (HCS, HBAR)
-- **HCS-10 OpenConvAI Protocol**
+- Hedera Hashgraph (HCS, HBAR, HTS)
+- x402 Payment Standard (cross-chain + native)
 - Google A2A Protocol
-- x402 Payment Standard
+- HCS-10 OpenConvAI Protocol
 - Base Sepolia (USDC)
 - LangChain + OpenAI (LLM)
 - TypeScript + Solidity
 
-### **Unique Features:**
+### **SDK Features:**
 
-- First x402 on Base + Hedera
-- **Complete HCS-10 OpenConvAI implementation**
-- LLM reasoning for autonomous decisions
-- Fraud detection with blockchain verification
-- Multi-protocol agent communication
-- Production-ready code
-- **First production SDK for Hedera agents** - `hedron-agent-sdk`
-- **8 production demos** - Comprehensive showcase
+- **Production-ready npm package** - Install and use immediately
+- **RWA Tokenization** - Invoice factoring with tokenization
+- **Cross-chain payments** - USDC on Base, HBAR on Hedera
+- **AI-powered decisions** - LLM reasoning for validation
+- **Autonomous agents** - Multi-agent negotiation and settlement
+- **TypeScript definitions** - Full type safety
+- **Modular exports** - Import only what you need
 
 ---
 
 ## 🎯 Delivery Tips
 
-### **Pacing:**
-- Speak clearly and at moderate pace
-- Pause between sections
-- Allow demos to show actual execution
-- Highlight HCS-10 features clearly
+### **Pacing (4 minutes strict):**
+- **Opening**: Fast and energetic (0:15)
+- **Problem & SDK**: Clear and confident (0:45)
+- **RWA Demo**: Let it run - this is the showcase! (1:15)
+  - Don't rush - show each step clearly
+  - Point out token creation, transfer, and settlement
+- **Use Cases**: Quick but impactful (1:00)
+- **Closing**: Strong and memorable (0:45)
 
 ### **Energy:**
-- Show enthusiasm for the project
-- Highlight innovation and completeness
-- Demonstrate confidence in the solution
-- Emphasize HCS-10 integration as a differentiator
+- Show excitement for the SDK and real-world impact
+- Emphasize the $3 trillion RWA market opportunity
+- Demonstrate confidence in the SDK value proposition
+- Highlight that developers can build this in minutes
 
-### **Technical Details:**
-- Explain concepts clearly
-- Show actual code/transactions when relevant
-- Balance technical depth with accessibility
-- Explain HCS-10 benefits clearly
+### **RWA Demo Focus:**
+- **Start the demo early** - Run it before you need to show it
+- **Point out key moments**:
+  - "Watch the token being created on Hedera now"
+  - "See the token transfer - this is invoice factoring happening on-chain"
+  - "The settlement is executing automatically - no human intervention"
+- **Show the transaction hashes** - This proves it's real
+- **Mention the SDK** - "All of this is available in our SDK"
 
-### **Demo Timing:**
-- Run actual demos (not just screen recordings)
-- Show terminal output and transaction confirmations
-- Highlight HCS-10 connection establishment
-- Show transaction approval workflows
-- Demonstrate both with and without HCS-10
-
----
-
-## 📝 Alternative Shorter Version (3 minutes)
-
-If time is limited, focus on:
-
-1. **Problem & Solution** (30 seconds)
-2. **Quick Demo 1** - Orchestrator with HCS-10 (45 seconds)
-3. **Quick Demo 2** - Intelligent Invoice with HCS-10 (45 seconds)
-4. **Why We Should Win** (30 seconds)
+### **SDK Emphasis:**
+- Show the npm install command
+- Show simple code examples
+- Emphasize "first complete SDK for Hedera agents"
+- Mention real-world use cases throughout
 
 ---
 
 ## ✅ Pre-Recording Checklist
 
-- [ ] All 8 demos tested and working
-- [ ] HCS-10 features tested with `USE_HCS10_CONNECTIONS=true`
-- [ ] Environment variables configured
-- [ ] Testnet accounts funded
-- [ ] Screen recording software ready
-- [ ] Code examples prepared
-- [ ] Architecture diagram ready
-- [ ] Blockchain explorer links ready
-- [ ] HCS-10 connection examples ready
+- [ ] **RWA Demo tested and working** - `npm run demo:rwa-invoice 600`
+- [ ] Testnet accounts funded with HBAR
+- [ ] Environment variables configured (.env file ready)
+- [ ] Screen recording software ready (OBS, QuickTime, etc.)
+- [ ] Terminal window prepared with good contrast
+- [ ] SDK installation command ready (`npm install hedron-agent-sdk`)
+- [ ] HashScan links ready to show (for transaction verification)
+- [ ] Code examples prepared (simple SDK usage)
+- [ ] Timing practiced - ensure demo fits in 1:15 window
+- [ ] Backup: Pre-record RWA demo if live demo is risky
+
+---
+
+## 📊 Time Breakdown (4 minutes)
+
+- **0:00 - 0:15**: Opening - Introduce Hedron SDK
+- **0:15 - 1:00**: Problem & SDK Solution - Real-world problems, SDK value
+- **1:00 - 2:15**: RWA Demo (FEATURED) - Live demonstration of tokenization
+- **2:15 - 3:15**: Real Use Cases - What developers can build
+- **3:15 - 4:00**: Why We Win + Call to Action - Closing strong
+
+---
+
+## 🎬 Demo Commands Reference
+
+**Featured RWA Demo:**
+```bash
+npm run demo:rwa-invoice 600
+```
+
+**Other Demos (quick reference):**
+```bash
+npm run demo:rwa-invoice 250      # Smaller RWA demo
+npm run demo:nft-royalty 150      # NFT royalty payment
+npm run demo:hbar-x402 100        # Native HBAR transfer
+npm run demo:invoice-llm 800      # AI invoice validation
+```
 
 ---
 
 **Good luck with your pitch! 🚀**
 
-_Hedron - Building the future of autonomous commerce on Hedera Hashgraph with HCS-10 OpenConvAI Protocol._
+_Hedron SDK - The first complete agent framework SDK for Hedera Hashgraph, enabling developers to build the future of autonomous commerce with Real-World Asset tokenization and instant cross-chain payments._
