@@ -32,7 +32,7 @@ Hedron is a complete implementation of autonomous agent-to-agent systems built o
 
 ### ✅ Bounty 2: Hedera Agent Kit & Google A2A Protocol
 
-**Autonomous agent-to-agent systems with AI-powered decision making**
+**Autonomous agent-to-agent systems with AI-powered decision making + HCS-10 OpenConvAI**
 
 **Features:**
 - ✅ **LLM Reasoning** - GPT-4 powered invoice validation
@@ -40,12 +40,33 @@ Hedron is a complete implementation of autonomous agent-to-agent systems built o
 - ✅ **Memo Verification** - Blockchain-verified agreements
 - ✅ **Hedera Token Settlement** - Native HBAR/token payments
 - ✅ **A2A Protocol** - Standardized agent communication
+- ✅ **HCS-10 OpenConvAI** - Connection management and transaction approval
 
 **Demos:**
-- Intelligent Invoice (`npm run demo:invoice-llm`)
-- Supply Chain Fraud Detection (`npm run demo:supply-chain-fraud`)
+- Main Orchestrator (`npm run demo`) - Complete 3-agent workflow with HCS-10 connections
+- Intelligent Invoice (`npm run demo:invoice-llm 800`) - LLM reasoning with HCS-10 transaction approval
+- Supply Chain Negotiation (`npm run demo:negotiation`) - Vendor payment with approval workflow
+- Supply Chain Fraud Detection (`npm run demo:supply-chain-fraud`) - Fraud-checked payments with HCS-10
+- Invoice Automation (`npm run demo:invoice 600`) - High-value processing with connections and approval
 
-**Technology:** Google A2A Protocol, Hedera Consensus Service (HCS), LangChain, OpenAI
+**Technology:** Google A2A Protocol, HCS-10 OpenConvAI, Hedera Consensus Service (HCS), LangChain, OpenAI
+
+---
+
+### ✅ Track 1: On-Chain Finance & RWA Tokenization
+
+**Tokenized invoice as Real-World Asset with HCS-10 settlement approval**
+
+**Features:**
+- ✅ **Invoice Tokenization** - Convert invoices to tradeable HTS tokens
+- ✅ **RWA Trading** - Invoice factoring and fractional ownership
+- ✅ **Automated Settlement** - x402 payment standard integration
+- ✅ **HCS-10 Transaction Approval** - Multi-signature workflows for high-value settlements (>= $500)
+
+**Demo:**
+- Tokenized RWA Invoice (`npm run demo:rwa-invoice 600`) - Complete RWA lifecycle with HCS-10
+
+**Technology:** HTS Tokenization, x402 Payment Standard, HCS-10 OpenConvAI
 
 ---
 
