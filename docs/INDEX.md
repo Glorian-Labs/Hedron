@@ -30,6 +30,10 @@ Complete guide to using Hedron for autonomous workflows.
 
 Complete API documentation for all components.
 
+### [RWA Invoice Demo](./RWA_INVOICE_DEMO.md)
+
+Tokenized Real-World Asset invoice demonstration: tokenization, trading, and automated settlement.
+
 ### [A2A Protocol Implementation](./A2A_PROTOCOL_IMPLEMENTATION.md)
 
 Agent-to-agent protocol implementation details.
