@@ -2,7 +2,7 @@
 
 ## Overview
 
-This directory contains demos for two Hedera bounties:
+This directory contains demos for two Hedera bounties and Track 1 alignment:
 
 ### Bounty 1: x402 Payment Standard SDK
 
@@ -11,6 +11,10 @@ Two showcase demos for cross-chain payment protocol.
 ### Bounty 2: Hedera Agent Kit (A2A Protocol)
 
 Two showcase demos for autonomous agent systems.
+
+### Track 1: On-Chain Finance & RWA Tokenization
+
+Tokenized invoice demo demonstrating Real-World Asset tokenization.
 
 ---
 
@@ -87,6 +91,29 @@ Two showcase demos for autonomous agent systems.
 
 ---
 
+## 🏦 Track 1: On-Chain Finance & RWA Tokenization
+
+### Demo 5: Tokenized RWA Invoice
+
+**File:** `tokenized-rwa-invoice-demo.ts`  
+**Command:** `npm run demo:rwa-invoice [amount]`
+
+**Demonstrates:**
+
+- Invoice tokenization as Real-World Asset (RWA)
+- Hedera Token Service (HTS) token creation
+- RWA token trading/transfer (invoice factoring)
+- Automated settlement via x402 payment standard
+- Cross-chain payment execution
+
+**Technology:** HTS Tokenization + x402 Payment Standard  
+**Network:** Hedera Testnet + Base Sepolia  
+**Asset:** HTS Tokens + HBAR/USDC
+
+**Use Case:** Invoice factoring market, improved liquidity, fractional ownership
+
+---
+
 ## Additional Demos (Supporting)
 
 ### Main Orchestrator
@@ -123,6 +150,9 @@ npm run demo:hbar-x402 10         # HBAR direct (x402 native)
 npm run demo:invoice-llm         # LLM reasoning + Hedera tokens
 npm run demo:supply-chain-fraud   # Fraud detection + memo verification
 
+# Track 1: RWA Tokenization
+npm run demo:rwa-invoice 250    # Tokenized invoice as RWA
+
 # Supporting demos
 npm run demo                      # Main orchestrator
 npm run demo:invoice             # Invoice automation
@@ -153,16 +183,24 @@ npm run demo:invoice-llm
 npm run demo:supply-chain-fraud
 ```
 
+### For Track 1 (RWA Tokenization):
+
+```bash
+# Show tokenized invoice as RWA
+npm run demo:rwa-invoice 250
+```
+
 ---
 
 ## What Each Demo Showcases
 
-| Demo               | Bounty | Mode/Feature     | Network      | Asset |
-| ------------------ | ------ | ---------------- | ------------ | ----- |
-| nft-royalty-x402   | 1      | Cross-chain x402 | Base Sepolia | USDC  |
-| hbar-direct-x402   | 1      | Native x402      | Hedera       | HBAR  |
-| invoice-llm        | 2      | LLM reasoning    | Hedera       | HBAR  |
-| supply-chain-fraud | 2      | Fraud + Memo     | Hedera       | HBAR  |
+| Demo               | Bounty/Track | Mode/Feature     | Network      | Asset |
+| ------------------ | ------------ | ---------------- | ------------ | ----- |
+| nft-royalty-x402   | Bounty 1      | Cross-chain x402 | Base Sepolia | USDC  |
+| hbar-direct-x402   | Bounty 1      | Native x402      | Hedera       | HBAR  |
+| invoice-llm        | Bounty 2      | LLM reasoning    | Hedera       | HBAR  |
+| supply-chain-fraud | Bounty 2      | Fraud + Memo     | Hedera       | HBAR  |
+| tokenized-rwa-invoice | Track 1   | RWA Tokenization | Hedera + Base | HTS + HBAR/USDC |
 
 ---
 
@@ -187,11 +225,12 @@ HEDERA_MERCHANT_ACCOUNT_ID=0.0.XXXXXX
 
 ## Summary
 
-**4 Key Showcase Demos:**
+**5 Key Showcase Demos:**
 
 - ✅ NFT Royalty (x402 cross-chain)
 - ✅ HBAR Direct (x402 native)
 - ✅ Invoice LLM (AI reasoning)
 - ✅ Supply Chain Fraud (Security + Verification)
+- ✅ Tokenized RWA Invoice (RWA Tokenization)
 
 **All ready for hackathon showcase! 🏆**

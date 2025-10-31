@@ -8,7 +8,7 @@
  * Used for the hackathon bonus points requirement: "Multiple Hedera services"
  */
 
-import { Client, TokenCreateTransaction, TokenType, PrivateKey, AccountId } from '@hashgraph/sdk'
+import { Client, TokenCreateTransaction, TokenType, PrivateKey, AccountId, AccountBalanceQuery } from '@hashgraph/sdk'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 
@@ -74,7 +74,9 @@ export class TokenService {
     try {
       console.log(chalk.blue(`📊 Getting token balance for account ${accountId}`))
 
-      const balance = await this.client.getAccountBalance(AccountId.fromString(accountId))
+      const balanceQuery = new AccountBalanceQuery()
+        .setAccountId(AccountId.fromString(accountId))
+      const balance = await balanceQuery.execute(this.client)
 
       console.log(chalk.blue(`💰 Token balance retrieved`))
 
@@ -161,6 +163,112 @@ export class TokenService {
       }
     } catch (error) {
       console.error(chalk.red(`❌ Failed to get token info: ${(error as Error).message}`))
+      throw error
+    }
+  }
+
+  /**
+   * Create a tokenized invoice token (RWA - Real-World Asset)
+   * 
+   * Tokenizes an invoice as a tradeable Hedera token representing the invoice claim.
+   * This demonstrates RWA tokenization for Track 1 (On-Chain Finance & RWA Tokenization).
+   */
+  async createInvoiceToken(
+    invoiceId: string,
+    invoiceAmount: number,
+    vendorAccountId: string,
+    description: string,
+    dueDate: Date,
+    decimals: number = 0
+  ): Promise<string> {
+    try {
+      console.log(chalk.blue(`📄 Creating tokenized invoice token for ${invoiceId}`))
+
+      const operatorId = this.client.operatorAccountId
+      if (!operatorId) {
+        throw new Error('No operator account configured')
+      }
+
+      // Generate token symbol from invoice ID (e.g., INV-12345 -> INV12345)
+      const tokenSymbol = `INV${invoiceId.replace(/[^0-9]/g, '').substring(0, 8)}`
+      const tokenName = `Invoice Token ${invoiceId}`
+      
+      // Token supply = invoice amount in smallest units (1 token = 1 USD unit, or use decimals)
+      // For simplicity, we'll use whole numbers (1 token = $1, so $150 invoice = 150 tokens)
+      const tokenSupply = Math.floor(invoiceAmount)
+      
+      // Create token memo with invoice metadata (Hedera memo limit is 100 bytes)
+      // Use shortened format to fit within limit
+      const invoiceMetadata = `RWA:${invoiceId}:$${invoiceAmount}:${dueDate.toISOString().substring(0, 10)}`
+      
+      // Ensure memo doesn't exceed 100 bytes
+      const maxMemoLength = 100
+      const tokenMemo = invoiceMetadata.length > maxMemoLength 
+        ? `RWA:${invoiceId.substring(0, 20)}:$${invoiceAmount}`
+        : invoiceMetadata
+
+      // Create the token
+      const transaction = new TokenCreateTransaction()
+        .setTokenName(tokenName)
+        .setTokenSymbol(tokenSymbol)
+        .setTokenType(TokenType.FungibleCommon)
+        .setInitialSupply(tokenSupply)
+        .setDecimals(decimals)
+        .setTreasuryAccountId(operatorId)
+        .setAutoRenewAccountId(operatorId)
+        .setTokenMemo(tokenMemo)
+
+      // Execute the transaction
+      const response = await transaction.execute(this.client)
+      const receipt = await response.getReceipt(this.client)
+      const tokenId = receipt.tokenId
+
+      console.log(chalk.green(`✅ Invoice token created: ${tokenId}`))
+      console.log(chalk.blue(`📋 Token Name: ${tokenName}`))
+      console.log(chalk.blue(`📋 Symbol: ${tokenSymbol}`))
+      console.log(chalk.blue(`📋 Supply: ${tokenSupply} tokens ($${invoiceAmount})`))
+      console.log(chalk.blue(`📋 Invoice ID: ${invoiceId}`))
+
+      return tokenId?.toString() || ''
+    } catch (error) {
+      console.error(chalk.red(`❌ Failed to create invoice token: ${(error as Error).message}`))
+      throw error
+    }
+  }
+
+  /**
+   * Transfer invoice tokens (demonstrates RWA trading)
+   */
+  async transferInvoiceTokens(
+    tokenId: string,
+    recipientAccountId: string,
+    amount: number
+  ): Promise<string> {
+    try {
+      console.log(chalk.blue(`💸 Transferring ${amount} invoice tokens to ${recipientAccountId}`))
+
+      const operatorId = this.client.operatorAccountId
+      if (!operatorId) {
+        throw new Error('No operator account configured')
+      }
+
+      // Create transfer transaction
+      const { TransferTransaction } = await import('@hashgraph/sdk')
+      const transaction = new TransferTransaction()
+        .addTokenTransfer(tokenId, operatorId, -amount)
+        .addTokenTransfer(tokenId, AccountId.fromString(recipientAccountId), amount)
+
+      // Execute the transfer
+      const response = await transaction.execute(this.client)
+      const receipt = await response.getReceipt(this.client)
+
+      const transactionId = response.transactionId.toString()
+      console.log(chalk.green(`✅ Invoice tokens transferred successfully`))
+      console.log(chalk.blue(`📋 Transaction ID: ${transactionId}`))
+
+      return transactionId
+    } catch (error) {
+      console.error(chalk.red(`❌ Failed to transfer invoice tokens: ${(error as Error).message}`))
       throw error
     }
   }
