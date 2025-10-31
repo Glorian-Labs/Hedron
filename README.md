@@ -361,193 +361,17 @@ Hedron enables autonomous systems across multiple industries:
 
 ## 💼 Real-World SDK Use Cases
 
-Here's how developers leverage Hedron SDK in production applications:
+See comprehensive real-world use cases with complete code examples:
 
-### 1. E-Commerce Payment Platform
+📖 **[Real-World Use Cases Guide](./docs/REAL_WORLD_USE_CASES.md)** - 6 production-ready examples including:
+- E-Commerce Payment Platform (Stripe-like)
+- B2B Supply Chain Platform (automated procurement)
+- Freelancer Marketplace (automated payouts)
+- SaaS Subscription Billing (multi-chain)
+- NFT Marketplace (royalty distribution)
+- Invoice Factoring Platform (RWA tokenization)
 
-**Use Case:** Build a Stripe-like platform with autonomous payment processing
-
-```typescript
-import { IntelligentVerifierAgent, SettlementAgent } from 'hedron-agent-sdk'
-
-class EcommercePaymentService {
-  private verifier = new IntelligentVerifierAgent()
-  private settlement = new SettlementAgent()
-  
-  async processOrder(order) {
-    // AI validates order automatically
-    const validation = await this.verifier.validateInvoice({
-      amount: order.total,
-      merchantId: order.merchantId,
-      items: order.items
-    })
-    
-    // Auto-settle via x402 if approved
-    if (validation.approved) {
-      await this.settlement.executePayment({
-        amount: order.total,
-        network: 'base-sepolia',
-        asset: 'USDC',
-        recipient: order.merchantWallet
-      })
-    }
-  }
-}
-```
-
-**Business Impact:** Reduce payment processing time from days to seconds, 80% cost reduction
-
----
-
-### 2. B2B Supply Chain Platform
-
-**Use Case:** Automated procurement and vendor payment system
-
-```typescript
-import { A2ANegotiation, SettlementAgent } from 'hedron-agent-sdk'
-
-class SupplyChainPlatform {
-  async negotiateContract(buyerAgentId, vendorAgentId, terms) {
-    const negotiation = new A2ANegotiation(a2aProtocol)
-    
-    // Agents negotiate autonomously
-    const agreement = await negotiation.negotiate(
-      buyerAgentId,
-      vendorAgentId,
-      terms
-    )
-    
-    // Record on Hedera, auto-pay on delivery
-    await negotiation.recordAgreement(agreement)
-    await this.settlement.settleOnAgreement(agreement)
-  }
-}
-```
-
-**Business Impact:** 80% reduction in procurement time, instant vendor payments
-
----
-
-### 3. Freelancer Marketplace
-
-**Use Case:** Automated payout processing for work submissions
-
-```typescript
-import { AnalyzerAgent, HumanInTheLoopMode, SettlementAgent } from 'hedron-agent-sdk'
-
-class FreelancerPlatform {
-  async processPayout(workSubmission) {
-    const analysis = await this.analyzer.analyzeWork(workSubmission)
-    
-    // Human approval for large payments
-    if (submission.amount > 1000) {
-      const hitl = new HumanInTheLoopMode({ threshold: 1000 })
-      const approved = await hitl.requestApproval({
-        type: 'payout',
-        amount: submission.amount,
-        freelancerId: submission.freelancerId
-      })
-      if (!approved) return
-    }
-    
-    // Auto-settle payment
-    await this.settlement.executePayout(analysis)
-  }
-}
-```
-
-**Business Impact:** Automated payout processing, reduced operational costs by 60%
-
----
-
-### 4. SaaS Subscription Billing
-
-**Use Case:** Flexible multi-chain subscription management
-
-```typescript
-import { SettlementAgent } from 'hedron-agent-sdk'
-
-class SubscriptionService {
-  async renewSubscription(subscription) {
-    const paymentMethod = await this.getPaymentMethod(subscription.userId)
-    
-    // Flexible settlement based on user preference
-    if (paymentMethod.type === 'hedera') {
-      // Native HBAR (low fees, fast)
-      await this.settlement.settleHBAR({
-        amount: subscription.amount,
-        recipient: subscription.merchantAccount
-      })
-    } else {
-      // USDC on Base (stablecoin)
-      await this.settlement.settleUSDC({
-        amount: subscription.amount,
-        recipient: subscription.merchantWallet,
-        network: 'base-sepolia'
-      })
-    }
-  }
-}
-```
-
-**Business Impact:** Multi-chain flexibility, 50% lower fees, faster settlements
-
----
-
-### 5. NFT Marketplace
-
-**Use Case:** Automatic royalty distribution to creators
-
-```typescript
-import { x402Payment } from 'hedron-agent-sdk/x402'
-
-class NFTMarketplace {
-  async payRoyalty(salePrice, creatorWallet) {
-    const royalty = salePrice * 0.10 // 10% royalty
-    
-    // Auto-pay creator via x402
-    await x402Payment({
-      amount: royalty,
-      recipient: creatorWallet,
-      network: 'base-sepolia',
-      asset: 'USDC',
-      description: 'NFT Royalty Payment',
-      resource: '/nft-royalty'
-    })
-  }
-}
-```
-
-**Business Impact:** Automatic royalty distribution, transparent creator payments
-
----
-
-### 6. Invoice Factoring Platform (RWA)
-
-**Use Case:** Tokenize invoices as tradeable RWA assets
-
-```typescript
-import { TokenService, SettlementAgent } from 'hedron-agent-sdk'
-
-class InvoiceFactoringPlatform {
-  async tokenizeInvoice(invoice) {
-    // Create RWA token on Hedera
-    const tokenId = await tokenService.createInvoiceToken(
-      invoice.id,
-      invoice.amount,
-      invoice.vendorId,
-      invoice.description,
-      invoice.dueDate
-    )
-    
-    // Token can now be traded on secondary market
-    // Auto-settle when due
-    await this.settlement.settleOnDueDate(tokenId)
-  }
-}
-```
-
-**Business Impact:** Unlock $3T invoice factoring market, improved SME liquidity
+Each use case includes TypeScript code examples, business impact metrics, and implementation scenarios.
 
 ---
 
@@ -716,6 +540,10 @@ npm run check:wallets        # Check wallet status
 - [HCS-11 Setup Guide](./docs/HCS11_SETUP_GUIDE.md) - Profile registration
 - [Local HCS Resolver](./docs/LOCAL_HCS_RESOLVER.md) - Local profile resolver
 - [Hackathon Ready](./docs/HACKATHON_READY.md) - Submission checklist
+
+### Real-World Applications
+
+- **[Real-World Use Cases](./docs/REAL_WORLD_USE_CASES.md)** - Production implementation examples with code
 
 ---
 
