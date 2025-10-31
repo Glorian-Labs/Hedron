@@ -1,4 +1,6 @@
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
+import { HCS10ConnectionManager } from '../protocols/HCS10ConnectionManager'
+import { HCS10TransactionApproval } from '../protocols/HCS10TransactionApproval'
 import chalk from 'chalk'
 import dotenv from 'dotenv'
 
@@ -8,6 +10,8 @@ dotenv.config()
 export class VerifierAgent {
   private hcsClient: HCS10Client
   private messageHandlers: Map<string, Function>
+  private connectionManager?: HCS10ConnectionManager
+  private transactionApproval?: HCS10TransactionApproval
 
   constructor() {
     // Get agent credentials from environment variables
@@ -33,9 +37,23 @@ export class VerifierAgent {
       
       // Initialize HCS10Client with main account for now
       this.hcsClient = new HCS10Client(mainAccountId, mainPrivateKey, 'testnet')
+      
+      // Initialize connection manager and transaction approval (optional)
+      const useConnections = process.env.USE_HCS10_CONNECTIONS === 'true'
+      if (useConnections) {
+        this.connectionManager = new HCS10ConnectionManager(this.hcsClient, mainAccountId)
+        this.transactionApproval = new HCS10TransactionApproval(this.hcsClient, mainAccountId)
+      }
     } else {
       // Initialize HCS10Client with actual agent credentials
       this.hcsClient = new HCS10Client(agentId, privateKey, 'testnet')
+      
+      // Initialize connection manager and transaction approval (optional)
+      const useConnections = process.env.USE_HCS10_CONNECTIONS === 'true'
+      if (useConnections) {
+        this.connectionManager = new HCS10ConnectionManager(this.hcsClient, agentId)
+        this.transactionApproval = new HCS10TransactionApproval(this.hcsClient, agentId)
+      }
     }
 
     // Initialize message handlers map
@@ -154,5 +172,23 @@ export class VerifierAgent {
   onMessage(type: string, handler: Function): void {
     this.messageHandlers.set(type, handler)
     console.log(`📝 Registered handler for message type: ${type}`)
+  }
+
+  /**
+   * Get connection manager instance (if initialized)
+   */
+  getConnectionManager(): HCS10ConnectionManager | undefined {
+    return this.connectionManager
+  }
+
+  /**
+   * Get transaction approval manager instance (if initialized)
+   */
+  getTransactionApproval(): HCS10TransactionApproval | undefined {
+    return this.transactionApproval
+  }
+
+  getHcsClient(): HCS10Client {
+    return this.hcsClient
   }
 }

@@ -12,6 +12,9 @@
  */
 
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
+import { HCS10ConnectionManager, Connection } from './HCS10ConnectionManager'
+import { HCS10TransactionApproval } from './HCS10TransactionApproval'
+import { Transaction } from '@hashgraph/sdk'
 import chalk from 'chalk'
 
 /**
@@ -42,11 +45,25 @@ export class A2AProtocol {
   private agentId: string
   private capabilities: string[]
   private nonceGenerator: number = 0
+  private connectionManager?: HCS10ConnectionManager
+  private transactionApproval?: HCS10TransactionApproval
 
-  constructor(hcsClient: HCS10Client, agentId: string, capabilities: string[]) {
+  constructor(
+    hcsClient: HCS10Client, 
+    agentId: string, 
+    capabilities: string[],
+    connectionManager?: HCS10ConnectionManager,
+    transactionApproval?: HCS10TransactionApproval
+  ) {
     this.hcsClient = hcsClient
     this.agentId = agentId
     this.capabilities = capabilities
+    if (connectionManager !== undefined) {
+      this.connectionManager = connectionManager
+    }
+    if (transactionApproval !== undefined) {
+      this.transactionApproval = transactionApproval
+    }
   }
 
   /**
@@ -133,6 +150,84 @@ export class A2AProtocol {
     await this.hcsClient.sendMessage(topicId, JSON.stringify(message))
     
     console.log(chalk.green(`✅ A2A broadcast successful`))
+  }
+
+  /**
+   * Send an A2A message via established connection (if available)
+   * Falls back to direct topic messaging if no connection exists
+   */
+  async sendViaConnection(
+    receiverAgentId: string,
+    messageType: "request" | "response" | "notification",
+    payload: any
+  ): Promise<void> {
+    if (!this.connectionManager) {
+      throw new Error('Connection manager not initialized. Use sendMessage() for direct topic messaging.')
+    }
+
+    const connection = this.connectionManager.getConnection(receiverAgentId)
+    
+    if (connection && connection.status === 'established' && connection.connectionTopicId) {
+      // Send via connection topic
+      const message = this.createMessage(receiverAgentId, messageType, payload)
+      console.log(chalk.yellow(`📤 Sending A2A ${messageType} via connection to ${receiverAgentId}`))
+      await this.hcsClient.sendMessage(connection.connectionTopicId, JSON.stringify(message))
+      console.log(chalk.green(`✅ A2A message sent via connection`))
+    } else {
+      // Fall back to direct topic messaging
+      console.log(chalk.yellow(`⚠️  No connection established, falling back to direct topic messaging`))
+      // Get receiver's topic ID from environment or registry
+      const receiverTopicId = process.env[`${receiverAgentId.toUpperCase().replace(/\./g, '_')}_TOPIC_ID`]
+      if (!receiverTopicId) {
+        throw new Error(`Cannot find topic ID for agent ${receiverAgentId}`)
+      }
+      await this.sendMessage(receiverTopicId, receiverAgentId, messageType, payload)
+    }
+  }
+
+  /**
+   * Send a transaction for approval via connection
+   */
+  async sendTransactionForApproval(
+    receiverAgentId: string,
+    transaction: Transaction,
+    description: string,
+    options?: { scheduleMemo?: string; expirationTime?: number }
+  ): Promise<void> {
+    if (!this.transactionApproval) {
+      throw new Error('Transaction approval manager not initialized')
+    }
+
+    if (!this.connectionManager) {
+      throw new Error('Connection manager not initialized. Cannot send transaction for approval without connection.')
+    }
+
+    const connection = this.connectionManager.getConnection(receiverAgentId)
+    
+    if (!connection || connection.status !== 'established' || !connection.connectionTopicId) {
+      throw new Error(`No established connection with ${receiverAgentId}`)
+    }
+
+    await this.transactionApproval.sendTransaction(
+      connection.connectionTopicId,
+      transaction,
+      description,
+      options
+    )
+  }
+
+  /**
+   * Get connection manager instance
+   */
+  getConnectionManager(): HCS10ConnectionManager | undefined {
+    return this.connectionManager
+  }
+
+  /**
+   * Get transaction approval manager instance
+   */
+  getTransactionApproval(): HCS10TransactionApproval | undefined {
+    return this.transactionApproval
   }
 
   /**
