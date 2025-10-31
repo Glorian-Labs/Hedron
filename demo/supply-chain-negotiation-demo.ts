@@ -391,26 +391,101 @@ export class SupplyChainNegotiationDemo {
             // Execute HBAR transfer on Hedera
             console.log(chalk.blue('💸 Step 3: Executing HBAR Payment on Hedera...\n'))
             
-            const paymentTx = new TransferTransaction()
-              .addHbarTransfer(
-                AccountId.fromString(accountId),
-                new Hbar(-1)
-              )
-              .addHbarTransfer(
-                AccountId.fromString('0.0.7135719'),
-                new Hbar(1)
-              )
-              .setTransactionMemo(`Payment approved for: ${agreementTxId}`)
-              .setMaxTransactionFee(new Hbar(5))
+            // HCS-10: Use transaction approval if enabled
+            const useHCS10Approval = process.env.USE_HCS10_CONNECTIONS === 'true'
+            let useTransactionApproval = false
             
-            console.log(chalk.yellow('⏳ Executing payment transaction...'))
-            const paymentResponse = await paymentTx.execute(this.hederaClient)
-            const paymentTxId = paymentResponse.transactionId.toString()
+            if (useHCS10Approval) {
+              try {
+                // Initialize settlement agent for transaction approval
+                const settlement = new SettlementAgent()
+                await settlement.init()
+                const txApproval = settlement.getTransactionApproval()
+                const settlementConn = settlement.getConnectionManager()
+                
+                // For this demo, we'll simulate vendor approval by using buyer's account
+                // In production, vendor would have its own agent with transaction approval
+                if (txApproval && settlementConn) {
+                  const vendorAccountId = '0.0.7135719' // Vendor account
+                  
+                  // Try to get connection to vendor (if vendor agent exists)
+                  // For demo purposes, we'll create connection request
+                  const connection = await settlementConn.requestConnection(vendorAccountId, { timeout: 30000 })
+                  
+                  if (connection && connection.status === 'established' && connection.connectionTopicId) {
+                    console.log(chalk.yellow('📋 Using HCS-10 transaction approval workflow...\n'))
+                    
+                    const paymentTx = new TransferTransaction()
+                      .addHbarTransfer(
+                        AccountId.fromString(accountId),
+                        new Hbar(-1)
+                      )
+                      .addHbarTransfer(
+                        AccountId.fromString(vendorAccountId),
+                        new Hbar(1)
+                      )
+                      .setTransactionMemo(`Payment approved for: ${agreementTxId}`)
+                      .setMaxTransactionFee(new Hbar(5))
+                    
+                    // Schedule transaction for approval
+                    const scheduledTx = await txApproval.sendTransaction(
+                      connection.connectionTopicId,
+                      paymentTx,
+                      `Supply chain payment: 1 HBAR to vendor`,
+                      {
+                        scheduleMemo: `Agreement: ${agreementTxId}`,
+                        expirationTime: 3600
+                      }
+                    )
+                    
+                    console.log(chalk.blue(`📋 Transaction scheduled: ${scheduledTx.scheduleId.toString()}`))
+                    console.log(chalk.yellow('⏳ Vendor approval required...'))
+                    console.log(chalk.gray('   (In production, vendor agent would approve this transaction)'))
+                    
+                    // For demo: auto-approve if vendor account is controlled by same key
+                    // In real scenario, vendor would approve separately
+                    try {
+                      await txApproval.approveTransaction(scheduledTx.scheduleId)
+                      console.log(chalk.green('\n✅ Transaction approved and executed via HCS-10!'))
+                      console.log(chalk.green(`📋 Schedule ID: ${scheduledTx.scheduleId.toString()}`))
+                      console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
+                      console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${scheduledTx.scheduleId}\n`))
+                      useTransactionApproval = true
+                    } catch (approvalError) {
+                      console.log(chalk.yellow(`⚠️  Auto-approval failed: ${(approvalError as Error).message}`))
+                      console.log(chalk.gray('   Falling back to direct execution...\n'))
+                    }
+                  }
+                }
+              } catch (error) {
+                console.log(chalk.yellow(`⚠️  Transaction approval setup failed: ${(error as Error).message}`))
+                console.log(chalk.gray('   Falling back to direct execution...\n'))
+              }
+            }
             
-            console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
-            console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
-            console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
-            console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
+            // Fallback: Direct execution if transaction approval not used
+            if (!useTransactionApproval) {
+              const paymentTx = new TransferTransaction()
+                .addHbarTransfer(
+                  AccountId.fromString(accountId),
+                  new Hbar(-1)
+                )
+                .addHbarTransfer(
+                  AccountId.fromString('0.0.7135719'),
+                  new Hbar(1)
+                )
+                .setTransactionMemo(`Payment approved for: ${agreementTxId}`)
+                .setMaxTransactionFee(new Hbar(5))
+              
+              console.log(chalk.yellow('⏳ Executing payment transaction directly...'))
+              const paymentResponse = await paymentTx.execute(this.hederaClient)
+              const paymentTxId = paymentResponse.transactionId.toString()
+              
+              console.log(chalk.bold.green('\n✅ Payment Executed!\n'))
+              console.log(chalk.green(`📋 Payment TX ID: ${paymentTxId}`))
+              console.log(chalk.green(`💰 Amount: 1 HBAR to vendor`))
+              console.log(chalk.cyan(`🔗 View Payment: https://hashscan.io/testnet/transaction/${paymentTxId}\n`))
+            }
           }
         } else {
           console.log(chalk.red('❌ Agreement verification failed - payment cancelled\n'))

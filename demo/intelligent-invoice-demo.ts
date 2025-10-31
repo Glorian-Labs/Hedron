@@ -14,6 +14,7 @@
  */
 
 import { IntelligentVerifierAgent } from '../src/agents/IntelligentVerifierAgent'
+import { SettlementAgent } from '../src/agents/SettlementAgent'
 import { HumanInTheLoopMode } from '../src/modes/HumanInTheLoopMode'
 import { Client, PrivateKey, AccountId, TransferTransaction, Hbar, AccountBalanceQuery } from '@hashgraph/sdk'
 import chalk from 'chalk'
@@ -210,27 +211,113 @@ async function intelligentInvoiceDemo() {
         continue
       }
 
-      // Execute REAL HBAR transfer
-      console.log(chalk.yellow('\n⏳ Executing real HBAR transfer on Hedera testnet...'))
+      // HCS-10: Use transaction approval if enabled, otherwise direct execution
+      const useHCS10Approval = process.env.USE_HCS10_CONNECTIONS === 'true'
+      let useTransactionApproval = false
+      let txId: string | null = null
+
+      if (useHCS10Approval && requiresApproval) {
+        // Use HCS-10 transaction approval for high-value invoices
+        console.log(chalk.yellow('\n📋 Using HCS-10 transaction approval workflow...'))
+        console.log(chalk.gray('   Scheduled transaction requires approval before execution'))
+        
+        try {
+          const settlement = new SettlementAgent()
+          await settlement.init()
+          const txApproval = settlement.getTransactionApproval()
+          const settlementConn = settlement.getConnectionManager()
+          
+          if (txApproval && settlementConn) {
+            // Try to establish connection to vendor or use approval agent
+            const approvalAgentId = process.env.VERIFIER_AGENT_ID || process.env.HEDERA_ACCOUNT_ID!
+            
+            try {
+              const connection = await settlementConn.requestConnection(approvalAgentId, { timeout: 30000 })
+              
+              if (connection && connection.status === 'established' && connection.connectionTopicId) {
+                console.log(chalk.blue('✅ Connection established for transaction approval'))
+                
+                const transfer = new TransferTransaction()
+                  .addHbarTransfer(
+                    AccountId.fromString(accountId),
+                    Hbar.fromTinybars(-tinybarAmount)
+                  )
+                  .addHbarTransfer(
+                    AccountId.fromString(invoice.vendorAccountId),
+                    Hbar.fromTinybars(tinybarAmount)
+                  )
+                  .setTransactionMemo(`Invoice ${invoice.invoiceId}: ${invoice.description}`)
+                
+                // Schedule transaction for approval
+                const scheduledTx = await txApproval.sendTransaction(
+                  connection.connectionTopicId,
+                  transfer,
+                  `Invoice payment: $${invoice.amountUSD} - ${invoice.description}`,
+                  {
+                    scheduleMemo: `LLM Approved Invoice: ${invoice.invoiceId}\nReasoning: ${analysis.reasoning.substring(0, 100)}...`,
+                    expirationTime: 3600 // 1 hour
+                  }
+                )
+                
+                console.log(chalk.blue(`📋 Transaction scheduled: ${scheduledTx.scheduleId.toString()}`))
+                console.log(chalk.yellow('⏳ Waiting for approval...'))
+                console.log(chalk.gray(`   LLM Confidence: ${analysis.confidence}%`))
+                console.log(chalk.gray(`   LLM Reasoning: ${analysis.reasoning.substring(0, 80)}...`))
+                
+                // In production, approval agent would approve here
+                // For demo: auto-approve since LLM already approved
+                await new Promise(resolve => setTimeout(resolve, 2000)) // Simulate approval delay
+                
+                try {
+                  await txApproval.approveTransaction(scheduledTx.scheduleId)
+                  console.log(chalk.green('\n✅ Transaction approved and executed via HCS-10!'))
+                  console.log(chalk.blue(`📋 Schedule ID: ${scheduledTx.scheduleId.toString()}`))
+                  console.log(chalk.blue(`🔗 HashScan: https://hashscan.io/testnet/transaction/${scheduledTx.scheduleId.toString()}`))
+                  txId = scheduledTx.scheduleId.toString()
+                  useTransactionApproval = true
+                } catch (approvalError) {
+                  console.log(chalk.yellow(`⚠️  Auto-approval failed: ${(approvalError as Error).message}`))
+                  console.log(chalk.gray('   Falling back to direct execution...\n'))
+                }
+              } else {
+                throw new Error('Connection not established')
+              }
+            } catch (connError) {
+              console.log(chalk.yellow(`⚠️  Connection failed: ${(connError as Error).message}`))
+              console.log(chalk.gray('   Falling back to direct execution...\n'))
+            }
+          }
+        } catch (error) {
+          console.log(chalk.yellow(`⚠️  Transaction approval setup failed: ${(error as Error).message}`))
+          console.log(chalk.gray('   Falling back to direct execution...\n'))
+        }
+      }
       
-      const transfer = new TransferTransaction()
-        .addHbarTransfer(
-          AccountId.fromString(accountId),
-          Hbar.fromTinybars(-tinybarAmount)
-        )
-        .addHbarTransfer(
-          AccountId.fromString(invoice.vendorAccountId),
-          Hbar.fromTinybars(tinybarAmount)
-        )
-        .setTransactionMemo(`Invoice payment: ${invoice.invoiceId}`)
+      // Fallback: Direct execution (original behavior)
+      if (!useTransactionApproval) {
+        console.log(chalk.yellow('\n⏳ Executing real HBAR transfer on Hedera testnet...'))
+        
+        const transfer = new TransferTransaction()
+          .addHbarTransfer(
+            AccountId.fromString(accountId),
+            Hbar.fromTinybars(-tinybarAmount)
+          )
+          .addHbarTransfer(
+            AccountId.fromString(invoice.vendorAccountId),
+            Hbar.fromTinybars(tinybarAmount)
+          )
+          .setTransactionMemo(`Invoice payment: ${invoice.invoiceId}`)
 
-      const txResponse = await transfer.execute(hederaClient)
-      const receipt = await txResponse.getReceipt(hederaClient)
+        const txResponse = await transfer.execute(hederaClient)
+        const receipt = await txResponse.getReceipt(hederaClient)
+        
+        txId = txResponse.transactionId.toString()
 
-      console.log(chalk.green('\n✅ REAL PAYMENT EXECUTED!'))
-      console.log(chalk.blue(`📋 Transaction ID: ${txResponse.transactionId.toString()}`))
-      console.log(chalk.blue(`📋 Status: ${receipt.status.toString()}`))
-      console.log(chalk.blue(`🔗 HashScan: https://hashscan.io/testnet/transaction/${txResponse.transactionId.toString()}`))
+        console.log(chalk.green('\n✅ REAL PAYMENT EXECUTED!'))
+        console.log(chalk.blue(`📋 Transaction ID: ${txId}`))
+        console.log(chalk.blue(`📋 Status: ${receipt.status.toString()}`))
+        console.log(chalk.blue(`🔗 HashScan: https://hashscan.io/testnet/transaction/${txId}`))
+      }
 
       // FINAL SUMMARY
       console.log(chalk.bold.green('\n🎉 INVOICE PROCESSING COMPLETE!\n'))
@@ -241,7 +328,8 @@ async function intelligentInvoiceDemo() {
       console.log(`   LLM Confidence: ${analysis.confidence}%`)
       console.log(`   Fraud Check: ${fraudCheck.isFraud ? 'FAILED' : 'PASSED'}`)
       console.log(`   HITL Required: ${requiresApproval ? 'Yes' : 'No'}`)
-      console.log(`   Transaction: ${txResponse.transactionId.toString()}`)
+      console.log(`   Payment Method: ${useTransactionApproval ? 'HCS-10 Transaction Approval' : 'Direct Execution'}`)
+      console.log(`   Transaction: ${txId}`)
       console.log(`   Status: PAID ON BLOCKCHAIN`)
 
     } // End invoice loop

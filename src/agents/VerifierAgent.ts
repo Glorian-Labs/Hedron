@@ -1,11 +1,11 @@
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
 import { HCS10ConnectionManager } from '../protocols/HCS10ConnectionManager'
 import { HCS10TransactionApproval } from '../protocols/HCS10TransactionApproval'
-import { loadEnvIfNeeded } from '../utils/env'
 import chalk from 'chalk'
+import dotenv from 'dotenv'
 
-// Load environment variables (optional for SDK usage)
-loadEnvIfNeeded()
+// Load environment variables
+dotenv.config()
 
 export class VerifierAgent {
   private hcsClient: HCS10Client
