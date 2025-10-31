@@ -20,6 +20,7 @@
     "demo:nft-royalty": "ts-node demo/nft-royalty-x402-demo.ts",
     "demo:hbar-x402": "ts-node demo/hbar-direct-x402-demo.ts",
     "demo:supply-chain-fraud": "ts-node demo/supply-chain-fraud-detection-demo.ts",
+    "demo:rwa-invoice": "ts-node demo/tokenized-rwa-invoice-demo.ts",
     "check:wallets": "ts-node scripts/maintenance/check-wallet-status.ts",
     "test:unit": "ts-node tests/unit/test-analyzer.ts && ts-node tests/unit/test-verifier.ts && ts-node tests/unit/test-settlement.ts",
     "test:integration": "ts-node tests/integration/test-improved-x402.ts && ts-node tests/integration/test-merchant-agent.ts && ts-node tests/integration/test-payment-server.ts && ts-node tests/integration/test-enhanced-x402utils.ts && ts-node tests/integration/test-complete-x402-system.ts",

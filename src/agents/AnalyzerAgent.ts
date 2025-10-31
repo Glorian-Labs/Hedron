@@ -1,5 +1,6 @@
 import { HCS10Client } from '@hashgraphonline/standards-agent-kit'
 import { Client, AccountInfoQuery, AccountId } from '@hashgraph/sdk'
+import { HCS10ConnectionManager } from '../protocols/HCS10ConnectionManager'
 import axios from 'axios'
 import dotenv from 'dotenv'
 
@@ -9,6 +10,7 @@ dotenv.config()
 export class AnalyzerAgent {
   private hcsClient: HCS10Client
   private hederaClient: Client
+  private connectionManager?: HCS10ConnectionManager
   private readonly MIRROR_NODE_URL = 'https://testnet.mirrornode.hedera.com'
 
   constructor() {
@@ -38,6 +40,12 @@ export class AnalyzerAgent {
       
       // Initialize HCS10Client with main account for now
       this.hcsClient = new HCS10Client(mainAccountId, mainPrivateKey, 'testnet')
+      
+      // Initialize connection manager (optional)
+      const useConnections = process.env.USE_HCS10_CONNECTIONS === 'true'
+      if (useConnections) {
+        this.connectionManager = new HCS10ConnectionManager(this.hcsClient, mainAccountId)
+      }
     } else {
       // Initialize HCS10Client with actual agent credentials
       this.hcsClient = new HCS10Client(agentId, privateKey, 'testnet')
@@ -45,6 +53,12 @@ export class AnalyzerAgent {
       // Also initialize Hedera client for direct queries
       this.hederaClient = Client.forTestnet()
       this.hederaClient.setOperator(AccountId.fromString(agentId), privateKey)
+      
+      // Initialize connection manager (optional)
+      const useConnections = process.env.USE_HCS10_CONNECTIONS === 'true'
+      if (useConnections) {
+        this.connectionManager = new HCS10ConnectionManager(this.hcsClient, agentId)
+      }
     }
   }
 
