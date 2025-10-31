@@ -185,7 +185,7 @@ async function tokenizedRWAInvoiceDemo(): Promise<void> {
 
       console.log(chalk.green(`✅ Token transfer completed!`))
       console.log(chalk.blue(`📋 Transaction ID: ${transferTxId}`))
-      console.log(chalk.blue(`🔗 HashScan: https://hashscan.io/testnet/transaction/${transferTxId.split('@')[0]}`))
+      console.log(chalk.blue(`🔗 HashScan: https://hashscan.io/testnet/transaction/${encodeURIComponent(transferTxId)}`))
       console.log('')
 
       console.log(chalk.cyan('💡 RWA Trading Benefits:'))
