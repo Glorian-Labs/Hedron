@@ -30,9 +30,9 @@ Complete guide to using Hedron for autonomous workflows.
 
 Complete API documentation for all components.
 
-### [RWA Invoice Demo](./RWA_INVOICE_DEMO.md)
+### [Real-World Use Cases](./REAL_WORLD_USE_CASES.md)
 
-Tokenized Real-World Asset invoice demonstration: tokenization, trading, and automated settlement.
+6 production-ready use case examples with complete code: E-commerce, B2B Supply Chain, Freelancer Platform, SaaS, NFT Marketplace, and RWA Invoice Factoring.
 
 ### [A2A Protocol Implementation](./A2A_PROTOCOL_IMPLEMENTATION.md)
 
@@ -58,6 +58,12 @@ Complete guide for HCS-11 profile setup.
 
 Local HCS profile resolver documentation.
 
+### [HCS-10 Integration Guide](./HCS10_ALL_DEMOS_CHANGES.md)
+
+Complete guide to HCS-10 OpenConvAI protocol integration.
+
+## 📖 Hackathon Resources
+
 ### [Hackathon Ready](./HACKATHON_READY.md)
 
 Submission checklist and readiness status.
@@ -73,11 +79,13 @@ Submission checklist and readiness status.
 
 ---
 
-## 📖 For Judges
+## 📖 Hackathon & Presentation
 
-- [Hackathon Ready](./HACKATHON_READY.md) - Submission checklist
+- [Hackathon README](../HACKATHON_README.md) - Complete hackathon submission
+- [Pitch Deck](./PITCH_DECK.md) - Presentation slides
+- [Video Pitch Summary](./VIDEO_PITCH_SUMMARY.md) - Video script
 - [Bounties Guide](./BOUNTIES_GUIDE.md) - Complete bounty information
-- [Usage Guide](./USAGE_GUIDE.md) - How to run demos
+- [Hackathon Ready](./HACKATHON_READY.md) - Submission checklist
 
 ---
 
