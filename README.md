@@ -107,6 +107,11 @@ hedron/
 └── README.md            # project overview
 ```
 
+### 🌿 Branch Structure
+
+- `ascension` - TrustScore Oracle branch: a decentralized reputation marketplace implementing an end-to-end A2A -> AP2 -> x402 -> analytics -> HCS workflow, with payment-gated trust scoring and production-grade test coverage.
+- `hackathon/hedera-africa` - Hackathon archive branch containing submission artifacts, pitch/demo materials, and grant-support documentation.
+
 ---
 
 ## 🤝 Contributing
