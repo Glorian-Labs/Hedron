@@ -6,6 +6,8 @@ This index is organized for ongoing OSS development of Hedron as a Hedera-native
 
 ## Core Documentation
 
+- `ROADMAP.md` - Official roadmap and next milestones (M1-M18)
+- `SHOWCASE.md` - Hackathon submission, demos, and feature matrix
 - `API_REFERENCE.md` - API details for SDK modules
 - `USAGE_GUIDE.md` - Integration and usage walkthroughs
 - `A2A_PROTOCOL_IMPLEMENTATION.md` - Agent-to-agent protocol implementation
@@ -21,7 +23,9 @@ This index is organized for ongoing OSS development of Hedron as a Hedera-native
 
 ## Quick Navigation
 
-1. Start in root `README.md` for roadmap and milestones
-2. Read `USAGE_GUIDE.md` for implementation flow
-3. Use `API_REFERENCE.md` while integrating SDK modules
-4. Review setup guides before running demos or tests
+1. Start in root `README.md` for product overview and architecture
+2. Read `ROADMAP.md` for Activation/Milestone/Scale execution plan
+3. Read `SHOWCASE.md` for demos, examples, and hackathon context
+4. Read `USAGE_GUIDE.md` for implementation flow
+5. Use `API_REFERENCE.md` while integrating SDK modules
+6. Review setup guides before running demos or tests

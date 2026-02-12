@@ -15,6 +15,12 @@ Full hackathon submission artifacts are maintained in:
 - Submission guideline PDF and supporting hackathon deliverables
 - Demo and judging context tied to the hackathon submission cycle
 
+## Built For
+
+- Hedera x402 Payment Standard bounty
+- Hedera Agent Kit bounty
+- Hedera Africa Hackathon submission cycle
+
 ## Mainline Continuity
 
 Hedron remains the product identity. Mainline development is centered on:
