@@ -1,45 +1,91 @@
 # Hedron
 
-**Hedera-native Agentic Commerce SDK (Hedron by Glorian Labs)**
+**Hedera-native SDK for agentic commerce -- negotiate, pay, and prove, all on-chain.**
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
 [![Hedera](https://img.shields.io/badge/Hedera-Testnet-green.svg)](https://hedera.com)
 
-Hedron is a Hedera-native SDK for agentic commerce. It enables autonomous agents to negotiate, request and settle payments, and generate verifiable receipts with auditable trails on Hedera.
+---
+
+## What is Hedron?
+
+Hedron is an open-source TypeScript SDK that lets autonomous AI agents conduct real commerce on Hedera. An agent can discover a service, request a quote, settle payment in HBAR or USDC, and produce a cryptographically verifiable receipt -- all without human intervention.
+
+**Who is it for?** Teams building agent-to-agent marketplaces, AI-powered procurement tools, or any workflow where software agents need to spend and receive money with an auditable trail.
+
+**What can I do in 5 minutes?** Clone the repo, set two Hedera testnet keys in `.env`, run `npm run demo`, and watch a buyer agent negotiate a price, pay, and receive a verified receipt -- logged to HCS.
 
 ---
 
-## 🌟 Vision
+## Why it matters
 
-Hedron's long-term product vision is a **Router/Broker** layer for autonomous commerce:
-
-- **Discovery**: list agents, capabilities, and pricing
-- **Negotiation**: request -> quote -> proposal
-- **Policy & Safety**: approvals, allowlists, spending/rate limits
-- **Settlement**: collect payment and trigger execution
-- **Proof**: emit HCS audit trails + final receipt verification
+- **Agents need rails, not wallets.** LLMs can reason about purchases but have no native way to pay. Hedron provides the missing settlement + proof layer.
+- **Auditability by default.** Every negotiation step and payment is anchored to Hedera Consensus Service, giving you a tamper-proof event trail.
+- **Protocol-agnostic agents.** Built-in adapters for A2A, AP2, and x402 mean your agents can interoperate across ecosystems today.
 
 ---
 
-## 🏆 Recognition
+## Key Capabilities
 
-“We’re honored that Hedron — an autonomous agent ecosystem built on the Hedera Hashgraph stack — was recognized as a Top 3 winner in the AI & DePIN track at the Hedera Africa Hackathon. This grant accelerates our mission to power the emerging agent economy, enabling autonomous agents to coordinate, negotiate, establish trust, transact, and build real economic value on-chain.”
-
----
-
-## 🚀 Key Features
-
-- **Router/Broker-ready architecture** for agent discovery, negotiation, execution, and proof
-- **Hedera-first verifiability** with HCS-based event trails and receipt-oriented settlement
-- **Multi-protocol agent communication** with A2A, AP2, and x402 integration points
-- **Policy-driven execution controls** including approvals, limits, and safe retries
-- **Cross-network settlement support** for HBAR-native and EVM-based payment flows
-- **Production SDK ergonomics** with typed modules, docs, tests, and reusable demos
+- **Agent discovery & negotiation** -- list agents, request quotes, accept proposals
+- **Policy engine** -- approvals, allowlists, spending limits, rate limits
+- **HBAR & EVM settlement** -- native HBAR transfers, EVM USDC, and x402 payment rails
+- **HCS audit trails** -- every event is timestamped on Hedera Consensus Service
+- **Receipt verification** -- cryptographic proof that payment occurred and service was delivered
+- **Multi-protocol support** -- A2A, AP2, and x402 integration out of the box
+- **Typed SDK with docs & tests** -- production ergonomics, not hackathon glue
 
 ---
 
-## 🏗️ Architecture
+## Status
+
+| Aspect | State |
+|---|---|
+| SDK core (agents, settlement, HCS) | **Alpha** -- API surface may change |
+| Demo flows | **Stable** -- working end-to-end on testnet |
+| Smart contracts | **Experimental** -- deployed on testnet only |
+| Recommended for | Prototyping, hackathons, early integration partners |
+
+> Hedron is in active development. We welcome early adopters and contributors -- but pin to a specific commit or tag for anything beyond experimentation.
+
+---
+
+## Use Cases
+
+| Flow | What happens |
+|---|---|
+| **Quote-to-receipt** | Buyer agent requests a quote, seller agent responds, buyer pays in HBAR, HCS logs the receipt |
+| **Policy-gated spending** | Agent checks spending limits and approval rules before releasing funds |
+| **HCS audit export** | Export the full negotiation + settlement trail from HCS for compliance review |
+| **Trust-scored marketplace** | Agents build on-chain reputation via payment-gated trust scoring (see `ascension` branch) |
+| **Cross-chain settlement** | Settle in HBAR natively or bridge to EVM USDC via x402 rails |
+
+---
+
+## Quick Start
+
+```bash
+git clone https://github.com/glorian-labs/hedron.git
+cd hedron
+npm install
+cp env.example .env   # add your Hedera testnet operator ID + key
+npm run build
+```
+
+## Demo
+
+Run the full orchestrated flow -- a buyer agent negotiates, pays, and receives a verified receipt:
+
+```bash
+npm run demo
+```
+
+You will see console output showing each protocol step: discovery, quote, proposal acceptance, HBAR transfer, HCS message submission, and receipt verification.
+
+---
+
+## Architecture
 
 ```text
 ┌─────────────────────────────────────────────────────────┐
@@ -62,38 +108,37 @@ Hedron's long-term product vision is a **Router/Broker** layer for autonomous co
 
 ---
 
-## ⚡ Quick Start
+## Vision
 
-```bash
-git clone https://github.com/Hebx/hedron.git
-cd hedron
-npm install
-cp env.example .env
-npm run build
-```
+Hedron's long-term product direction is a **Router/Broker** layer for autonomous commerce:
 
-Run a complete orchestrated flow:
-
-```bash
-npm run demo
-```
+- **Discovery** -- list agents, capabilities, and pricing
+- **Negotiation** -- request, quote, proposal
+- **Policy & Safety** -- approvals, allowlists, spending and rate limits
+- **Settlement** -- collect payment and trigger execution
+- **Proof** -- HCS audit trails and receipt verification
 
 ---
 
-## 📚 Documentation
+## Documentation
 
-- **[SDK README](./SDK_README.md)** - SDK installation and usage
-- **[Usage Guide](./docs/USAGE_GUIDE.md)** - integration walkthroughs
-- **[API Reference](./docs/API_REFERENCE.md)** - full API surface
-- **[Roadmap & Real-World Adoption](./docs/ROADMAP.md)** - Activation, Milestone, Scale
-- **[Showcase: Hackathon Submission + Demos + Feature Matrix](./docs/SHOWCASE.md)** - consolidated demo/submission document
-- **[Real-World SDK Use Cases](./docs/REAL_WORLD_USE_CASES.md)** - applied production scenarios
-- **[Docs Index](./docs/INDEX.md)** - full documentation map
-- **[Hackathon Archive](./docs/HACKATHON_ARCHIVE.md)** - separate branch and historical context
+- **[SDK Guide](./SDK_README.md)** -- installation and usage
+- **[Usage Guide](./docs/USAGE_GUIDE.md)** -- integration walkthroughs
+- **[API Reference](./docs/API_REFERENCE.md)** -- full API surface
+- **[Roadmap](./docs/ROADMAP.md)** -- activation, milestones, scale
+- **[Showcase](./docs/SHOWCASE.md)** -- hackathon submission, demos, feature matrix
+- **[Real-World Use Cases](./docs/REAL_WORLD_USE_CASES.md)** -- applied production scenarios
+- **[Docs Index](./docs/INDEX.md)** -- full documentation map
 
 ---
 
-## 📦 Project Structure
+## Recognition
+
+**Top 3 -- AI & DePIN track, Hedera Africa Hackathon.** The award included a grant from Hedera to accelerate development of autonomous agent commerce infrastructure.
+
+---
+
+## Project Structure
 
 ```text
 hedron/
@@ -102,30 +147,31 @@ hedron/
 ├── scripts/             # deployment and maintenance scripts
 ├── tests/               # unit, integration, e2e
 ├── demo/                # runnable demo workflows
-├── docs/                # documentation and roadmap/showcase pages
+├── docs/                # documentation, roadmap, showcase
 ├── SDK_README.md        # SDK-focused guide
-└── README.md            # project overview
+└── README.md            # this file
 ```
 
-### 🌿 Branch Structure
+### Branches
 
-- `ascension` - TrustScore Oracle branch: a decentralized reputation marketplace implementing an end-to-end A2A -> AP2 -> x402 -> analytics -> HCS workflow, with payment-gated trust scoring and production-grade test coverage.
-- `hackathon/hedera-africa` - Hackathon archive branch containing submission artifacts, pitch/demo materials, and grant-support documentation.
+- `main` -- stable SDK and demo flows
+- `ascension` -- TrustScore Oracle: decentralized reputation marketplace with A2A, AP2, x402, analytics, and HCS integration
+- `hackathon/hedera-africa` -- submission artifacts, pitch/demo materials, grant documentation
 
 ---
 
-## 🤝 Contributing
+## Contributing
 
-See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for contribution workflow and PR expectations.
+See **[CONTRIBUTING.md](./CONTRIBUTING.md)** for workflow and PR expectations.
 
-## 🔐 Security
+## Security
 
 See **[SECURITY.md](./SECURITY.md)** for vulnerability reporting and disclosure policy.
 
-## 📄 License
+## License
 
-This project is licensed under the **[MIT License](./LICENSE)**.
+[MIT](./LICENSE)
 
 ---
 
-**Hedron** - _Autonomous agents, intelligent decisions, seamless settlements._
+**Hedron** -- _Autonomous agents, intelligent decisions, seamless settlements._
