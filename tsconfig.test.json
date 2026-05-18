@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "include": ["src/**/*", "tests/unit/**/*", "demo/local.ts", "demo/testnet.ts"],
+  "exclude": ["node_modules", "dist", "build", "tests/e2e", "tests/integration"],
+  "compilerOptions": {
+    "noEmit": true,
+    "types": ["node"]
+  }
+}
