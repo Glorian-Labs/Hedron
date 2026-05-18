@@ -105,7 +105,7 @@ Urgency: ${invoice.urgency}`
       const reasoning = response.content as string
 
       // Parse LLM response
-      let result = this.parseLLMResponse(reasoning)
+      const result = this.parseLLMResponse(reasoning)
 
       console.log(chalk.green('✅ LLM analysis complete'))
       console.log(chalk.blue(`📊 Decision: ${result.approved ? 'APPROVED' : 'REJECTED'}`))

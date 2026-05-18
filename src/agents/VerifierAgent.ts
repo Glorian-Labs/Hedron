@@ -9,7 +9,7 @@ dotenv.config()
 
 export class VerifierAgent {
   private hcsClient: HCS10Client
-  private messageHandlers: Map<string, Function>
+  private messageHandlers: Map<string, (...args: unknown[]) => unknown>
   private connectionManager?: HCS10ConnectionManager
   private transactionApproval?: HCS10TransactionApproval
 
@@ -169,7 +169,7 @@ export class VerifierAgent {
    * @param type - The message type to handle
    * @param handler - The handler function to call when this message type is received
    */
-  onMessage(type: string, handler: Function): void {
+  onMessage(type: string, handler: (...args: unknown[]) => unknown): void {
     this.messageHandlers.set(type, handler)
     console.log(`📝 Registered handler for message type: ${type}`)
   }

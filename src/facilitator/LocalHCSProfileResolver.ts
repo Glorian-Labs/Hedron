@@ -45,7 +45,7 @@ export class LocalHCSProfileResolver {
 
     // HCS-11 profile endpoint (matches Kiloscribe CDN format)
     this.app.get('/hcs-11/profile/:accountId', async (req: Request, res: Response) => {
-      const accountId = req.params.accountId || ''
+      const accountId: string = String(req.params.accountId ?? '')
       
       try {
         console.log(chalk.blue(`📥 Profile request for: ${accountId}`))
@@ -73,7 +73,7 @@ export class LocalHCSProfileResolver {
 
     // Profile topic endpoint
     this.app.get('/profile/:topicId', async (req: Request, res: Response) => {
-      const topicId = req.params.topicId || ''
+      const topicId: string = String(req.params.topicId ?? '')
       
       try {
         console.log(chalk.blue(`📥 Topic request for: ${topicId}`))

@@ -1,7 +1,7 @@
 {
-  "name": "hedron-agent-sdk",
-  "version": "1.0.0",
-  "description": "Autonomous Agent Ecosystem SDK for Hedera Hashgraph - A2A Protocol, x402 Payment Standard, and Multi-Protocol Agent Communication",
+  "name": "hedron",
+  "version": "0.2.0-alpha.0",
+  "description": "Hedera-native agentic commerce SDK and Router/Broker runtime for autonomous agents.",
   "main": "./dist/src/index.js",
   "types": "./dist/src/index.d.ts",
   "exports": {
@@ -10,30 +10,55 @@
       "require": "./dist/src/index.js",
       "types": "./dist/src/index.d.ts"
     },
-    "./agents": {
-      "import": "./dist/src/agents/index.js",
-      "require": "./dist/src/agents/index.js",
-      "types": "./dist/src/agents/index.d.ts"
+    "./types": {
+      "import": "./dist/src/types/index.js",
+      "require": "./dist/src/types/index.js",
+      "types": "./dist/src/types/index.d.ts"
     },
-    "./protocols": {
-      "import": "./dist/src/protocols/index.js",
-      "require": "./dist/src/protocols/index.js",
-      "types": "./dist/src/protocols/index.d.ts"
+    "./router": {
+      "import": "./dist/src/router/index.js",
+      "require": "./dist/src/router/index.js",
+      "types": "./dist/src/router/index.d.ts"
     },
-    "./services": {
-      "import": "./dist/src/services/index.js",
-      "require": "./dist/src/services/index.js",
-      "types": "./dist/src/services/index.d.ts"
+    "./broker": {
+      "import": "./dist/src/broker/index.js",
+      "require": "./dist/src/broker/index.js",
+      "types": "./dist/src/broker/index.d.ts"
     },
-    "./modes": {
-      "import": "./dist/src/modes/index.js",
-      "require": "./dist/src/modes/index.js",
-      "types": "./dist/src/modes/index.d.ts"
+    "./registry": {
+      "import": "./dist/src/registry/index.js",
+      "require": "./dist/src/registry/index.js",
+      "types": "./dist/src/registry/index.d.ts"
     },
-    "./facilitator": {
-      "import": "./dist/src/facilitator/index.js",
-      "require": "./dist/src/facilitator/index.js",
-      "types": "./dist/src/facilitator/index.d.ts"
+    "./policy": {
+      "import": "./dist/src/policy/index.js",
+      "require": "./dist/src/policy/index.js",
+      "types": "./dist/src/policy/index.d.ts"
+    },
+    "./settlement": {
+      "import": "./dist/src/settlement/index.js",
+      "require": "./dist/src/settlement/index.js",
+      "types": "./dist/src/settlement/index.d.ts"
+    },
+    "./hcs": {
+      "import": "./dist/src/hcs/index.js",
+      "require": "./dist/src/hcs/index.js",
+      "types": "./dist/src/hcs/index.d.ts"
+    },
+    "./receipts": {
+      "import": "./dist/src/receipts/index.js",
+      "require": "./dist/src/receipts/index.js",
+      "types": "./dist/src/receipts/index.d.ts"
+    },
+    "./adapters/daydreams": {
+      "import": "./dist/src/adapters/daydreams/index.js",
+      "require": "./dist/src/adapters/daydreams/index.js",
+      "types": "./dist/src/adapters/daydreams/index.d.ts"
+    },
+    "./adapters/hedera-agent-kit": {
+      "import": "./dist/src/adapters/hedera-agent-kit/index.js",
+      "require": "./dist/src/adapters/hedera-agent-kit/index.js",
+      "types": "./dist/src/adapters/hedera-agent-kit/index.d.ts"
     }
   },
   "files": [
@@ -44,80 +69,60 @@
   "keywords": [
     "hedera",
     "hashgraph",
+    "agentic-commerce",
+    "router",
+    "broker",
+    "hcs",
+    "x402",
+    "payai",
+    "daydreams",
+    "hedera-agent-kit",
     "agent",
     "autonomous-agents",
     "a2a-protocol",
-    "x402",
-    "payment",
-    "blockchain",
-    "hcs",
-    "cross-chain",
-    "ai",
-    "llm",
-    "agent-communication",
-    "supply-chain",
-    "invoice-automation"
+    "ap2",
+    "hcs-10",
+    "policy",
+    "receipts"
   ],
   "scripts": {
+    "clean": "rimraf dist build coverage artifacts cache",
     "build": "tsc",
-    "start": "node dist/index.js",
-    "dev": "ts-node src/index.ts",
-    "setup:agents": "ts-node setup/register-agents.ts",
-    "setup:hcs11": "ts-node scripts/hcs11-setup/setup-hcs11-memo.ts",
-    "setup:hcs11-fixed": "ts-node scripts/hcs11-setup/setup-hcs11-memo-fixed.ts",
-    "create:hcs11-profile": "ts-node scripts/hcs11-setup/create-hcs11-profile.ts",
-    "inscribe:hcs11-data": "ts-node scripts/hcs11-setup/inscribe-hcs11-profile-data.ts",
-    "create:complete-hcs11": "ts-node scripts/hcs11-setup/create-complete-hcs11-profile.ts",
-    "create:simple-hcs11": "ts-node scripts/hcs11-setup/create-simple-hcs11-profile.ts",
-    "check:credentials": "ts-node scripts/maintenance/check-credentials-status.ts",
-    "demo": "ts-node demo/orchestrator.ts",
-    "demo:invoice": "ts-node demo/invoice-automation-demo.ts",
-    "demo:invoice-llm": "ts-node demo/intelligent-invoice-demo.ts",
-    "demo:negotiation": "ts-node demo/supply-chain-negotiation-demo.ts",
-    "demo:nft-royalty": "ts-node demo/nft-royalty-x402-demo.ts",
-    "demo:hbar-x402": "ts-node demo/hbar-direct-x402-demo.ts",
-    "demo:supply-chain-fraud": "ts-node demo/supply-chain-fraud-detection-demo.ts",
-    "demo:rwa-invoice": "ts-node demo/tokenized-rwa-invoice-demo.ts",
-    "check:wallets": "ts-node scripts/maintenance/check-wallet-status.ts",
-    "test:unit": "ts-node tests/unit/test-analyzer.ts && ts-node tests/unit/test-verifier.ts && ts-node tests/unit/test-settlement.ts",
-    "test:integration": "ts-node tests/integration/test-improved-x402.ts && ts-node tests/integration/test-merchant-agent.ts && ts-node tests/integration/test-payment-server.ts && ts-node tests/integration/test-enhanced-x402utils.ts && ts-node tests/integration/test-complete-x402-system.ts",
-    "test:e2e": "ts-node tests/e2e/test-complete-coordination.ts && ts-node tests/e2e/test-working-coordination.ts && ts-node tests/e2e/test-payment-flow.ts",
-    "test:debug": "ts-node tests/debug/test-direct-payment.ts && ts-node tests/debug/test-direct-usdc-transfer.ts && ts-node tests/debug/test-funded-payment.ts && ts-node tests/debug/test-payment-debug.ts",
-    "test:all": "npm run test:unit && npm run test:integration && npm run test:e2e",
-    "test:analyzer": "ts-node tests/unit/test-analyzer.ts",
-    "test:verifier": "ts-node tests/unit/test-verifier.ts",
-    "test:settlement": "ts-node tests/unit/test-settlement.ts",
-    "test:merchant": "ts-node tests/integration/test-merchant-agent.ts",
-    "test:server": "ts-node tests/integration/test-payment-server.ts",
-    "test:utils": "ts-node tests/integration/test-enhanced-x402utils.ts",
-    "test:complete": "ts-node tests/integration/test-complete-x402-system.ts",
-    "test:coordination": "ts-node tests/e2e/test-complete-coordination.ts",
-    "test:working": "ts-node tests/e2e/test-working-coordination.ts",
-    "test:improved": "ts-node tests/integration/test-improved-x402.ts",
-    "test:usdc": "ts-node tests/debug/test-direct-usdc-transfer.ts",
-    "test:funded": "ts-node tests/debug/test-funded-payment.ts",
-    "test:hedera": "ts-node tests/integration/test-hedera-x402.ts",
-    "test:a2a-protocol": "ts-node tests/integration/test-a2a-protocol.ts",
-    "test:a2a-unit": "ts-node tests/unit/test-a2a-unit.ts",
-    "test:ap2-payments": "ts-node tests/integration/test-ap2-payments.ts",
-    "test:hitl": "ts-node tests/e2e/test-human-in-the-loop.ts",
-    "test:x402-complete": "ts-node tests/integration/test-complete-x402-system.ts",
-    "test:x402-server": "ts-node tests/integration/test-payment-server.ts",
-    "test:e2e-payment": "ts-node tests/e2e/test-payment-flow.ts",
-    "deploy:supply-chain": "ts-node scripts/deploy-supply-chain.ts",
-    "deploy:real": "ts-node scripts/deploy-real.ts",
-    "deploy:simple": "ts-node scripts/deploy-simple.ts"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "vitest run",
+    "test:unit": "vitest run",
+    "test:watch": "vitest",
+    "test:integration": "echo 'integration tests are opt-in; set RUN_HEDERA_INTEGRATION=true and run the targeted scripts under tests/integration/' && exit 0",
+    "compile:contracts": "echo 'hardhat v3 requires ESM; deferred to v0.2 ESM migration. See docs/ROADMAP.md.'",
+    "test:contracts": "echo 'hardhat v3 requires ESM; deferred to v0.2 ESM migration.'",
+    "demo": "npm run demo:local",
+    "demo:local": "tsx demo/local.ts",
+    "demo:testnet": "tsx demo/testnet.ts",
+    "demo:invoice-llm": "tsx demo/intelligent-invoice-demo.ts",
+    "demo:nft-royalty": "tsx demo/nft-royalty-x402-demo.ts",
+    "demo:hbar-x402": "tsx demo/hbar-direct-x402-demo.ts",
+    "deploy:supply-chain": "tsx scripts/deploy-supply-chain.ts",
+    "deploy:real": "tsx scripts/deploy-real.ts",
+    "deploy:simple": "tsx scripts/deploy-simple.ts",
+    "setup:agents": "tsx setup/register-agents.ts",
+    "check:credentials": "tsx scripts/maintenance/check-credentials-status.ts",
+    "check:wallets": "tsx scripts/maintenance/check-wallet-status.ts",
+    "secrets:scan": "gitleaks detect --source . --no-git --redact"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Hebx/hedera-a2a-agents.git"
+    "url": "git+https://github.com/Glorian-Labs/Hedron.git"
   },
-  "author": "",
+  "author": "Glorian Labs",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/Hebx/hedera-a2a-agents/issues"
+    "url": "https://github.com/Glorian-Labs/Hedron/issues"
   },
-  "homepage": "https://github.com/Hebx/hedera-a2a-agents#readme",
+  "homepage": "https://github.com/Glorian-Labs/Hedron#readme",
   "dependencies": {
     "@hashgraph/sdk": "^2.75.0",
     "@hashgraphonline/standards-agent-kit": "^0.2.164",
@@ -141,7 +146,14 @@
     "eslint": "^9.38.0",
     "hardhat": "^3.0.9",
     "prettier": "^3.6.2",
+    "rimraf": "^6.0.1",
     "ts-node": "^10.9.2",
-    "typescript": "^5.9.3"
+    "tsx": "^4.19.2",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.18.0",
+    "vitest": "^2.1.8"
+  },
+  "engines": {
+    "node": ">=20"
   }
 }
