@@ -23,14 +23,4 @@ Hedron is a Hedera-native agentic commerce SDK and Router/Broker runtime. These 
 ## Planning
 
 - [`ROADMAP.md`](ROADMAP.md) — versioned milestones
-- [`GRANT_EXECUTION_PLAN.md`](GRANT_EXECUTION_PLAN.md) — Tier 1 milestones with technical success criteria
-
-## Legacy (kept for context)
-
-- [`A2A_PROTOCOL_IMPLEMENTATION.md`](A2A_PROTOCOL_IMPLEMENTATION.md)
-- [`API_REFERENCE.md`](API_REFERENCE.md) — refreshed against the v0.2 module layout
-- [`USAGE_GUIDE.md`](USAGE_GUIDE.md)
-- [`HCS11_SETUP_GUIDE.md`](HCS11_SETUP_GUIDE.md)
-- [`HUMAN_IN_THE_LOOP.md`](HUMAN_IN_THE_LOOP.md)
-- [`LOCAL_HCS_RESOLVER.md`](LOCAL_HCS_RESOLVER.md)
-- [`SMART_CONTRACT_DEPLOYMENT.md`](SMART_CONTRACT_DEPLOYMENT.md)
+- [`DEPENDENCY_HARDENING.md`](DEPENDENCY_HARDENING.md) — current dependency picture + reduction plan

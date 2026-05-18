@@ -19,7 +19,7 @@ Hedron is **v0.2 in progress**. This branch is the working refactor toward a pro
 - **Production hosting is a roadmap item**, not a current claim.
 - **Receipts and HCS audit trails are the source of truth.** The repo intentionally does not "log success" without verifiable proofs.
 
-For the cleanup that produced this branch, see [`docs/ROADMAP.md`](docs/ROADMAP.md) and [`docs/GRANT_EXECUTION_PLAN.md`](docs/GRANT_EXECUTION_PLAN.md).
+For the milestones that follow this cleanup, see [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ---
 
@@ -110,19 +110,16 @@ The testnet demo writes real HCS audit events to a topic Hedron auto-provisions 
 ├── RELEASE_CHECKLIST.md
 ├── contracts/                 # Solidity, experimental, unaudited
 ├── deployments/testnet/       # Public testnet contract ids only
+├── demo/
+│   ├── local.ts               # canonical mocked end-to-end flow
+│   └── testnet.ts             # opt-in real Hedera testnet flow
 ├── docs/
-│   ├── INDEX.md
-│   ├── ARCHITECTURE.md
-│   ├── ROUTER_BROKER.md
-│   ├── HCS_RECEIPTS.md
-│   ├── POLICY_ENGINE.md
-│   ├── SECURITY_MODEL.md
-│   ├── QUICKSTART.md
-│   ├── ROADMAP.md
-│   ├── GRANT_EXECUTION_PLAN.md
-│   ├── DAYDREAMS_ADAPTER.md
-│   ├── PAYAI_X402_ADAPTER.md
-│   └── HEDERA_AGENT_KIT_PLUGIN.md
+│   ├── INDEX.md · ARCHITECTURE.md · ROUTER_BROKER.md
+│   ├── HCS_RECEIPTS.md · POLICY_ENGINE.md · SECURITY_MODEL.md
+│   ├── QUICKSTART.md · ROADMAP.md
+│   ├── DAYDREAMS_ADAPTER.md · PAYAI_X402_ADAPTER.md · HEDERA_AGENT_KIT_PLUGIN.md
+│   └── DEPENDENCY_HARDENING.md
+├── tests/unit/                # vitest, mock-only, 27 tests
 └── src/
     ├── router/                # discovery, capability index, quote dispatch
     ├── broker/                # intent → quote → policy → settle → execute → receipt
@@ -132,8 +129,6 @@ The testnet demo writes real HCS audit events to a topic Hedron auto-provisions 
     ├── receipts/              # Receipt + VerifiableReceipt + verifier
     ├── hcs/                   # topic management, signed event envelopes
     ├── adapters/              # daydreams/, hedera-agent-kit/, mcp/
-    ├── protocols/             # a2a/, hcs10/, ap2/
-    ├── agents/                # reference / example agents
     ├── types/                 # shared, type-only public surface
     ├── errors/                # typed errors
     └── utils/
@@ -161,14 +156,13 @@ Hedron is built so other agent runtimes plug in without forking:
 
 ## Roadmap
 
-The full roadmap and the Tier 1 grant execution plan live in:
-
-- [`docs/ROADMAP.md`](docs/ROADMAP.md) — versioned milestones
-- [`docs/GRANT_EXECUTION_PLAN.md`](docs/GRANT_EXECUTION_PLAN.md) — Tier 1 M1–M6 translated into technical deliverables with success criteria
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for versioned milestones (v0.2.0-alpha → v0.5+).
 
 ## Origins
 
-Hedron started as a submission for the **Hedera Africa Hackathon** (x402 Payment Standard + Hedera Agent Kit bounties). Hackathon materials (pitch deck, video summary, bounty briefs) are preserved in private project notes outside the public repo. The v0.2 branch is a deliberate productionization pass; it keeps the protocol foundations (A2A, AP2, HCS-10, x402) and rebuilds the runtime around an explicit Router/Broker contract.
+Hedron began as a Glorian Labs project exploring autonomous-agent coordination on Hedera. It was recognized with **3rd place in the AI & DePIN track at the Hedera Africa Hackathon**, alongside 1,300+ submissions and 13,000+ participants.
+
+The v0.2 branch is a deliberate productionization pass: it keeps the protocol foundations (A2A, AP2, HCS-10, x402) and rebuilds the runtime around an explicit Router/Broker contract with HCS-anchored receipts. Hackathon-era materials are preserved in private project notes outside the public repo.
 
 ## Contributing
 
@@ -179,5 +173,7 @@ See [`CONTRIBUTING.md`](CONTRIBUTING.md). Small reviewable PRs preferred. Adapte
 ISC — see [`LICENSE`](LICENSE).
 
 ---
+
+Built by **[Glorian Labs](https://github.com/Glorian-Labs)** — agentic intelligence for the next economy.
 
 **Hedron** — verifiable commerce for autonomous agents on Hedera.

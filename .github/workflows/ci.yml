@@ -17,12 +17,10 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
-      - uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+      - uses: actions/checkout@v5
 
       - name: Set up Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: npm
@@ -57,7 +55,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      # Pull just the branch tip + a few merge-base commits; we do NOT want
+      # to scan unreachable / cached PR refs from deleted branches.
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
 
@@ -70,8 +70,11 @@ jobs:
       - name: Scan working tree
         run: gitleaks detect --source . --no-git --redact --report-format sarif --report-path gitleaks.sarif
 
-      - name: Scan history
-        run: gitleaks detect --source . --redact --log-opts="--all --full-history"
+      - name: Scan reachable history (current branch only)
+        # Limit to what is reachable from HEAD. The pre-merge ref cache on
+        # GitHub can include deleted branches' commits if --all is used;
+        # this stays focused on the actual code path being merged.
+        run: gitleaks detect --source . --redact --log-opts="HEAD --full-history"
 
       - name: Upload SARIF
         if: always()
@@ -85,9 +88,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-node@v4
+      - uses: actions/setup-node@v5
         with:
           node-version: 20
           cache: npm

@@ -1,36 +1,25 @@
 /**
- * Hedron Agent SDK
- * 
- * Main entry point for the Hedron Autonomous Agent Ecosystem SDK
- * 
- * @packageDocumentation
+ * Hedron Agent SDK — public entry point.
+ *
+ * v0.2 surface. Subpath imports are also available:
+ *   import { Router } from 'hedron/router'
+ *   import { Broker } from 'hedron/broker'
+ *   import { policy } from 'hedron/policy'
+ *   import { MockHcsEmitter } from 'hedron/hcs'
+ *   import { MockPaymentAdapter } from 'hedron/settlement'
  */
 
-// Agents
-export * from './agents'
+export * as types from './types'
+export * as errors from './errors'
+export * from './config'
+export * from './registry'
+export * from './router'
+export * from './broker'
+export * from './settlement'
+export * from './hcs'
+export * from './receipts'
+export * from './policy'
+export * as utils from './utils'
 
-// Protocols
-export * from './protocols'
-
-// Services
-export * from './services'
-
-// Modes
-export * from './modes'
-
-// Facilitator
-export * from './facilitator'
-
-// Utils (optional exports)
-export * from './utils'
-
-/**
- * SDK Version
- */
-export const VERSION = '1.0.0'
-
-/**
- * SDK Name
- */
-export const SDK_NAME = 'hedron-agent-sdk'
-
+export const VERSION = '0.2.0-alpha.0'
+export const SDK_NAME = 'hedron'

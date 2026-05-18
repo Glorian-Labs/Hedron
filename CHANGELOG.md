@@ -5,7 +5,7 @@ All notable changes to Hedron are documented here. Format follows [Keep a Change
 ## [Unreleased]
 
 ### Added
-- Canonical v0.2 documentation: `docs/{INDEX,ARCHITECTURE,ROUTER_BROKER,HCS_RECEIPTS,POLICY_ENGINE,SECURITY_MODEL,QUICKSTART,DAYDREAMS_ADAPTER,PAYAI_X402_ADAPTER,HEDERA_AGENT_KIT_PLUGIN,ROADMAP,GRANT_EXECUTION_PLAN}.md`.
+- Canonical v0.2 documentation: `docs/{INDEX,ARCHITECTURE,ROUTER_BROKER,HCS_RECEIPTS,POLICY_ENGINE,SECURITY_MODEL,QUICKSTART,DAYDREAMS_ADAPTER,PAYAI_X402_ADAPTER,HEDERA_AGENT_KIT_PLUGIN,ROADMAP,DEPENDENCY_HARDENING}.md`.
 - Top-level `SECURITY.md`, `CONTRIBUTING.md`, `CHANGELOG.md`, `RELEASE_CHECKLIST.md`.
 - `src/types/`, `src/errors/`, `src/config/`, `src/router/`, `src/broker/`, `src/policy/`, `src/receipts/`, `src/hcs/`, `src/registry/`, `src/settlement/`, `src/adapters/{daydreams,hedera-agent-kit,mcp}` skeletons.
 - Mocked Router/Broker commerce flow runnable via `npm run demo:local`.

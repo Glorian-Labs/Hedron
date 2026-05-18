@@ -50,4 +50,4 @@ Versioned milestones. Each milestone has a tag and a definition of done. Until a
 - AI Agent Kit-style trusted-registry contributions.
 - Public agent marketplace UI as a separate project consuming Hedron.
 
-See [`GRANT_EXECUTION_PLAN.md`](GRANT_EXECUTION_PLAN.md) for how the Tier 1 grant ($20K) maps onto v0.2.0-alpha → v0.2.0.
+Each milestone has a tag and a definition of done. Until a tag exists in `git tag`, the milestone is in progress.
