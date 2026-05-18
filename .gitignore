@@ -1,4 +1,43 @@
-node_modules
+# --- dependencies -----------------------------------------------------------
+node_modules/
+
+# --- build / generated output -----------------------------------------------
+dist/
+build/
+coverage/
+.cache/
+cache/
+artifacts/
+typechain/
+typechain-types/
+
+# --- environment ------------------------------------------------------------
 .env
-dist
+.env.*
+!.env.example
+
+# --- editor / OS noise ------------------------------------------------------
+.DS_Store
 *.log
+tmp/
+temp/
+.vscode/
+.idea/
+.cursor/
+.kiro/
+
+# --- local deployments ------------------------------------------------------
+deployments/local/
+deployments/private/
+deployment.local.json
+
+# --- local-only operator files (NEVER commit) -------------------------------
+CLEANUP_AUDIT.md
+SECRET_INCIDENT_REPORT.md
+CLEANUP_SUMMARY.md
+HEDRON_TIER1_NOTES.md
+docs/internal/
+.local/
+
+# --- legacy duplicate env file (kept locally during v0.2 migration) --------
+env.example
