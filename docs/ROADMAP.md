@@ -4,22 +4,22 @@ Versioned milestones. Each milestone has a tag and a definition of done. Until a
 
 This roadmap tracks Hedron against the current Hedera surface area (May 2026):
 
-- **Hedera Agent Kit v4** \u2014 modular packages from `@hashgraph/hedera-agent-kit/plugins`, `BaseTool` lifecycle, first-class hooks and policies. See [`HEDERA_AGENT_KIT_PLUGIN.md`](HEDERA_AGENT_KIT_PLUGIN.md).
-- **Hedera x402** \u2014 native `exact` scheme: partially signed `TransferTransaction` (HBAR or HTS), facilitator pays gas and submits, on-chain settlement. See [`X402_ADAPTER.md`](X402_ADAPTER.md).
-- **HCS-10 / OpenConvAI** \u2014 production discovery and messaging standard for Hedera-resident agents.
-- **Hiero SDKs** \u2014 forward-looking SDK target; the legacy `@hashgraph/sdk` migrates into `@hiero-ledger/sdk`. See [`DEPENDENCY_HARDENING.md`](DEPENDENCY_HARDENING.md).
+- **Hedera Agent Kit v4** — modular packages from `@hashgraph/hedera-agent-kit/plugins`, `BaseTool` lifecycle, first-class hooks and policies. See [`HEDERA_AGENT_KIT_PLUGIN.md`](HEDERA_AGENT_KIT_PLUGIN.md).
+- **Hedera x402** — native `exact` scheme: partially signed `TransferTransaction` (HBAR or HTS), facilitator pays gas and submits, on-chain settlement. See [`X402_ADAPTER.md`](X402_ADAPTER.md).
+- **HCS-10 / OpenConvAI** — production discovery and messaging standard for Hedera-resident agents.
+- **Hiero SDKs** — forward-looking SDK target; the legacy `@hashgraph/sdk` migrates into `@hiero-ledger/sdk`. See [`DEPENDENCY_HARDENING.md`](DEPENDENCY_HARDENING.md).
 
 Hedron tracks these surfaces rather than wrapping them, so every milestone maps to one external surface plus the corresponding Hedron interface.
 
 ---
 
-## `v0.2.0-alpha.0` \u2014 cleanup + skeleton \u2705
+## `v0.2.0-alpha.0` — cleanup + skeleton ✅
 
 Hedron's v0.2 foundations are in place.
 
 - Public repo is review-friendly: no generated artifacts, no clutter, no leaked secrets.
 - Type surface (`src/types/`), errors (`src/errors/`), and config loader (`src/config/`) are landed.
-- Router and Broker run the canonical loop end-to-end against in-memory mocks: discover \u2192 quote \u2192 policy \u2192 pay \u2192 execute \u2192 receipt \u2192 verify.
+- Router and Broker run the canonical loop end-to-end against in-memory mocks: discover → quote → policy → pay → execute → receipt → verify.
 - Policy engine: pure evaluator + auditable decision events, stable hash of decisions.
 - HCS receipt schema v1 + verifier. Six checks: schema, signature, chain integrity, anchoring, policy + settlement consistency, terminal status.
 - Adapter interfaces defined for Daydreams, Hedera Agent Kit v4, x402.
@@ -29,7 +29,7 @@ DoD: tag `v0.2.0-alpha.0`. Released as PR #6 on 2026-05-19.
 
 ---
 
-## `v0.2.0-alpha.1` \u2014 quote-verification + ergonomics (next)
+## `v0.2.0-alpha.1` — quote-verification + ergonomics (next)
 
 Small, defensive slice. Locks the contract between Router and Broker so a quote cannot be silently swapped or accepted after expiry, before any real-network code lands.
 
@@ -44,7 +44,7 @@ DoD: tag `v0.2.0-alpha.1`. CI green; new tests green.
 
 ---
 
-## `v0.2.0-alpha.2` \u2014 Hedera surface bring-up on testnet
+## `v0.2.0-alpha.2` — Hedera surface bring-up on testnet
 
 Replace the mock HCS emitter and the first real settlement adapter with testnet implementations. This is the first milestone that touches the network.
 
@@ -58,7 +58,7 @@ DoD: tag `v0.2.0-beta.0`. `demo:testnet` succeeds; the receipt verifier confirms
 
 ---
 
-## `v0.2.0-beta.1` \u2014 x402 adapter (Hedera exact scheme)
+## `v0.2.0-beta.1` — x402 adapter (Hedera exact scheme)
 
 Wire the Broker to the Hedera x402 exact scheme so a paywalled endpoint becomes a first-class settlement rail in Hedron.
 
@@ -75,7 +75,7 @@ DoD: tag `v0.2.0-beta.1`. End-to-end x402 metered fetch succeeds on Hedera testn
 
 ---
 
-## `v0.2.0` \u2014 production-grade testnet release
+## `v0.2.0` — production-grade testnet release
 
 Hedron is publicly usable on Hedera testnet without operator hand-holding.
 
@@ -89,7 +89,7 @@ DoD: tag `v0.2.0`. The deployed Router handles 100 sequential and 20 concurrent 
 
 ---
 
-## `v0.3.0` \u2014 adapter expansion
+## `v0.3.0` — adapter expansion
 
 - **MCP server** exposing the Hedron tool surface (`discover` / `quote` / `pay` / `verify`) over the Model Context Protocol so MCP-aware agent runtimes can consume Hedron directly. MCP is now a widely adopted standard for connecting AI agents to tools (2026).
 - **Daydreams runtime** sandbox integration tests against the Lucid Agents Commerce SDK (Daydreams' SDK already speaks x402, A2A, and ERC-8004 natively, so the adapter bridges those into Hedron's HCS-anchored receipt flow).
@@ -99,7 +99,7 @@ DoD: tag `v0.3.0`. MCP server reachable from at least one MCP-aware host, Daydre
 
 ---
 
-## `v0.4.0` \u2014 governance + trust
+## `v0.4.0` — governance + trust
 
 - Policy registry on HCS: policies are **published**, not just executed; a `POLICY_REGISTERED` event makes the policy auditable independently of any flow.
 - Operator-key rotation events on a dedicated HCS topic; the verifier walks rotations transparently.
@@ -109,7 +109,7 @@ DoD: tag `v0.4.0`. Three policies published through the registry; one rotation w
 
 ---
 
-## `v0.5.0` \u2014 verifiable compute
+## `v0.5.0` — verifiable compute
 
 - Optional verifiable-compute adapter: TEE attestation or ZK-attached proof on selected adapters.
 - Receipts include attestation references when the adapter is enabled.
@@ -131,7 +131,7 @@ Further phases are being researched (registry depth, broader chain support, and 
 - Hedera Agent Kit v4 source: <https://github.com/hashgraph/hedera-agent-kit-js>
 - Hedera x402 announcement (Feb 2026): <https://hedera.com/blog/hedera-and-the-x402-payment-standard/>
 - x402 specs (Coinbase): <https://github.com/coinbase/x402>
-- HCS-10 / OpenConvAI \u2014 Hashgraph Online standards: <https://github.com/hashgraph-online/standards-agent-kit>, <https://hashgraphonline.com/>
+- HCS-10 / OpenConvAI — Hashgraph Online standards: <https://github.com/hashgraph-online/standards-agent-kit>, <https://hashgraphonline.com/>
 - Hedera native developer path: <https://docs.hedera.com/hedera/getting-started-hedera-native-developers>
 - Hedera Agent Lab: <https://portal.hedera.com/agent-lab>
 - Lucid Agents (Daydreams) Commerce SDK: <https://github.com/daydreamsai/lucid-agents>, <https://docs.daydreams.systems/>
