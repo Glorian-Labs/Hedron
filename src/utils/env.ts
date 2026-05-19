@@ -1,38 +1,36 @@
 /**
- * Environment utility functions
- * 
- * Allows optional dotenv loading for SDK usage
+ * Environment utility functions.
+ *
+ * Optional dotenv loading. dotenv is a runtime-optional dependency.
+ * Uses createRequire so the call survives both CommonJS and ESM consumers
+ * and avoids tripping ESLint's no-require-imports rule.
  */
+
+import { createRequire } from 'node:module'
 
 let dotenvLoaded = false
 
-/**
- * Load environment variables from .env file (if not already loaded)
- * This is optional and only runs once
- */
+/** Load `.env` once if dotenv is installed; otherwise no-op. */
 export function loadEnvIfNeeded(): void {
-  if (dotenvLoaded) {
-    return
-  }
-
+  if (dotenvLoaded) return
   try {
-    // Only load dotenv if it's available (not bundled in SDK)
-    const dotenv = require('dotenv')
+    // Anchor createRequire to this file's path. Works in CJS builds where
+    // `__filename` is defined; falls back to cwd in ESM environments.
+    const anchor =
+      typeof __filename === 'string' ? `file://${__filename}` : `file://${process.cwd()}/`
+    const req = createRequire(anchor)
+    const dotenv = req('dotenv') as { config?: () => unknown }
     if (dotenv && typeof dotenv.config === 'function') {
       dotenv.config()
       dotenvLoaded = true
     }
-  } catch (error) {
-    // dotenv is optional - if not available, environment variables
-    // should be provided by the user via process.env
+  } catch {
+    // dotenv is optional. If not installed, env must come from process.env.
   }
 }
 
-/**
- * Get environment variable with optional default
- */
+/** Get an environment variable with an optional default. */
 export function getEnv(key: string, defaultValue?: string): string | undefined {
   loadEnvIfNeeded()
-  return process.env[key] || defaultValue
+  return process.env[key] ?? defaultValue
 }
-

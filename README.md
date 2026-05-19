@@ -1,641 +1,179 @@
 # Hedron
 
-**Autonomous Agent Ecosystem SDK for Hedera Hashgraph**
+> **Hedron is a Hedera-native agentic commerce SDK and Router/Broker runtime for autonomous agents.** It lets agents and apps discover capabilities, request quotes, enforce policy, settle payments, execute workflows, and produce verifiable HCS-backed receipts.
 
-[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
+[![CI](https://github.com/Glorian-Labs/Hedron/actions/workflows/ci.yml/badge.svg)](https://github.com/Glorian-Labs/Hedron/actions/workflows/ci.yml)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.9-blue.svg)](https://www.typescriptlang.org/)
-[![Hedera](https://img.shields.io/badge/Hedera-Testnet-green.svg)](https://hedera.com)
-
-Hedron is a complete SDK and framework for building autonomous agent-to-agent systems on the Hedera network. It combines Google's A2A Protocol, x402 Payment Standard, and Hedera Consensus Service (HCS) to enable truly autonomous, multi-protocol agent communication and settlement.
-
----
-
-## 🌟 Vision
-
-**Hedron** envisions a future where autonomous agents orchestrate complex workflows across blockchain networks—negotiating contracts, processing payments, detecting fraud, and making intelligent decisions—all without human intervention.
-
-Our ecosystem integrates:
-
-- **AP2 Protocol** - Agent-to-agent payment negotiations
-- **A2A Protocol** - Standardized agent communication
-- **x402 Payment Standard** - Autonomous cross-chain settlements
-- **Hedera HCS** - Decentralized messaging infrastructure
+[![Hedera](https://img.shields.io/badge/Hedera-testnet--first-2acac0.svg)](https://hedera.com)
+[![License: ISC](https://img.shields.io/badge/License-ISC-blue.svg)](https://opensource.org/licenses/ISC)
 
 ---
 
-## 🎯 What Is Hedron?
+## Status
 
-Hedron is both a **production-ready SDK** and a **complete framework** that enables:
+Hedron is **v0.2 in progress**. This branch is the working refactor toward a production-grade Router/Broker runtime aligned with the Hedron Tier 1 grant scope.
 
-### 🔄 Autonomous Workflows
+- **Testnet-first.** Mainnet settlement is a v0.2 / Tier 1 milestone; do not assume mainnet readiness from this branch.
+- **Public APIs may change** until `v0.2.0` is tagged.
+- **Smart contracts are unaudited and experimental.** Do not use against mainnet value without your own review.
+- **Production hosting is a roadmap item**, not a current claim.
+- **Receipts and HCS audit trails are the source of truth.** The repo intentionally does not "log success" without verifiable proofs.
 
-- **Agent Negotiation**: Buyers and sellers negotiate terms autonomously
-- **Intelligent Verification**: LLM-powered decision making and fraud detection
-- **Automated Settlement**: Cross-chain payments executed without intermediaries
-
-### 🌐 Multi-Chain Support
-
-- **Hedera Network**: Native HBAR transfers, HCS messaging, fast finality
-- **EVM Chains**: USDC on Base, Ethereum, or any EVM-compatible network
-- **Cross-Chain**: Seamless settlements across networks
-
-### 🤖 Smart Agents
-
-- **AnalyzerAgent**: Queries account data, generates insights, proposes actions
-- **VerifierAgent**: Validates proposals, applies business rules, makes decisions
-- **SettlementAgent**: Executes payments via x402, records settlements on-chain
-- **IntelligentVerifierAgent**: AI-powered validation with GPT-4 reasoning
+For the milestones that follow this cleanup, see [`docs/ROADMAP.md`](docs/ROADMAP.md).
 
 ---
 
-## 📦 SDK Installation
+## What Hedron is
 
-Hedron is available as an npm package for easy integration into your projects.
+Hedron is the **commerce and proof layer** for agents on Hedera. Two surfaces:
 
-### Install
+1. **A Router/Broker runtime** that coordinates the canonical agent commerce loop:
+
+   `discover agent → request quote → approve/pay → execute → log/attest → verify receipt`
+
+2. **A TypeScript SDK** that lets external agent runtimes (Daydreams, Hedera Agent Kit v4 plugins, custom A2A/MCP agents) and applications participate in that loop with a small, deterministic surface.
+
+Hedron makes the **proof** first-class: every step produces a structured HCS event, every flow ends with a verifiable receipt that anchors the result hash, payment id, policy decision hash, and HCS sequence range.
+
+## Why Hedera
+
+- **HCS** gives ordered, low-cost, queryable audit trails. Hedron commerce events live on a dedicated HCS topic, not in app logs.
+- **HBAR / HTS** settlement is fast and deterministic — receipts are usable as the source of truth instead of an off-chain database.
+- **x402 on Hedera** (exact payment scheme) lets HTTP-native agent calls pay per request with HBAR or HTS tokens directly, without a separate billing stack.
+- **Hedera Agent Kit v4** ships first-class policies/hooks and modular plugins — Hedron exposes its commerce actions as a plugin so HAK agents inherit the policy surface for free.
+
+## Architecture (high level)
+
+```mermaid
+flowchart LR
+  User[User / App / Agent] -->|IntentRequest| Router
+  Router -->|discover| Registry[(Agent Registry)]
+  Router -->|QuoteRequest| Broker
+  Broker -->|policy check| Policy[Policy Engine]
+  Policy -->|allow/deny/approve| Broker
+  Broker -->|settle| Settlement[Settlement Adapter]
+  Settlement -->|HBAR/HTS/x402/PayAI| Rails[(Payment Rails)]
+  Broker -->|execute| Agent[Provider Agent]
+  Broker -->|emit| HCS[(HCS Audit Topic)]
+  Broker -->|issue| Receipt[VerifiableReceipt]
+  Receipt -->|anchored on| HCS
+```
+
+For the detailed component breakdown see [`docs/ARCHITECTURE.md`](docs/ARCHITECTURE.md).
+For the canonical event schema see [`docs/HCS_RECEIPTS.md`](docs/HCS_RECEIPTS.md).
+For the Router/Broker contract see [`docs/ROUTER_BROKER.md`](docs/ROUTER_BROKER.md).
+
+## Quickstart
+
+> Requires Node 20+ and npm 10+.
 
 ```bash
-npm install hedron-agent-sdk
-```
-
-### Quick Start
-
-```typescript
-import { 
-  AnalyzerAgent, 
-  VerifierAgent, 
-  SettlementAgent,
-  A2AProtocol 
-} from 'hedron-agent-sdk'
-
-// Initialize an agent
-const agent = new AnalyzerAgent()
-await agent.init()
-
-// Query account data
-const accountInfo = await agent.queryAccount('0.0.123456')
-```
-
-### SDK Documentation
-
-- **[SDK README](./SDK_README.md)** - Complete SDK installation and usage guide
-- **[API Reference](./docs/API_REFERENCE.md)** - Full API documentation
-- **[Usage Guide](./docs/USAGE_GUIDE.md)** - Integration examples
-
----
-
-## 🎬 Demos & Examples
-
-Hedron includes **8 production-ready demos** showcasing real-world use cases with actual blockchain transactions. All demos support **HCS-10 OpenConvAI Protocol** for enhanced security and auditability.
-
-### 🔗 HCS-10 OpenConvAI Protocol
-
-All demos include optional HCS-10 features:
-- **Connection Management** - Establish trusted agent connections
-- **Transaction Approval** - Multi-signature workflows for high-value transactions
-- **Fee-Based Connections** - Agent monetization support
-- **Enhanced Audit Trail** - Complete on-chain transaction history
-
-Enable HCS-10: `export USE_HCS10_CONNECTIONS=true`
-
----
-
-### Bounty 1: x402 Payment Standard Demos
-
-#### 1. NFT Royalty Payment (Cross-Chain x402)
-```bash
-npm run demo:nft-royalty 150
-```
-
-**Demonstrates:**
-- NFT sale simulation ($150)
-- Automatic 10% royalty calculation ($15)
-- Cross-chain x402 payment execution
-- USDC transfer on Base Sepolia
-- Fee-based connection configuration (HCS-10)
-- Complete payment receipt
-
-**Network:** Base Sepolia | **Asset:** USDC | **Protocol:** x402
-
-#### 2. HBAR Direct Transfer (Native x402)
-```bash
-npm run demo:hbar-x402 10    # Small amount
-npm run demo:hbar-x402 100   # Large amount (triggers HCS-10 approval)
-```
-
-**Demonstrates:**
-- Direct Hedera HBAR transfer
-- x402 verification on native Hedera
-- Fast, low-cost settlement
-- **HCS-10 transaction approval** for large amounts (>=50 HBAR)
-- Payment authorization and settlement
-
-**Network:** Hedera Testnet | **Asset:** HBAR | **Protocol:** x402
-
----
-
-### Bounty 2: Hedera Agent Kit Demos
-
-#### 3. Main Orchestrator (Complete 3-Agent Workflow)
-```bash
-npm run demo 0.0.XXXXXX 10 hedera-testnet
-```
-
-**Demonstrates:**
-- Complete 3-agent coordination (Analyzer → Verifier → Settlement)
-- **HCS-10 connection establishment** between agents
-- Connection-based proposal messaging
-- **HCS-10 transaction approval** for HBAR payments
-- Cross-chain settlement execution
-- Full autonomous workflow
-
-**Technology:** A2A Protocol + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
-
-#### 4. Intelligent Invoice with LLM Reasoning
-```bash
-npm run demo:invoice-llm 150      # Low-value (auto-approved)
-npm run demo:invoice-llm 800      # High-value (HCS-10 approval)
-```
-
-**Demonstrates:**
-- LLM-powered invoice validation (GPT-4)
-- AI decision making with reasoning
-- **HCS-10 transaction approval** replaces CLI HITL prompts
-- On-chain storage of LLM reasoning in transaction memo
-- Autonomous approval/rejection
-- Hedera token settlement
-
-**Technology:** LLM + A2A Protocol + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
-
-#### 5. Supply Chain Negotiation
-```bash
-npm run demo:negotiation
-```
-
-**Demonstrates:**
-- Multi-agent price negotiation
-- Vendor payment workflow
-- **HCS-10 transaction approval** for vendor payments
-- Multi-signature approval before execution
-- Hedera token settlement
-
-**Technology:** A2A Protocol + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
-
-#### 6. Supply Chain Fraud Detection
-```bash
-npm run demo:supply-chain-fraud
-```
-
-**Demonstrates:**
-- Multi-agent price negotiation
-- AI fraud detection algorithms
-- Blockchain memo verification
-- **HCS-10 transaction approval** for fraud-checked payments
-- Enhanced security with multi-signature approval
-- Hedera token settlement
-
-**Technology:** Fraud Detection + Memo Verification + A2A + HCS-10 | **Network:** Hedera Testnet | **Asset:** HBAR
-
-#### 7. Invoice Automation
-```bash
-npm run demo:invoice 150      # Low-value (direct execution)
-npm run demo:invoice 600      # High-value (HCS-10 approval)
-```
-
-**Demonstrates:**
-- Automated invoice processing
-- **HCS-10 connection establishment** between Analyzer and Verifier
-- Agent-to-agent communication via connections
-- **HCS-10 transaction approval** for high-value invoices (>= $500)
-- Human-in-the-loop integration
-- Cross-chain payment support
-
-**Technology:** A2A Protocol + HCS-10 + x402 | **Network:** Hedera Testnet + Base Sepolia | **Asset:** HBAR/USDC
-
----
-
-### Track 1: RWA Tokenization
-
-#### 8. Tokenized RWA Invoice
-```bash
-npm run demo:rwa-invoice 250      # Low-value
-npm run demo:rwa-invoice 600      # High-value (HCS-10 approval)
-```
-
-**Demonstrates:**
-- Invoice tokenization as Real-World Asset (RWA)
-- Hedera Token Service (HTS) token creation
-- RWA token trading/transfer (invoice factoring)
-- **HCS-10 transaction approval** for high-value settlements (>= $500)
-- Automated settlement via x402 payment standard
-- Cross-chain payment execution (HBAR or USDC)
-- Complete RWA lifecycle on-chain
-
-**Technology:** HTS Tokenization + x402 + HCS-10 | **Network:** Hedera Testnet + Base Sepolia | **Asset:** HTS Tokens + HBAR/USDC
-
----
-
-### Demo Feature Matrix
-
-| Demo | HCS-10 Connections | HCS-10 Approval | Network | Asset | Command |
-|------|-------------------|-----------------|---------|-------|---------|
-| Orchestrator | ✅ | ✅ (HBAR) | Hedera | HBAR | `npm run demo` |
-| NFT Royalty | ✅ (fee config) | ❌ | Base | USDC | `npm run demo:nft-royalty 150` |
-| HBAR Direct | ❌ | ✅ (>=50 HBAR) | Hedera | HBAR | `npm run demo:hbar-x402 100` |
-| Intelligent Invoice | ❌ | ✅ (>= $500) | Hedera | HBAR | `npm run demo:invoice-llm 800` |
-| Supply Chain Negotiation | ❌ | ✅ | Hedera | HBAR | `npm run demo:negotiation` |
-| Supply Chain Fraud | ❌ | ✅ | Hedera | HBAR | `npm run demo:supply-chain-fraud` |
-| Invoice Automation | ✅ | ✅ (>= $500) | Hedera/Base | HBAR/USDC | `npm run demo:invoice 600` |
-| RWA Invoice | ❌ | ✅ (>= $500) | Hedera/Base | HBAR/USDC | `npm run demo:rwa-invoice 600` |
-
-```bash
-npm run demo                    # Complete 3-agent workflow
-npm run demo:invoice            # Invoice automation
-npm run demo:negotiation        # Supply chain negotiation
-npm run demo:rwa-invoice        # Tokenized RWA invoice demo
-```
-
-### Demo Documentation
-
-- **[Demo Guide](./demo/README.md)** - Complete demo showcase guide
-- **[Bounty 1 Details](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md)** - x402 implementation
-- **[Bounty 2 Details](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md)** - Agent Kit implementation
-
----
-
-## 🏆 Hackathon Submission
-
-Hedron was built for the **Hedera Africa Hackathon**, implementing both bounties with production-ready code:
-
-- ✅ **Bounty 1: Hedera x402 Payment Standard SDK** - Complete cross-chain payment protocol
-- ✅ **Bounty 2: Hedera Agent Kit & Google A2A Protocol** - Autonomous agent systems with AI-powered decision making
-
-### Quick Hackathon Overview
-
-**What We Built:**
-- 80+ files of production-ready code
-- 11 passing tests (unit, integration, e2e)
-- 7 working demos with real blockchain transactions
-- 21+ comprehensive documentation files
-- 2 deployed smart contracts
-
-**Key Highlights:**
-- First x402 implementation connecting Hedera and Base
-- LLM reasoning for autonomous invoice validation
-- Fraud detection with blockchain memo verification
-- Multi-protocol agent communication (A2A, AP2, x402)
-
-📖 **[Read Complete Hackathon README](./HACKATHON_README.md)** for full submission details, setup instructions, and demo walkthroughs.
-
----
-
-## 🏗️ Architecture
-
-```
-┌─────────────────────────────────────────────────────────┐
-│                   Agent Network                          │
-├──────────────────┬──────────────────┬──────────────────┤
-│ AnalyzerAgent    │  VerifierAgent   │ SettlementAgent  │
-│                  │                  │                  │
-│ • Query Data     │ • Validate       │ • x402 Payments  │
-│ • Generate       │ • Approve/Reject │ • Cross-Chain    │
-│   Proposals      │ • AI Reasoning   │ • Settlement     │
-└────────┬─────────┴─────────┬─────────┴─────────┬────────┘
-         │                   │                   │
-         ▼                   ▼                   ▼
-┌─────────────────────────────────────────────────────────┐
-│      Hedera Consensus Service (HCS) Messaging          │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────┐         │
-│  │ Analyzer │  │ Verifier │  │ Settlement   │         │
-│  │ Topic    │  │ Topic    │  │ Topic        │         │
-│  └──────────┘  └──────────┘  └──────────────┘         │
-└─────────────────────────────────────────────────────────┘
-         │                   │                   │
-         ▼                   ▼                   ▼
-┌─────────────────────────────────────────────────────────┐
-│            Multi-Chain Settlement Layer                 │
-│  ┌──────────┐  ┌──────────┐  ┌──────────────┐         │
-│  │ Hedera   │  │ Base     │  │ x402         │         │
-│  │ HBAR     │  │ USDC     │  │ Protocol     │         │
-│  └──────────┘  └──────────┘  └──────────────┘         │
-└─────────────────────────────────────────────────────────┘
-```
-
----
-
-## 💡 Use Cases
-
-Hedron enables autonomous systems across multiple industries:
-
-### 🧾 Invoice Automation
-
-- **Autonomous Processing**: AI analyzes invoices, validates business rules, and approves payments
-- **Fraud Detection**: ML algorithms flag suspicious transactions
-- **Instant Settlement**: Automated USDC or HBAR transfers
-
-### 📦 Supply Chain
-
-- **Agent Negotiation**: Buyer and vendor agents negotiate terms autonomously
-- **Agreement Recording**: Smart contracts record finalized terms on Hedera
-- **Automated Payments**: x402 protocol executes settlements
-
-### 🎨 NFT Royalties
-
-- **Automatic Calculation**: 10% royalty calculated on each NFT sale
-- **Cross-Chain Payments**: Creators receive USDC on preferred network
-- **Transparent Trail**: All payments recorded on blockchain
-
-### 💰 Financial Services
-
-- **Autonomous Trading**: Agents execute trades based on market conditions
-- **Risk Management**: AI evaluates risk and makes decisions
-- **Multi-Asset Settlement**: USDC, HBAR, or any supported token
-
-### 🔒 Security & Compliance
-
-- **Fraud Detection**: AI analyzes transaction patterns
-- **Memo Verification**: Blockchain-verified agreement recording
-- **Audit Trails**: Complete transparency via HCS
-
----
-
-## 💼 Real-World SDK Use Cases
-
-See comprehensive real-world use cases with complete code examples:
-
-📖 **[Real-World Use Cases Guide](./docs/REAL_WORLD_USE_CASES.md)** - 6 production-ready examples including:
-- E-Commerce Payment Platform (Stripe-like)
-- B2B Supply Chain Platform (automated procurement)
-- Freelancer Marketplace (automated payouts)
-- SaaS Subscription Billing (multi-chain)
-- NFT Marketplace (royalty distribution)
-- Invoice Factoring Platform (RWA tokenization)
-
-Each use case includes TypeScript code examples, business impact metrics, and implementation scenarios.
-
----
-
-## 🗺️ Roadmap & Real-World Adoption
-
-### Phase 1: Launch ✅ (Complete)
-- Core agent framework with A2A Protocol
-- x402 payment standard (cross-chain & native)
-- HCS messaging infrastructure
-- HCS-10 OpenConvAI integration
-- Production SDK package (`hedron-agent-sdk`)
-- 8 production-ready demos
-
-### Phase 2: Real-World Integration (Q1 2025)
-
-**Target Markets:**
-- **E-Commerce Platforms** - Integrate SDK for autonomous payment processing
-- **B2B Marketplaces** - Deploy supply chain automation
-- **Freelancer Platforms** - Automated payout systems
-- **SaaS Companies** - Multi-chain subscription billing
-
-**Technical Expansion:**
-- Mainnet deployment
-- Additional EVM chains (Polygon, Arbitrum, Optimism)
-- Enterprise APIs and webhooks
-- HCS-10 agent registry integration
-- SDK performance optimizations
-
-### Phase 3: Scale (Q2-Q3 2025)
-
-**Market Expansion:**
-- **Financial Services** - RWA tokenization platforms
-- **NFT Marketplaces** - Royalty distribution networks
-- **Supply Chain Finance** - Invoice factoring marketplaces
-- **Enterprise Automation** - Large-scale workflow systems
-
-**Platform Growth:**
-- HCS-10 network expansion
-- SDK marketplace with pre-built templates
-- Community contributions and plugins
-- Framework integrations (React, Next.js, Express)
-- Governance tokens and DAO
-
-### Phase 4: Ecosystem (Q4 2025+)
-- **Agent Marketplace** - Discover and connect agents
-- **Template Library** - Pre-built workflows (invoice, royalty, supply chain)
-- **Analytics Dashboard** - Monitor agent performance
-- **Multi-Network Support** - Expand beyond Hedera/EVM
-- **Enterprise Support** - SLA guarantees, dedicated support
-
----
-
-## ⚡ Quick Start (Development)
-
-### Installation
-
-```bash
-# Clone repository
-git clone https://github.com/Hebx/hedron.git
-cd hedron
-
-# Install dependencies
+git clone https://github.com/Glorian-Labs/Hedron.git
+cd Hedron
 npm install
-
-# Configure environment
-cp env.example .env
-# Edit .env with your credentials
-
-# Setup HCS-11 profile
-npm run setup:hcs11-fixed
+cp .env.example .env   # placeholders are enough for the mocked demo
 ```
 
-### Configuration
-
-Configure your `.env` file with:
-
-- Hedera testnet account ID and private key
-- Base Sepolia wallet with USDC
-- Agent credentials (auto-generated)
-- Payment network preference
-
-See [Environment Setup](./docs/HCS11_SETUP_GUIDE.md) for detailed instructions.
-
----
-
-## 🧪 Testing
-
-### Run All Tests
+### Mocked local demo (no credentials needed)
 
 ```bash
-npm run test:all  # Unit + Integration + E2E tests
+npm run demo:local
 ```
 
-### Test Coverage
+Walks through the full discover → quote → approve → pay → execute → receipt loop against in-memory mocks. The receipt verifier runs at the end and prints the verification path.
 
-- **Unit Tests**: Agent logic, protocol implementations
-- **Integration Tests**: Cross-protocol workflows, payment flows
-- **E2E Tests**: Complete agent coordination (requires HCS-11 setup)
+### Optional Hedera testnet demo
 
-**Status:** ✅ All tests passing
-
----
-
-## 🌍 Network Support
-
-### Hedera Networks
-
-- **Testnet**: Primary development environment
-- **Mainnet**: Production deployments
-
-### EVM Networks
-
-- **Base Sepolia**: Primary settlement network for USDC
-- **Ethereum Sepolia**: Alternative network
-- **Any EVM**: Compatible with any EVM-compatible chain
-
----
-
-## 🔧 Development
-
-### Build
+You need a testnet account from <https://portal.hedera.com> and your operator key in `.env`.
 
 ```bash
-npm run build  # Build SDK and source code
+# in .env
+HEDERA_NETWORK=testnet
+HEDERA_OPERATOR_ID=0.0.xxxxx
+HEDERA_OPERATOR_KEY=<your-testnet-operator-private-key>
+RUN_HEDERA_INTEGRATION=true
+
+npm run demo:testnet
 ```
 
-### Deploy Contracts
+The testnet demo writes real HCS audit events to a topic Hedron auto-provisions on first run.
 
-```bash
-npm run deploy:simple        # Simple supply chain
-npm run deploy:supply-chain  # Advanced supply chain
-```
-
-### Check Status
-
-```bash
-npm run check:credentials    # Verify configuration
-npm run check:wallets        # Check wallet status
-```
-
----
-
-## 📚 Documentation
-
-### SDK Documentation
-
-- **[SDK README](./SDK_README.md)** - SDK installation and usage
-- **[API Reference](./docs/API_REFERENCE.md)** - Complete API documentation
-- **[Usage Guide](./docs/USAGE_GUIDE.md)** - How to use Hedron
-
-### Bounty Submissions
-
-- [Bounty 1: Hedera x402 Payment Standard](./docs/BOUNTY_1_HEDERA_X402_STANDARD.md) - Cross-chain payment protocol
-- [Bounty 2: Hedera Agent Kit](./docs/BOUNTY_2_HEDERA_AGENT_KIT.md) - Autonomous agent systems
-- [Bounties Comparison](./docs/BOUNTIES_GUIDE.md) - Side-by-side comparison
-
-### Core Documentation
-
-- [Complete Documentation Index](./docs/INDEX.md) - All available documentation
-- [A2A Protocol Implementation](./docs/A2A_PROTOCOL_IMPLEMENTATION.md) - Agent communication
-- [Human-in-the-Loop Mode](./docs/HUMAN_IN_THE_LOOP.md) - HITL configuration
-- [Smart Contract Deployment](./docs/SMART_CONTRACT_DEPLOYMENT.md) - Contract deployment
-
-### Setup Guides
-
-- [HCS-11 Setup Guide](./docs/HCS11_SETUP_GUIDE.md) - Profile registration
-- [Local HCS Resolver](./docs/LOCAL_HCS_RESOLVER.md) - Local profile resolver
-- [Hackathon Ready](./docs/HACKATHON_READY.md) - Submission checklist
-
-### Real-World Applications
-
-- **[Real-World Use Cases](./docs/REAL_WORLD_USE_CASES.md)** - Production implementation examples with code
-
----
-
-## 📦 Project Structure
+## Repository layout
 
 ```
-hedron/
-├── src/
-│   ├── agents/              # Agent implementations (SDK)
-│   ├── protocols/           # A2A, AP2, x402 protocols (SDK)
-│   ├── facilitator/         # x402 facilitator server (SDK)
-│   ├── modes/              # Human-in-the-loop (SDK)
-│   ├── services/           # Token services (SDK)
-│   └── utils/              # Utility functions (SDK)
-├── contracts/              # Solidity smart contracts
-├── tests/                  # Test suite (unit, integration, e2e)
-├── demo/                   # Showcase demos
-├── docs/                   # Complete documentation
-├── dist/                   # Built SDK files
-├── SDK_README.md          # SDK-specific documentation
-├── HACKATHON_README.md    # Hackathon submission details
-└── README.md              # This file
+.
+├── .env.example               # Canonical environment template (placeholders only)
+├── README.md
+├── SECURITY.md
+├── CONTRIBUTING.md
+├── CHANGELOG.md
+├── RELEASE_CHECKLIST.md
+├── contracts/                 # Solidity, experimental, unaudited
+├── deployments/testnet/       # Public testnet contract ids only
+├── demo/
+│   ├── local.ts               # canonical mocked end-to-end flow
+│   └── testnet.ts             # opt-in real Hedera testnet flow
+├── docs/
+│   ├── INDEX.md · ARCHITECTURE.md · ROUTER_BROKER.md
+│   ├── HCS_RECEIPTS.md · POLICY_ENGINE.md · SECURITY_MODEL.md
+│   ├── QUICKSTART.md · ROADMAP.md
+│   ├── DAYDREAMS_ADAPTER.md · PAYAI_X402_ADAPTER.md · HEDERA_AGENT_KIT_PLUGIN.md
+│   └── DEPENDENCY_HARDENING.md
+├── tests/unit/                # vitest, mock-only, 27 tests
+└── src/
+    ├── router/                # discovery, capability index, quote dispatch
+    ├── broker/                # intent → quote → policy → settle → execute → receipt
+    ├── registry/              # AgentIdentity / AgentCard / capability registry
+    ├── policy/                # rules, context, decision, auditable events
+    ├── settlement/            # hedera/, payai/, x402/, evm/
+    ├── receipts/              # Receipt + VerifiableReceipt + verifier
+    ├── hcs/                   # topic management, signed event envelopes
+    ├── adapters/              # daydreams/, hedera-agent-kit/, mcp/
+    ├── types/                 # shared, type-only public surface
+    ├── errors/                # typed errors
+    └── utils/
 ```
 
----
+## Security warnings
 
-## 🚀 Key Features
+- **Never commit `.env`.** Only `.env.example` (placeholders) is tracked.
+- **Receipts > logs.** A flow without a `RECEIPT_ISSUED` event on HCS did not succeed, regardless of what the app says.
+- **Default deny.** The policy engine denies unless an explicit rule allows. High-value actions require approval.
+- **Replay protection is mandatory** for any payment integration. See [`docs/SECURITY_MODEL.md`](docs/SECURITY_MODEL.md) for the threat model.
+- **Smart contracts are unaudited.** They are reference implementations of the supply-chain example agent, not production money paths.
 
-### ✅ Multi-Protocol Support
+## Adapters and integrations
 
-- A2A for standardized communication
-- AP2 for payment negotiations
-- x402 for autonomous settlements
-- HCS for decentralized messaging
+Hedron is built so other agent runtimes plug in without forking:
 
-### ✅ Intelligent Agents
+| Adapter | Status | Doc |
+| --- | --- | --- |
+| Daydreams runtime | interface defined, skeleton in `src/adapters/daydreams/` | [`docs/DAYDREAMS_ADAPTER.md`](docs/DAYDREAMS_ADAPTER.md) |
+| Hedera Agent Kit v4 plugin | interface defined, skeleton in `src/adapters/hedera-agent-kit/` | [`docs/HEDERA_AGENT_KIT_PLUGIN.md`](docs/HEDERA_AGENT_KIT_PLUGIN.md) |
+| MCP server | planned (v0.3) | — |
+| PayAI / x402 facilitator | adapter interface in `src/settlement/{payai,x402}/` | [`docs/PAYAI_X402_ADAPTER.md`](docs/PAYAI_X402_ADAPTER.md) |
+| Hedera HBAR / HTS native | primary rail | [`docs/ROUTER_BROKER.md`](docs/ROUTER_BROKER.md) |
 
-- AI-powered decision making
-- Fraud detection algorithms
-- Risk assessment
-- Business rule validation
+## Roadmap
 
-### ✅ Cross-Chain Capabilities
+See [`docs/ROADMAP.md`](docs/ROADMAP.md) for versioned milestones (v0.2.0-alpha → v0.5+).
 
-- USDC on Base/Ethereum
-- HBAR on Hedera
-- Automatic network selection
-- Seamless bridging
+## Origins
 
-### ✅ Production Ready
+Hedron began as a Glorian Labs project exploring autonomous-agent coordination on Hedera. It was recognized with **3rd place in the AI & DePIN track at the Hedera Africa Hackathon**, alongside 1,300+ submissions and 13,000+ participants.
 
-- Error handling
-- Human-in-the-loop (HITL)
-- Complete audit trails
-- Security best practices
+The v0.2 branch is a deliberate productionization pass: it keeps the protocol foundations (A2A, AP2, HCS-10, x402) and rebuilds the runtime around an explicit Router/Broker contract with HCS-anchored receipts. Hackathon-era materials are preserved in private project notes outside the public repo.
 
-### ✅ SDK Ready
+## Contributing
 
-- npm package available
-- TypeScript definitions
-- Modular exports
-- Optional environment configuration
+See [`CONTRIBUTING.md`](CONTRIBUTING.md). Small reviewable PRs preferred. Adapter contributions must include a manifest, an interface conformance test, and a mock-mode end-to-end test.
 
----
+## License
 
-## 🤝 Contributing
-
-We welcome contributions! Please see our contributing guidelines in the documentation.
+ISC — see [`LICENSE`](LICENSE).
 
 ---
 
-## 📄 License
+Built by **[Glorian Labs](https://github.com/Glorian-Labs)** — agentic intelligence for the next economy.
 
-ISC License - see LICENSE file for details.
-
----
-
-## 🔗 Links
-
-- **GitHub Repository**: [github.com/Hebx/hedron](https://github.com/Hebx/hedron)
-- **Issues**: [GitHub Issues](https://github.com/Hebx/hedron/issues)
-- **Documentation**: See `docs/` directory
-- **SDK Package**: `hedron-agent-sdk` on npm
-
----
-
-## 🏆 Built For
-
-- **Hedera x402 Payment Standard Bounty** - Agentic Cross-chain payment protocol
-- **Hedera Agent Kit Bounty** - Autonomous agent systems and protocols
-- **Hedera Africa Hackathon** - Complete submission with both bounties
-
----
-
-**Hedron** - _Autonomous agents, intelligent decisions, seamless settlements._
+**Hedron** — verifiable commerce for autonomous agents on Hedera.

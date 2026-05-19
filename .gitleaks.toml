@@ -1,0 +1,26 @@
+# Hedron gitleaks config.
+#
+# Extends the upstream default ruleset; only the allowlist is project-specific.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Hedron false-positive allowlist"
+
+# Local-only operator files (already in .gitignore; defense in depth)
+paths = [
+    '''CLEANUP_AUDIT\.md''',
+    '''SECRET_INCIDENT_REPORT\.md''',
+    '''CLEANUP_SUMMARY\.md''',
+    '''HEDRON_TIER1_NOTES\.md''',
+    '''docs/internal/.*''',
+    '''\.local/.*''',
+]
+
+# Known-safe placeholder tokens used in .env.example and docs.
+regexes = [
+    '''REPLACE_ME''',
+    '''<placeholder-[a-z0-9-]+>''',
+    '''placeholder-key-for-0\.0\.[0-9]+''',
+    '''PLACEHOLDER_(ANALYZER|VERIFIER|SETTLEMENT)_KEY''',
+]
