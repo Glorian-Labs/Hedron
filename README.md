@@ -9,6 +9,17 @@
 
 ---
 
+## Origins
+
+Hedron began as a Glorian Labs project exploring autonomous-agent coordination on Hedera. It was recognized with **3rd place in the AI & DePIN track at the Hedera Africa Hackathon** (a **$30,000 prize**), alongside 1,300+ submissions and 13,000+ participants.
+
+- DoraHacks winners page: <https://dorahacks.io/hackathon/hederahackafrica/winner>
+- The Hashgraph Association announcement: <https://www.hashgraph.swiss/news-all/2025-hedera-africa-hackathon-announces-winners-officially-becomes-the-largest-web3-hackathon-globally>
+
+The v0.2 branch is a deliberate productionization pass: it keeps the protocol foundations (A2A, AP2, HCS-10, x402) and rebuilds the runtime around an explicit Router/Broker contract with HCS-anchored receipts. Hackathon-era materials are preserved in private project notes outside the public repo.
+
+---
+
 ## Status
 
 Hedron is **v0.2 in progress**. This branch is the working refactor toward a production-grade Router/Broker runtime aligned with the Hedron Tier 1 grant scope.
@@ -157,12 +168,6 @@ Hedron is built so other agent runtimes plug in without forking:
 ## Roadmap
 
 See [`docs/ROADMAP.md`](docs/ROADMAP.md) for versioned milestones (v0.2.0-alpha → v0.5+).
-
-## Origins
-
-Hedron began as a Glorian Labs project exploring autonomous-agent coordination on Hedera. It was recognized with **3rd place in the AI & DePIN track at the Hedera Africa Hackathon**, alongside 1,300+ submissions and 13,000+ participants.
-
-The v0.2 branch is a deliberate productionization pass: it keeps the protocol foundations (A2A, AP2, HCS-10, x402) and rebuilds the runtime around an explicit Router/Broker contract with HCS-anchored receipts. Hackathon-era materials are preserved in private project notes outside the public repo.
 
 ## Contributing
 
