@@ -7,7 +7,7 @@ This is a working threat model for Hedron v0.2. It is deliberately conservative 
 - **Hedera consensus** — trusted. We anchor receipts here.
 - **Hedera mirror nodes** — trusted for read paths, but Hedron supports plural mirror hints so a single mirror cannot lie.
 - **Provider agents** — *untrusted*. They produce signed quotes and signed execution results, but the broker re-verifies everything against the bound `actionHash`.
-- **External payment facilitators (PayAI, x402 third parties)** — *partially trusted*. We trust them to broadcast and timestamp; we do not trust their reported settlement status without an independent on-chain check.
+- **External x402 facilitators** — *partially trusted*. We trust them to broadcast and timestamp; we do not trust their reported settlement status without an independent on-chain check.
 - **The Hedron operator key** — trusted root. Compromise of this key is a P0 incident. The key signs receipts and runs the broker. See "Operator-key compromise" below.
 
 ## Invariants
@@ -68,7 +68,7 @@ This is a working threat model for Hedron v0.2. It is deliberately conservative 
 ### Adapter misbehavior
 
 - **Threat:** a third-party adapter reports success without actually settling.
-- **Mitigation:** the broker verifies `SettlementResult` independently (on-chain read for native rails, facilitator-result + on-chain read for x402/PayAI). The adapter does not get to be the only witness.
+- **Mitigation:** the broker verifies `SettlementResult` independently (on-chain read for native rails, facilitator-result + on-chain read for x402). The adapter does not get to be the only witness.
 
 ### Smart-contract risk
 

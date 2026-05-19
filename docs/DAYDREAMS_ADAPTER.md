@@ -78,7 +78,7 @@ Daydreams Agent                Hedron (Router + Broker)              Daydreams C
 ## Open questions (resolve before v0.2.0)
 
 - Daydreams docs surface several supporting protocols (x402, A2A, ERC-8004, SIWX, MPP). The first integration cut targets **A2A + x402** because those overlap directly with Hedron's existing protocols. ERC-8004 identity verification is a v0.3 candidate.
-- Daydreams' MPP (Machine Payments Protocol) overlaps with Hedron's `PaymentAdapter` surface. We will model MPP as one rail (`mpp`) inside `src/settlement/`, parallel to `payai/` and `x402/`.
+- Daydreams' MPP (Machine Payments Protocol) overlaps with Hedron's `PaymentAdapter` surface. We will model MPP as one rail (`mpp`) inside `src/settlement/`, parallel to `x402/`.
 
 ## Status
 

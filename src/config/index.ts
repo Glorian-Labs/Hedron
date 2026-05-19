@@ -7,7 +7,6 @@ const VALID_RAILS: PaymentRail[] = [
   'hedera-hbar',
   'hedera-hts',
   'x402',
-  'payai',
   'evm-usdc',
   'mpp',
 ]
@@ -134,10 +133,6 @@ export function loadHedronConfig(env: NodeJS.ProcessEnv = process.env): HedronCo
           ? { facilitatorUrl: env.HEDRON_X402_FACILITATOR_URL }
           : {}),
       },
-      payai: {
-        ...(env.PAYAI_FACILITATOR_URL ? { facilitatorUrl: env.PAYAI_FACILITATOR_URL } : {}),
-        ...(env.PAYAI_NETWORK ? { network: env.PAYAI_NETWORK } : {}),
-      },
       evm: {
         ...(env.EVM_RPC_URL ? { rpcUrl: env.EVM_RPC_URL } : {}),
         ...(env.EVM_CHAIN_ID ? { chainId: num(env.EVM_CHAIN_ID, 0) } : {}),
@@ -155,7 +150,6 @@ export function loadHedronConfig(env: NodeJS.ProcessEnv = process.env): HedronCo
     },
     flags: {
       runHederaIntegration: bool(env.RUN_HEDERA_INTEGRATION, false),
-      runPayaiIntegration: bool(env.RUN_PAYAI_INTEGRATION, false),
       runEvmIntegration: bool(env.RUN_EVM_INTEGRATION, false),
       demoMode,
     },

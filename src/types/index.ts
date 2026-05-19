@@ -46,14 +46,12 @@ export interface HedronConfig {
   }
   adapters: {
     x402: { facilitatorUrl?: string }
-    payai: { facilitatorUrl?: string; network?: string }
     evm: { rpcUrl?: string; chainId?: number; usdcContract?: string; merchantAddress?: string }
     daydreams: { agentId?: string; apiBaseUrl?: string }
     hak: { enabled: boolean; llmProvider?: string }
   }
   flags: {
     runHederaIntegration: boolean
-    runPayaiIntegration: boolean
     runEvmIntegration: boolean
     demoMode: 'mock' | 'testnet' | 'mainnet'
   }
@@ -208,7 +206,6 @@ export type PaymentRail =
   | 'hedera-hbar'
   | 'hedera-hts'
   | 'x402'
-  | 'payai'
   | 'evm-usdc'
   | 'mpp'
 
