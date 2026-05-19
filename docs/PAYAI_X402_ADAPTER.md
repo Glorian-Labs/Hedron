@@ -1,13 +1,13 @@
-# PayAI / x402 Adapter
+# x402 (Hedera-native) & PayAI Adapters
 
-> Status: **interface defined, skeletons in `src/settlement/payai/` and `src/settlement/x402/`.**
+> Status: **interface defined, skeletons in `src/settlement/x402/` (Hedera, primary) and `src/settlement/payai/` (deferred).**
 
-x402 is the HTTP-native pay-per-request standard from Coinbase. The Hedera "exact" scheme has been accepted into x402 with an official Hedera facilitator reference implementation (Hedera Agent Kit v4 blog, May 2026). PayAI is a third-party x402 facilitator focused on Base and Solana settlement.
+x402 is the HTTP-native pay-per-request standard from Coinbase, leveraging the HTTP 402 "Payment Required" status. Hedera shipped a native **`exact` scheme** for x402 in February 2026 (see <https://hedera.com/blog/hedera-and-the-x402-payment-standard/>): the client builds a partially signed `TransferTransaction` (HBAR or HTS), the facilitator pays gas and submits, settlement confirms on-chain. **[Blocky402](https://blocky402.com/)** is the open-source reference facilitator and supports Hedera testnet V1 today.
 
 Hedron's role:
 
-- **First-class Hedera x402 rail.** Hedron ships a Hedera facilitator implementation aligned with the x402-foundation reference (`@hiero-ledger/sdk`-based).
-- **PayAI as a peer rail** for non-Hedera settlement (USDC on Base, Solana). PayAI is one of several supported facilitators; Hedron does not assume it.
+- **First-class Hedera x402 rail** (`src/settlement/x402/`). Default facilitator: Blocky402 (testnet) — swappable to a self-hosted or CDP-hosted facilitator via config.
+- **PayAI** (`src/settlement/payai/`) ships as an *interface-only* skeleton in v0.2. PayAI's network coverage is Solana + EVM (Base, Avalanche, etc.); Hedron will add a real PayAI adapter only after PayAI exposes Hedera support. Until then, the interface lives behind a feature flag and is not wired into the default Router.
 
 Multiple payment rails are first-class. The broker selects a rail per quote based on `quote.pricing.rail` and policy.
 
@@ -17,8 +17,8 @@ Multiple payment rails are first-class. The broker selects a rail per quote base
 | --- | --- | --- | --- |
 | `hedera-hbar` | native HBAR transfer | testnet, mainnet | primary |
 | `hedera-hts` | HTS fungible token transfer | testnet, mainnet | primary |
-| `x402` (Hedera) | x402 exact-scheme via Hedron-hosted facilitator | testnet, mainnet | M1 target |
-| `payai` | x402 via PayAI facilitator | Base, Solana | adapter only |
+| `x402-hedera` | x402 exact-scheme via Blocky402 (default) or self-hosted facilitator | testnet (V1) | v0.2.0-beta.1 target |
+| `payai` | x402 via PayAI facilitator | Base, Solana | interface only — gated by upstream Hedera support |
 | `evm-usdc` | direct ERC-20 transfer | EVM chains | optional |
 
 ## Payment adapter interface
