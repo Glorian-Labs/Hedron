@@ -26,7 +26,7 @@
 │   │AgentCard│    │ Engine  │       │ HBAR    │      │Daydreams │   │
 │   └─────────┘    └─────────┘       │ HTS     │      │ HAK v4   │   │
 │        │               │           │ x402    │      │ MCP      │   │
-│        │               │           │ PayAI   │      └──────────┘   │
+│        │               │           │ EVM     │      └──────────┘   │
 │        └───────────────┴───────────┴────┬────┘                     │
 │                                         ▼                          │
 │                              ┌────────────────────┐                │
@@ -72,7 +72,7 @@
 
 ### Settlement (`src/settlement/`)
 - Adapter interface: `createPaymentRequirement → validatePaymentPayload → settlePayment → getSettlementStatus → produceSettlementReceipt → verifySettlementReceipt`.
-- Adapters: `hedera/` (HBAR + HTS), `x402/` (Hedera exact scheme), `payai/` (external facilitator), `evm/` (optional).
+- Adapters: `hedera/` (HBAR + HTS), `x402/` (Hedera exact scheme), `evm/` (optional).
 - Each adapter is responsible for binding payment authorization to the exact `quoteId` / `resourceId` / `correlationId` and rejecting replays.
 
 ### Receipts (`src/receipts/`)
@@ -159,6 +159,6 @@ Treat anything outside `src/types/` and the module index files as private until 
 ## Non-goals (v0.2)
 
 - Mainnet self-custody for arbitrary users. Mainnet settlement is operator-driven.
-- Cross-chain bridging beyond what x402/PayAI rails already provide.
+- Cross-chain bridging beyond what x402 rails already provide.
 - A general-purpose agent framework. Hedron is the commerce layer; runtimes plug in.
 - Verifiable compute attestation. Tier 1 explicitly does not block on this.

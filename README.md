@@ -22,9 +22,9 @@ The v0.2 branch is a deliberate productionization pass: it keeps the protocol fo
 
 ## Status
 
-Hedron is **v0.2 in progress**. This branch is the working refactor toward a production-grade Router/Broker runtime aligned with the Hedron Tier 1 grant scope.
+Hedron is **v0.2 in progress**. This branch is the working refactor toward a production-grade Router/Broker runtime.
 
-- **Testnet-first.** Mainnet settlement is a v0.2 / Tier 1 milestone; do not assume mainnet readiness from this branch.
+- **Testnet-first.** Hedron is currently focused on Hedera testnet; mainnet readiness is gated on a separate verification pass and is not implied by this branch.
 - **Public APIs may change** until `v0.2.0` is tagged.
 - **Smart contracts are unaudited and experimental.** Do not use against mainnet value without your own review.
 - **Production hosting is a roadmap item**, not a current claim.
@@ -63,7 +63,7 @@ flowchart LR
   Broker -->|policy check| Policy[Policy Engine]
   Policy -->|allow/deny/approve| Broker
   Broker -->|settle| Settlement[Settlement Adapter]
-  Settlement -->|HBAR/HTS/x402/PayAI| Rails[(Payment Rails)]
+  Settlement -->|HBAR/HTS/x402| Rails[(Payment Rails)]
   Broker -->|execute| Agent[Provider Agent]
   Broker -->|emit| HCS[(HCS Audit Topic)]
   Broker -->|issue| Receipt[VerifiableReceipt]
@@ -128,7 +128,7 @@ The testnet demo writes real HCS audit events to a topic Hedron auto-provisions 
 │   ├── INDEX.md · ARCHITECTURE.md · ROUTER_BROKER.md
 │   ├── HCS_RECEIPTS.md · POLICY_ENGINE.md · SECURITY_MODEL.md
 │   ├── QUICKSTART.md · ROADMAP.md
-│   ├── DAYDREAMS_ADAPTER.md · PAYAI_X402_ADAPTER.md · HEDERA_AGENT_KIT_PLUGIN.md
+│   ├── DAYDREAMS_ADAPTER.md · X402_ADAPTER.md · HEDERA_AGENT_KIT_PLUGIN.md
 │   └── DEPENDENCY_HARDENING.md
 ├── tests/unit/                # vitest, mock-only, 27 tests
 └── src/
@@ -136,7 +136,7 @@ The testnet demo writes real HCS audit events to a topic Hedron auto-provisions 
     ├── broker/                # intent → quote → policy → settle → execute → receipt
     ├── registry/              # AgentIdentity / AgentCard / capability registry
     ├── policy/                # rules, context, decision, auditable events
-    ├── settlement/            # hedera/, payai/, x402/, evm/
+    ├── settlement/            # hedera/, x402/, evm/
     ├── receipts/              # Receipt + VerifiableReceipt + verifier
     ├── hcs/                   # topic management, signed event envelopes
     ├── adapters/              # daydreams/, hedera-agent-kit/, mcp/
@@ -162,7 +162,7 @@ Hedron is built so other agent runtimes plug in without forking:
 | Daydreams runtime | interface defined, skeleton in `src/adapters/daydreams/` | [`docs/DAYDREAMS_ADAPTER.md`](docs/DAYDREAMS_ADAPTER.md) |
 | Hedera Agent Kit v4 plugin | interface defined, skeleton in `src/adapters/hedera-agent-kit/` | [`docs/HEDERA_AGENT_KIT_PLUGIN.md`](docs/HEDERA_AGENT_KIT_PLUGIN.md) |
 | MCP server | planned (v0.3) | — |
-| PayAI / x402 facilitator | adapter interface in `src/settlement/{payai,x402}/` | [`docs/PAYAI_X402_ADAPTER.md`](docs/PAYAI_X402_ADAPTER.md) |
+| x402 facilitator (Hedera exact scheme) | adapter interface in `src/settlement/x402/` | [`docs/X402_ADAPTER.md`](docs/X402_ADAPTER.md) |
 | Hedera HBAR / HTS native | primary rail | [`docs/ROUTER_BROKER.md`](docs/ROUTER_BROKER.md) |
 
 ## Roadmap

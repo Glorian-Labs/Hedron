@@ -18,7 +18,7 @@ Hedron's plugin exposes the commerce loop as HAK tools, with policy hooks that m
 
 ## Tool surface (intentionally minimal)
 
-Per the Tier 1 grant scope: **"Keep tool surface minimal: quote/pay/verify."**
+Hedron deliberately keeps the HAK v4 tool surface minimal: **`quote` / `pay` / `verify`** — just enough for an agent to drive the canonical Hedron commerce loop without leaking Hedron internals into the agent's tool list.
 
 | Tool | Purpose |
 | --- | --- |

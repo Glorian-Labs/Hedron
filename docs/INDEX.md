@@ -18,7 +18,7 @@ Hedron is a Hedera-native agentic commerce SDK and Router/Broker runtime. These 
 
 - [`DAYDREAMS_ADAPTER.md`](DAYDREAMS_ADAPTER.md)
 - [`HEDERA_AGENT_KIT_PLUGIN.md`](HEDERA_AGENT_KIT_PLUGIN.md)
-- [`PAYAI_X402_ADAPTER.md`](PAYAI_X402_ADAPTER.md)
+- [`X402_ADAPTER.md`](X402_ADAPTER.md)
 
 ## Planning
 

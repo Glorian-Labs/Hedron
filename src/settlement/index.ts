@@ -21,7 +21,7 @@ export * from './types'
 /**
  * Mock in-process payment adapter used by the local demo and the unit tests.
  *
- * Real rails (hedera, x402, payai) replace this with their own implementation
+ * Real rails (hedera, x402) replace this with their own implementation
  * but MUST satisfy the same invariants:
  *   - paymentId is single-use
  *   - quoteId + actionHash + amount + asset + recipient + rail + expiry all match
