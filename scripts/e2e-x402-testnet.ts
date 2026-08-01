@@ -193,19 +193,15 @@ async function tierB(facilitator: X402FacilitatorClient, feePayer: string): Prom
     accountId: OPERATOR_ID!,
     privateKey: OPERATOR_KEY!,
     keyType: KEY_TYPE,
+    network: 'testnet',
   })
-  const built = await payer.buildPaymentHeader({
-    requirements: {
-      scheme: 'exact',
-      network: HEDERA_TESTNET_CAIP2,
-      asset: HBAR_ASSET_ID,
-      amount: AMOUNT_TINYBAR,
-      payTo,
-      maxTimeoutSeconds: 180,
-      extra: { feePayer },
-    } as never,
-    feePayer,
-  })
+  // Sign the ADAPTER'S OWN wire requirements, not a hand-rolled copy. The
+  // adapter derives `maxTimeoutSeconds` from the quote expiry relative to now,
+  // so a hardcoded value drifts and /settle rejects with
+  // accepted_payment_requirements_mismatch — the payload's `accepted` block
+  // must be byte-identical to what the adapter presents.
+  const wireRequirements = await adapter.toWireRequirements(requirement)
+  const built = await payer.buildPaymentHeader(wireRequirements)
   const decoded = decodePaymentHeader(built.header)
   check(
     'B1',
@@ -227,10 +223,11 @@ async function tierB(facilitator: X402FacilitatorClient, feePayer: string): Prom
     return
   }
 
+  const paymentId = `e2e-pay-${Date.now()}`
   const settlement = await adapter.settlePayment({
     requirement,
     payload: {
-      paymentId: `e2e-pay-${Date.now()}`,
+      paymentId,
       quoteId: quote.quoteId,
       signedPayload: built.header,
     } as never,
@@ -262,31 +259,29 @@ async function tierB(facilitator: X402FacilitatorClient, feePayer: string): Prom
     `      hashscan: https://hashscan.io/testnet/transaction/${settlement.settlementId}`,
   )
 
-  const receiptCheck = await adapter.verifySettlementReceipt({
-    settlementId: settlement.settlementId,
-    rail: 'x402',
-    record: settlement.settlementHash,
-  } as never)
+  // Use the adapter's own receipt rather than hand-building one.
+  // `settlement.settlementHash` and `receipt.record` are deliberately DIFFERENT
+  // hashes: settlementHash binds the full quote/action/correlation context,
+  // while receipt.record is the narrow cross-rail settlement identity. Passing
+  // settlementHash as `record` makes recordMatches fail — correct behaviour,
+  // wrong input.
+  const receipt = await adapter.produceSettlementReceipt(settlement.settlementId)
+  const receiptCheck = await adapter.verifySettlementReceipt(receipt)
   check(
     'B5',
-    typeof receiptCheck.ok === 'boolean',
-    `verifySettlementReceipt ran ${JSON.stringify(receiptCheck.checks)}`,
+    receiptCheck.ok,
+    `verifySettlementReceipt on the real settlement: ${JSON.stringify(receiptCheck.checks)}`,
   )
 
+  // Replay the paymentId that B3 already settled. Hedron's own guard must
+  // reject this BEFORE any network call — if it reached the facilitator we
+  // would get an X402FacilitatorError instead, which would mean our replay
+  // protection is not actually in front of the wire.
   try {
     await adapter.settlePayment({
       requirement,
       payload: {
-        paymentId: 'replay-fixed-id',
-        quoteId: quote.quoteId,
-        signedPayload: built.header,
-      } as never,
-      idempotencyKey: 'replay',
-    })
-    await adapter.settlePayment({
-      requirement,
-      payload: {
-        paymentId: 'replay-fixed-id',
+        paymentId,
         quoteId: quote.quoteId,
         signedPayload: built.header,
       } as never,
@@ -294,10 +289,13 @@ async function tierB(facilitator: X402FacilitatorClient, feePayer: string): Prom
     })
     check('B6', false, 'replay was NOT rejected — this is a bug')
   } catch (err) {
+    const name = err instanceof Error ? err.name : String(err)
     check(
       'B6',
-      err instanceof Error && err.name === 'ReplayDetectedError',
-      `replay rejected: ${err instanceof Error ? err.name : String(err)}`,
+      name === 'ReplayDetectedError',
+      name === 'ReplayDetectedError'
+        ? 'replay rejected by Hedron before reaching the facilitator (ReplayDetectedError)'
+        : `replay rejected but by the WRONG layer: ${name} — our guard should have caught it first`,
     )
   }
 }
