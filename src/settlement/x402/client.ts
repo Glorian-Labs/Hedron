@@ -23,6 +23,7 @@
 
 import {
   AccountId,
+  Client,
   Hbar,
   PrivateKey,
   TransactionId,
@@ -39,6 +40,12 @@ export interface X402PayerOptions {
   privateKey: string
   /** Key type; ECDSA is the common default for new accounts. */
   keyType?: 'ecdsa' | 'ed25519'
+  /**
+   * Which network's node list to freeze against. Freezing requires real node
+   * account ids, so this selects the address book — it does NOT submit
+   * anything. Defaults to `testnet`.
+   */
+  network?: 'testnet' | 'mainnet'
 }
 
 /**
@@ -50,8 +57,10 @@ export interface X402PayerOptions {
 export class X402HederaPayer {
   private readonly accountId: AccountId
   private readonly key: PrivateKey
+  private readonly network: 'testnet' | 'mainnet'
 
   constructor(opts: X402PayerOptions) {
+    this.network = opts.network ?? 'testnet'
     this.accountId = AccountId.fromString(opts.accountId)
     this.key =
       opts.keyType === 'ed25519'
@@ -118,11 +127,22 @@ export class X402HederaPayer {
         .addTokenTransfer(requirements.asset, payTo, amount)
     }
 
-    // Freeze without a client: the transaction id is already set, so only node
-    // account ids are missing. An empty node list lets the facilitator choose.
-    const frozen = tx.freeze()
-    const signed = await frozen.sign(this.key)
-    const transaction = Buffer.from(signed.toBytes()).toString('base64')
+    // Freezing needs real node account ids, so a bare `tx.freeze()` is not
+    // enough even with the transaction id already set — signing it throws
+    // "transaction must have been frozen before calculating the hash".
+    // `freezeWith(client)` supplies the address book; it does NOT submit
+    // anything and never uses an operator, so this stays offline-safe. The
+    // reference @x402/hedera client does the same.
+    const client =
+      this.network === 'mainnet' ? Client.forMainnet() : Client.forTestnet()
+    let transaction: string
+    try {
+      const frozen = tx.freezeWith(client)
+      const signed = await frozen.sign(this.key)
+      transaction = Buffer.from(signed.toBytes()).toString('base64')
+    } finally {
+      client.close()
+    }
 
     const payload: X402PaymentPayload = {
       x402Version: X402_VERSION,
