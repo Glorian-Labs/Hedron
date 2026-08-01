@@ -1,6 +1,6 @@
 # x402 Adapter (Hedera-native)
 
-> Status: **implemented and verified against a live Hedera testnet facilitator.** `src/settlement/x402/` ships a working `PaymentAdapter`, wire codec, facilitator client, and client-side payer. 31 offline unit tests (incl. drift guards against the real `@x402/hedera@2.20.0` constants) plus a live probe — `npm run e2e:x402:testnet` — whose credential-free tier passes 6/6 against Blocky402's testnet facilitator. On-chain settlement (Tier B) is implemented but unproven: it needs a funded testnet account, which CI does not have.
+> Status: **implemented and proven end-to-end on Hedera testnet.** `src/settlement/x402/` ships a working `PaymentAdapter`, wire codec, facilitator client, and client-side payer. 31 offline unit tests (incl. drift guards against the real `@x402/hedera@2.20.0` constants) plus `npm run e2e:x402:testnet`, which passes **12/12 including real on-chain settlement** against Blocky402's testnet facilitator — a real `TransferTransaction` verified, settled, and confirmed SUCCESS on the mirror node.
 
 x402 is the HTTP-native pay-per-request standard built on the `402 Payment Required` status code. Hedera ships a native **`exact` scheme**: the client builds a *partially signed* `TransferTransaction` (HBAR or HTS), the facilitator sponsors the fee and submits it, and settlement is confirmed on-chain.
 
@@ -94,7 +94,27 @@ Two tiers, so the credential-free part is always runnable:
 
 **Tier A (no credentials, 6 checks, currently 6/6 green)** — `/supported` reachable and advertising `hedera:testnet`; our `feePayerFor()` and `supportsHederaNetwork()` agree with it; the mirror node confirms the advertised fee-payer account exists; the adapter builds a `PaymentRequirement` off the discovered fee payer; and the facilitator **rejects a malformed payload** (`invalid_exact_hedera_payload_transaction_could_not_be_decoded`). That last check is the important one — it proves `/verify` is genuinely round-tripping rather than being stubbed out.
 
-**Tier B (needs `HEDERA_OPERATOR_ID` + `HEDERA_OPERATOR_KEY`, funded testnet)** — builds and signs a real `TransferTransaction` via `X402HederaPayer`, asserts the tx-id account is the fee payer, `/verify`s it, settles it on-chain through the adapter, polls the mirror node for consensus, runs `verifySettlementReceipt` against the real settlement, and asserts a replay is rejected without a second `/settle`. Amount is 100 tinybar (0.000001 HBAR) so a real run costs ~nothing. **Not yet executed** — no funded account available.
+**Tier B (needs `HEDERA_OPERATOR_ID` + `HEDERA_OPERATOR_KEY`, funded testnet — 6/6 green)** — builds and signs a real `TransferTransaction` via `X402HederaPayer`, asserts the tx-id account is the fee payer, `/verify`s it, settles it on-chain through the adapter, polls the mirror node for consensus, runs `verifySettlementReceipt` against the real settlement, and asserts a replay is rejected *by Hedron* before reaching the facilitator. Amount is 100 tinybar (0.000001 HBAR), so a real run costs ~nothing.
+
+A confirmed run's on-chain transfers, read back from the mirror node — note the facilitator paying the fee while the payer moves only the quoted amount:
+
+```
+payer      0.0.9050506    -100 tinybar
+payTo      0.0.98         +100 tinybar
+feePayer   0.0.7162784  -292737 tinybar   (network fee, sponsored)
+node       0.0.802      +292737 tinybar
+result: SUCCESS
+```
+
+### Three failure modes this probe caught
+
+All three were found only by real execution — the 31 unit tests pass regardless.
+
+1. **`tx.freeze()` is not sufficient.** Freezing needs real node account ids; a bare `freeze()` throws `"transaction must have been frozen before calculating the hash"` at signing time even with the transaction id already set. Use `freezeWith(client)` — it supplies the address book, submits nothing, and needs no operator, so offline construction still works. The reference `@x402/hedera` client does the same. Hence `X402PayerOptions.network`.
+2. **Self-payment reads as an amount mismatch.** If `payTo` equals the payer, the two transfers net to zero and the facilitator rejects with `invalid_exact_hedera_payload_amount_mismatch`. Pay a distinct recipient.
+3. **Sign the adapter's own wire requirements, never a hand-rolled copy.** `maxTimeoutSeconds` is derived from quote expiry *relative to now*, so any hardcoded value drifts and `/settle` fails with `accepted_payment_requirements_mismatch`. The payload's `accepted` block must match what the adapter presents. Use `adapter.toWireRequirements(requirement)`.
+
+Also worth knowing: `settlement.settlementHash` and `receipt.record` are **deliberately different hashes** — the former binds the full quote/action/correlation context, the latter is the narrow cross-rail settlement identity. Passing one where the other belongs makes `recordMatches` fail correctly. Get a receipt from `produceSettlementReceipt()` rather than assembling one.
 
 ## Verification invariants
 
@@ -104,6 +124,7 @@ Two tiers, so the credential-free part is always runnable:
 
 ## Known gaps
 
-- **No on-chain settlement has actually happened.** Tier B of the probe is written but unexecuted — it needs a funded testnet account. This is the single remaining unknown on the rail.
-- The adapter has no mirror-node read-back of its own, so `receipt.verification.mirrorHints` stays empty and confirmation depends on the facilitator's response. The probe polls the mirror node directly; the adapter should eventually do so itself. Blocks the Audit-Trail-v1 "explorer-verifiable" bullet.
+- The adapter has no mirror-node read-back of its own, so `receipt.verification.mirrorHints` stays empty and confirmation depends on the facilitator's response. The probe polls the mirror node directly and proves the data is there; the adapter should do so itself. This is what blocks the Audit-Trail-v1 "explorer-verifiable" bullet.
+- HBAR is proven on-chain; **HTS settlement is not.** The code path exists and is unit-tested, but no live HTS run has happened (needs an associated token). Nothing suggests it is broken — it is simply unproven.
 - Refund/dispute hooks are not implemented on this rail.
+- No mainnet path. Testnet-only per the repo charter.
